@@ -64,3 +64,5 @@ function wpCityCategoryPageCallback() {
 include "mapa.php";
 
 
+/** Informace o objektech */
+include "objekty.php";
