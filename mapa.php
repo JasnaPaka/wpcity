@@ -27,7 +27,8 @@ function kv_MapaData() {
 		
 		$nazev = str_replace("'", "\'", $row->nazev);
 		
-		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$nazev.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.'\']';
+		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$nazev.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
+		'\',\''.$nazev.'\']';
 	}
 		
 	return $output;
