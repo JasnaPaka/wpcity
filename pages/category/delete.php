@@ -1,6 +1,9 @@
 <?php
-	include_once "category-controller.php";
+	$ROOT = plugin_dir_path( __FILE__ )."../../";
+
+	include_once $ROOT."controllers/CategoryController.php";
 	$controller = new CategoryController();
+	
 	if (isset($_POST["submit"])) {
 		$row = $controller->delete();
 	} else {
@@ -46,7 +49,7 @@
 
 <h2>Smazání kategorie '<?php echo $row->nazev ?>'</h2>
 
-<?php include_once "messages.php"; ?>
+<?php include_once $ROOT."fw/templates/messages.php"; ?>
 
 <form action="admin.php?page=category&amp;action=delete" method="post">
 

@@ -56,25 +56,25 @@ function wpCityCategoryMenu() {
 function wpCityCategoryPageListCallback() {
 	
 	if (!isset($_GET["action"])) {
-		require_once("category-list.php");	
+		require_once("pages\category\list.php");	
 	}
 	
 	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
 	switch ($action) {
 		case 'create':
-			require_once("category-create.php");
+			require_once("pages\category\create.php");
 			break;
 		case 'update':
-			require_once("category-update.php");
+			require_once("pages\category\update.php");
 			break;
 		case 'delete':
-			require_once("category-delete.php");
+			require_once("pages\category\delete.php");
 			break;
 		case 'list':
-			require_once("category-list.php");
+			require_once("pages\category\list.php");
 			break;
 		default:
-			require_once("category-list.php");
+			require_once("pages\category\list.php");
 			break;
 	}
 	

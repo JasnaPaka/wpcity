@@ -2,9 +2,6 @@
 
 class CategoryDb {
 	
-	/**
-	 * Vrátí všechny kategorie seřazené podle názvu.
-	 */
 	public function getAll() {
 		global $wpdb;
 		

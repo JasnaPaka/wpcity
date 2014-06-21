@@ -1,5 +1,5 @@
 <?php
-	include_once "jp\JPMessages.php";
+	include_once $ROOT."fw/JPMessages.php";
 	
 	$errors = $controller->getErrorMessages();
 	$infos = $controller->getInfoMessages();
