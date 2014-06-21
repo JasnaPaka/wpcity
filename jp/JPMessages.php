@@ -2,7 +2,6 @@
 	abstract class JPMessage {
 		
 		CONST ERROR = "error";
-		CONST WARN = "warn";
 		CONST INFO = "info";
 		
 		private $type;
@@ -25,12 +24,6 @@
 	class JPErrorMessage extends JPMessage {
 		function __construct($message) {
 			parent::__construct(JPMessage::ERROR, $message);
-		}
-	}
-	
-	class JPWarnMessage extends JPMessage {
-		function __construct($message) {
-			parent::__construct(JPMessage::WARN, $message);
 		}
 	}
 	

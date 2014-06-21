@@ -95,10 +95,7 @@ class CategoryController {
 		}
 		
 		return $messages;			
-	}
-	
-	// TODO: stejne metody pro warn messages
-		
+	}	
 }
 
 ?>

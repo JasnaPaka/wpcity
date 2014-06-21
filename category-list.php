@@ -16,6 +16,7 @@
 			<th>Název</th>
 			<th>URL</th>
 			<th>Ikona</th>
+			<th>Akce</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -42,9 +43,10 @@
 						$barva = true;
 					}
 					
-					echo '<td><strong><a href="">'.$row->nazev.'</a></strong></td>';
+					echo '<td><strong>'.$row->nazev.'</strong></td>';
 					echo '<td>'.$row->url.'</td>';
 					echo '<td>'.$row->ikona.'</td>';
+					echo '<td><a href="" title="Upraví kategorii">Upravit</a> &middot; <a href="" title="Smaže kategorii">Smazat</a></td>';
 					echo '</tr>';
 				}
 			} 
