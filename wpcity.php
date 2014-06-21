@@ -49,15 +49,33 @@ function wpCityMenuPageCallback(){
 add_action( 'admin_menu', 'wpCityCategoryMenu' );
 
 function wpCityCategoryMenu() {
-	add_submenu_page( 'wpcity', 'Správa kategorií', 'Kategorie', 'manage_options', 'wpCityCategoryPage', 'wpCityCategoryPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'manage_options', 'category', 'wpCityCategoryPageListCallback');
+	//add_submenu_page('kategorie_seznam', 'Přidání kategorie', 'Přidání kategorie', 'manage_options', 'category-create', 'wpCityCategoryPageCreateCallback');
 }
 
-function wpCityCategoryPageCallback() {
+function wpCityCategoryPageListCallback() {
 	
-	echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
-	echo '<h2>My Custom Submenu Page</h2>';
-	echo '</div>';
+	if (!isset($_GET["action"])) {
+		require_once("category-list.php");	
+	}
+	
+	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
+	switch ($action) {
+		case 'create':
+			require_once("category-create.php");
+			break;
+		case 'list':
+			require_once("category-list.php");
+			break;
+		default:
+			require_once("category-list.php");
+			break;
+	}
+	
+}
 
+function wpCityCategoryPageCreateCallback() {
+	require_once("category-create.php");
 }
 
 /** Mapa*/
