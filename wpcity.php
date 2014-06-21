@@ -64,6 +64,12 @@ function wpCityCategoryPageListCallback() {
 		case 'create':
 			require_once("category-create.php");
 			break;
+		case 'update':
+			require_once("category-update.php");
+			break;
+		case 'delete':
+			require_once("category-delete.php");
+			break;
 		case 'list':
 			require_once("category-list.php");
 			break;

@@ -9,6 +9,7 @@
 
 <h2>Kategorie <a href="admin.php?page=category&amp;action=create" class="add-new-h2">Přidat novou</a></h2>
 
+<?php include_once "messages.php"; ?>
 
 <table class="wp-list-table widefat fixed posts">
 	<thead>
@@ -46,7 +47,8 @@
 					echo '<td><strong>'.$row->nazev.'</strong></td>';
 					echo '<td>'.$row->url.'</td>';
 					echo '<td>'.$row->ikona.'</td>';
-					echo '<td><a href="" title="Upraví kategorii">Upravit</a> &middot; <a href="" title="Smaže kategorii">Smazat</a></td>';
+					echo '<td><a href="admin.php?page=category&amp;action=update&amp;id='.$row->id.'" title="Upraví kategorii">Upravit</a> 
+						&middot; <a href="admin.php?page=category&amp;action=delete&amp;id='.$row->id.'" title="Smaže kategorii">Smazat</a></td>';
 					echo '</tr>';
 				}
 			} 
