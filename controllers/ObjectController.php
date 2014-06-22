@@ -21,6 +21,28 @@ class ObjectController extends JPController {
 		$this->dbCategory = new CategoryDb();
 	}
 	
+	public function getList() {
+		if (!$this->getSearchValueValid()) {
+			return parent::getList();	
+		}
+		
+		if ($this->getShowAll()) {
+			return $this->db->getListByNazev($this->getSearchValue());
+		} else {
+			return $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());	
+		}
+		
+		return $this->db->getListByNazev($this->getSearchValue());
+	}
+	
+	public function getCount() {
+		if (!$this->getSearchValueValid()) {
+			return parent::getCount();	
+		}
+		
+		return $this->db->getCountByNazev($this->getSearchValue()); 
+	}
+	
 	public function getCategoryNameForObject($id) {
 		if ($categories == null) {
 			$categories = $this->dbCategory->getAll();	

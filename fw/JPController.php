@@ -1,8 +1,11 @@
 <?php
 
+include "JPDb.php";
+
 class JPController {
 	
 	protected $messages = array();	
+	private $pagging;
 	
 	public function getMessages() {
 		return $this->messages;	
@@ -31,7 +34,15 @@ class JPController {
 	}	
 	
 	public function getList() {
-		return $this->db->getAll();	
+		if ($this->getShowAll()) {
+			return $this->db->getAll();
+		} else {
+			return $this->db->getPage($this->getPageCurrent());	
+		}	
+	}
+	
+	public function getCount() {
+		return $this->db->getCount();	
 	}
 	
 	/**
@@ -69,6 +80,87 @@ class JPController {
 		}
 		
 		return $this->db->getById($id);
+	}
+	
+	public function getShowAll() {
+		if ($this->getSearchValueValid()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public function getShowNavigation() {
+		if ($this->getShowAll()) {
+			return false;	
+		}
+		
+		$count = $this->db->getCount();
+		
+		if ($count <= JPDb::MAX_ITEMS_ON_PAGE) {
+			return false;	
+		}
+		
+		return true;
+	}
+	
+	public function getPageCurrent() {
+		if (!isset($_GET["paged"])) {
+			return 1;	
+		}
+		
+		$page = (int) filter_input (INPUT_GET, "paged", FILTER_SANITIZE_STRING);
+		if ($page < 1) {
+			return 1;
+		}
+		if ($page > $this->getPageLast()) {
+			return 1;
+		}
+		
+		return $page;
+	}
+	
+	public function getPageLast() {
+		$pages = $this->getCount() / JPDb::MAX_ITEMS_ON_PAGE;
+		return ceil($pages);
+	}
+	
+	public function getPagePrevious() {
+		$page = $this->getPageCurrent();	
+		if ($page === 1) {
+			return $page;	
+		}
+		
+		$page--;
+		return $page;
+	}
+	
+	public function getPageNext() {
+		$page = $this->getPageCurrent();	
+		if ($page >= $this->getPageLast()) {
+			return $page;
+		}
+		
+		return $page+1;
+	}
+	
+	public function getSearchValue() {
+		if (!isset($_POST["s"])) {
+			return null;
+		}
+		
+		return filter_input (INPUT_POST, "s", FILTER_SANITIZE_STRING);	
+	}
+	
+	/**
+	 * Zadaný řetězec ve vyhledávání by měl být aspoň tři znaky, jinak nemá vyhledávání smysl.
+	 */
+	public function getSearchValueValid() {
+		if ($this->getSearchValue() == null) {
+			return false;	
+		}
+		
+		return strlen($this->getSearchValue()) >= 3;
 	}
 	
 }

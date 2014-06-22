@@ -13,12 +13,22 @@
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
+<form action="admin.php?page=object&amp;action=list" method="post">
+
+<p class="search-box">
+	<input type="search" id="s" name="s" value="<?php echo $controller->getSearchValue() ?>" placeholder="Zadejte název" />
+	<input type="submit" id="search" name="search" value="Hledat" class="button" />
+</p>
+
+<div class="tablenav top">
+	<?php include $ROOT."fw/templates/navigation.php"; ?>
+</div>
+
 <table class="wp-list-table widefat fixed posts">
 	<thead>
 		<tr>
 			<th>Název</th>
-			<th>Latitude</th>
-			<th>Longtitude</th>
+			<th>Souřadnice</th>
 			<th>Kategorie</th>
 			<th>Akce</th>
 		</tr>
@@ -48,8 +58,8 @@
 					}
 					
 					echo '<td><strong>'.$row->nazev.'</strong></td>';
-					echo '<td>'.$row->latitude.'</td>';
-					echo '<td>'.$row->longitude.'</td>';
+					echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
+						$row->latitude.', '.$row->longitude.'</a></td>';
 					echo '<td>'.$controller->getCategoryNameForObject($row->kategorie).'</td>';
 					echo '<td><a href="admin.php?page=object&amp;action=update&amp;id='.$row->id.'" title="Upraví objekt">Upravit</a> 
 						&middot; <a href="admin.php?page=object&amp;action=delete&amp;id='.$row->id.'" title="Smaže objekt">Smazat</a></td>';
@@ -60,5 +70,11 @@
 	
 	</tbody>
 </table>	
+
+<div class="tablenav bottom">
+	<?php include $ROOT."fw/templates/navigation.php"; ?>
+</div>
+
+</list>
 
 </div>
