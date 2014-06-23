@@ -163,6 +163,10 @@ class JPController {
 		return strlen($this->getSearchValue()) >= 3;
 	}
 	
+	public function getIsEdit() {
+		return $this->getObjectFromUrl() != null;
+	}
+	
 }
 
 ?>

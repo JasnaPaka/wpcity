@@ -57,7 +57,7 @@
 						$barva = true;
 					}
 					
-					echo '<td><strong>'.$row->nazev.'</strong></td>';
+					echo '<td><a href="admin.php?page=object&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->nazev.'</strong></a></td>';
 					echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
 						$row->latitude.', '.$row->longitude.'</a></td>';
 					echo '<td>'.$controller->getCategoryNameForObject($row->kategorie).'</td>';

@@ -1,4 +1,4 @@
-<table class="form-table">
+<table class="form-table" enctype="multipart/form-data" method="post">
 <tbody>
 <tr>
 	<th scope="row"><label for="nazev">Název</label></th>
@@ -26,5 +26,15 @@
 		</select>
 	</td>
 </tr>
+<?php if (!$controller->getIsEdit()) { ?>
+	<tr>
+		<th scope="row">Fotky</th>
+		<td>
+			<input type="file" id="photo1" name="photo1" /><br />
+			<input type="file" id="photo2" name="photo2" /><br />
+			<input type="file" id="photo3" name="photo3" />
+		</td>
+	</tr>
+<?php } ?>
 </tbody>
 </table>

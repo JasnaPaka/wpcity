@@ -41,38 +41,48 @@ function wpCityMenu(){
 }
 
 function wpCityMenuPageCallback(){
-	echo "";	
+?>
+
+<h2>Správa objektů</h2>
+<p>Plugin pro WordPress, který umožňuje spravovat body v mapě a základní informace o nich.</p>
+<p>Zdrojový kód plugin je <a href="https://github.com/JasnaPaka/wpcity">k dispozici na GitHubu</a>.</p>
+
+<?php
 }
 
-/** Přidáme podnabídku pro správu kategorií */
+/** Přidáme podnabídku */
 add_action( 'admin_menu', 'wpCityCategoryMenu' );
 
 function wpCityCategoryMenu() {
 	add_submenu_page('wpcity', 'Správa kategorií', 'Objekty', 'manage_options', 'object', 'wpCityObjectPageCallback');
 	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'manage_options', 'category', 'wpCityCategoryPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Autoři', 'manage_options', 'author', 'wpCityAuthorPageCallback');
 }
 
 function wpCityObjectPageCallback(){
 	if (!isset($_GET["action"])) {
-		require_once("pages\object\list.php");	
+		require_once("pages/object/list.php");	
 	}
 	
 	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
 	switch ($action) {
 		case 'create':
-			require_once("pages\object\create.php");
+			require_once("pages/object/create.php");
 			break;
 		case 'update':
-			require_once("pages\object\update.php");
+			require_once("pages/object/update.php");
 			break;
 		case 'delete':
-			require_once("pages\object\delete.php");
+			require_once("pages/object/delete.php");
 			break;
 		case 'list':
-			require_once("pages\object\list.php");
+			require_once("pages/object/list.php");
+			break;
+		case 'view':
+			require_once("pages/object/view.php");
 			break;
 		default:
-			require_once("pages\object\list.php");
+			require_once("pages/object/list.php");
 			break;
 	}
 }
@@ -81,28 +91,54 @@ function wpCityObjectPageCallback(){
 function wpCityCategoryPageCallback() {
 	
 	if (!isset($_GET["action"])) {
-		require_once("pages\category\list.php");	
+		require_once("pages/category/list.php");	
 	}
 	
 	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
 	switch ($action) {
 		case 'create':
-			require_once("pages\category\create.php");
+			require_once("pages/category/create.php");
 			break;
 		case 'update':
-			require_once("pages\category\update.php");
+			require_once("pages/category/update.php");
 			break;
 		case 'delete':
-			require_once("pages\category\delete.php");
+			require_once("pages/category/delete.php");
 			break;
 		case 'list':
-			require_once("pages\category\list.php");
+			require_once("pages/category/list.php");
 			break;
 		default:
-			require_once("pages\category\list.php");
+			require_once("pages/category/list.php");
 			break;
 	}
+}
+
+
+function wpCityAuthorPageCallback() {
 	
+	if (!isset($_GET["action"])) {
+		require_once("pages/author/list.php");	
+	}
+	
+	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
+	switch ($action) {
+		case 'create':
+			require_once("pages/author/create.php");
+			break;
+		case 'update':
+			require_once("pages/author/update.php");
+			break;
+		case 'delete':
+			require_once("pages/author/delete.php");
+			break;
+		case 'list':
+			require_once("pages/author/list.php");
+			break;
+		default:
+			require_once("pages/author/list.php");
+			break;
+	}
 }
 
 

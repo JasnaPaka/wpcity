@@ -1,13 +1,13 @@
 <?php
 
-class JPDb {
+abstract class JPDb {
 
 	CONST MAX_ITEMS_ON_PAGE = 20;	
 	
 	public function getAll() {
 		global $wpdb;
 		
-		return $wpdb->get_results("SELECT * FROM ".$this->tableName." ORDER BY nazev");	
+		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getDefaultOrder());	
 	}
 	
 	public function getPage($page) {
@@ -16,19 +16,19 @@ class JPDb {
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
-		return $wpdb->get_results("SELECT * FROM ".$this->tableName." ORDER BY nazev LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
+		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getDefaultOrder()." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
 	}
 
 	public function getCount() {
 		global $wpdb;
 		
-		return $wpdb->get_var ("SELECT count(*) FROM ".$this->tableName);
+		return $wpdb->get_var ("SELECT count(*) FROM ".$this->tableName." WHERE deleted = 0");
 	}
 	
 	public function getById($id) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE id = %d", $id); 
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE id = %d AND deleted = 0", $id); 
 		$rows = $wpdb->get_results ($sql);
 		if (count($rows) === 0) {
 			return null;
@@ -53,8 +53,10 @@ class JPDb {
 	public function delete($id) {
 		global $wpdb;
 		
-		return $wpdb->delete($this->tableName, array('id' => $id));
+		return $wpdb->update($this->tableName, array ("deleted" => 1), array("id" => $id), array ('%d'));
 	}
+	
+	abstract public function getDefaultOrder();
 
 }
 

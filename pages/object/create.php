@@ -15,7 +15,7 @@
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
-<form action="admin.php?page=object&amp;action=create" method="post">
+<form action="admin.php?page=object&amp;action=create" method="post" enctype="multipart/form-data">
 
 <?php include_once $ROOT."/pages/object/i-shared-form.php" ?>
 

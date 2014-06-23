@@ -97,11 +97,86 @@ class ObjectController extends JPController {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nový objekt."));
 			} else {
 				array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně přidán."));
+				
+				// Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
+				$this->addPhotos();
+				
 				return new stdClass();
 			}
 		}
 		
 		return $row;
+	}
+	
+	private function addPhotos() {
+		global $_wp_additional_image_sizes;
+     	$sizes = array();
+		
+		if (!function_exists('wp_handle_upload')) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+		
+		$upload_overrides = array('test_form' => false);
+		$uploadFiles = array ();
+		if (isset($_FILES['photo1']) && $_FILES['photo1']['name'] != null) {
+			array_push($uploadFiles, $_FILES['photo1']);
+		}
+		if (isset($_FILES['photo2']) && $_FILES['photo2']['name'] != null) {
+			array_push($uploadFiles, $_FILES['photo2']);
+		}
+		if (isset($_FILES['photo3']) && $_FILES['photo3']['name'] != null) {
+			array_push($uploadFiles, $_FILES['photo3']);
+		}
+		
+		foreach ($uploadFiles as $uploadFile) {
+			
+			$result = wp_handle_upload($uploadFile, $upload_overrides);
+			if ($result["error"] != null) {
+				array_push($this->messages, new JPErrorMessage("Při nahrávání fotky '".$uploadFile["name"]."' nastala chyba, 
+					díky které fotka nebyla k objektu nahrána. Chyba: ".$result["error"]));
+			} else {
+				
+				// vše ok, máme info o obrázku, vygenerujeme náhledy
+				foreach (get_intermediate_image_sizes() as $s) {
+					$sizes[ $s ] = array( 0, 0 );
+		 			if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
+		 				$sizes[ $s ][0] = get_option( $s . '_size_w' );
+		 				$sizes[ $s ][1] = get_option( $s . '_size_h' );
+		 			}else{
+		 				if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
+		 					$sizes[ $s ] = array( $_wp_additional_image_sizes[ $s ]['width'], $_wp_additional_image_sizes[ $s ]['height'], );
+		 			}
+		 		}
+				
+				foreach($sizes as $size) {
+					
+				}
+				
+				/*$image = wp_get_image_editor($result["file"]);
+				if (!is_wp_error($image)) {
+					foreach (get_intermediate_image_sizes() as $s) {
+						
+						$sizes[ $s ] = array( 0, 0 );
+			 			if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
+			 				$sizes[ $s ][0] = get_option( $s . '_size_w' );
+			 				$sizes[ $s ][1] = get_option( $s . '_size_h' );
+			 			}else{
+			 				if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
+			 					$sizes[ $s ] = array( $_wp_additional_image_sizes[ $s ]['width'], $_wp_additional_image_sizes[ $s ]['height'], );
+			 			}
+			 		}
+			 
+			 		foreach($sizes as $size){
+						$image->resize($size[0], $size[1], true );
+			 		}
+						
+				} else {
+					array_push($this->messages, new JPErrorMessage("Při vytváření náhledů se vyskytla chyba.
+						 Chyba: ".$image->get_error_message()));
+				}*/	
+			}
+		}
+		
 	}
 	
 	public function update() {
