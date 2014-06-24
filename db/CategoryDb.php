@@ -20,6 +20,24 @@ class CategoryDb extends JPDb {
 		return $rows[0];
 	}
 	
+	public function update($data, $id) {
+		global $wpdb;
+		
+		$values = array (
+			"nazev" => $data->nazev,
+			"url" => $data->url,
+			"ikona" => $data->ikona,
+		);
+		
+		$types = array (
+			'%s',
+			'%s',			
+			'%s'
+		);
+		
+		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+	}
+	
 }
 
 ?>

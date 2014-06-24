@@ -40,6 +40,28 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_var ($sql); 
 	}
 	
+	public function update($data, $id) {
+		global $wpdb;
+		
+		$values = array (
+			"nazev" => $data->nazev,
+			"latitude" => $data->latitude,
+			"longitude" => $data->longitude,
+			"kategorie" => $data->kategorie,
+			"obsah" => $data->obsah
+		);
+		
+		$types = array (
+			'%s',
+			'%f',
+			'%f',
+			'%d',
+			'%s'
+		);
+		
+		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+	}
+	
 		
 }
 

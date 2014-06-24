@@ -27,6 +27,14 @@
 </tbody>
 </table>
 
+<?php if (strlen($row->obsah) > 0) { ?>
+
+<h3>Obsah</h3>
+
+<?php echo $row->obsah ?>
+
+<?php } ?>
+
 <h3>Fotografie</h3>
 
 <?php if (count ($photos) == 0) { ?>
@@ -49,7 +57,8 @@
 ?>
 
 <p class="submit">
-	<a href="admin.php?page=object" class="button button-primary">Zpět na výpis</a>
+	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>
 
 

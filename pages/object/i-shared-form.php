@@ -1,3 +1,5 @@
+<script src="<?php echo $ROOT_URL ?>content/js/ckeditor4.4.2/ckeditor.js"></script>
+
 <table class="form-table" enctype="multipart/form-data" method="post">
 <tbody>
 <tr>
@@ -26,6 +28,13 @@
 		</select>
 	</td>
 </tr>
+<tr>
+	<th scope="row"><label for="obsah">Text</label></th>
+	<td>
+		<textarea id="editor" name="editor" rows="30" cols="50"><?php echo $row->obsah ?></textarea>
+	</td>
+</tr>
+
 <?php if (!$controller->getIsEdit()) { ?>
 	<tr>
 		<th scope="row">Fotky</th>
@@ -38,3 +47,7 @@
 <?php } ?>
 </tbody>
 </table>
+
+<script>
+	CKEDITOR.replace('editor');
+</script>

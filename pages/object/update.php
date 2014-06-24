@@ -1,5 +1,6 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
+	$ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
 	include_once $ROOT."controllers/ObjectController.php";
 	$controller = new ObjectController();
@@ -37,7 +38,7 @@
 
 <p class="submit">
 	<input name="submit" id="submit" class="button button-primary" value="Upravit" type="submit">
-	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
+	<a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
 </p>
 
 </form>
