@@ -32,9 +32,19 @@ function initWpCityData() {
 }
 
 register_activation_hook( __FILE__, 'initWpCityData');
+
+function pageScripts() {
+	wp_enqueue_script('jQuery', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-1.10.2.js');
+	wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-ui-1.10.4.custom.min.js');
+	//wp_enqueue_script('jQuery UI dt cs', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery.ui.datepicker-cs.js');
+	wp_enqueue_style( 'jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');
+}
+
+/** Přidání stylů do stránky */
+add_action('admin_enqueue_scripts', 'pageScripts');
  
  /** Přidáme hlavní kategorii pro správu objektů */
-add_action( 'admin_menu', 'wpCityMenu' );
+add_action('admin_menu', 'wpCityMenu');
 
 function wpCityMenu(){
    add_menu_page('Správa objektů', 'Správa objektů', 'manage_options', 'wpcity', 'wpCityMenuPageCallback', plugins_url( 'myplugin/images/icon.png' ), 90); 
