@@ -17,7 +17,7 @@ class PhotoDb extends JPDb {
 	
 	public function getPhotosByObject($idObject) {
 		global $wpdb;
-		
+
 		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE objekt = %d ORDER BY ".$this->getDefaultOrder(), $idObject); 
 		return $wpdb->get_results ($sql);	
 	}

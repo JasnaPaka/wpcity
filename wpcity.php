@@ -37,7 +37,9 @@ function pageScripts() {
 	wp_enqueue_script('jQuery', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-1.10.2.js');
 	wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-ui-1.10.4.custom.min.js');
 	//wp_enqueue_script('jQuery UI dt cs', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery.ui.datepicker-cs.js');
-	wp_enqueue_style( 'jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');
+	
+	wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');	
+	wp_enqueue_style('WPCity CSS', plugin_dir_url(__FILE__). '/content/css/wpcity.css');
 }
 
 /** Přidání stylů do stránky */

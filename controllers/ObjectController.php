@@ -193,9 +193,6 @@ class ObjectController extends JPController {
 					if (!$result) {
 						array_push($this->messages, new JPErrorMessage("Fotografii '".$uploadFile['name']." se nepodařilo uložit."));
 					}
-					
-					/*echo $idObject;
-					print_r($photos);*/
 				}
 			}
 		}

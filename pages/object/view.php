@@ -39,9 +39,9 @@
 		$uploadDir = wp_upload_dir();
 ?>
 
-<a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
+<span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
 	<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt="" />
-</a>
+</a></span>
 
 <?php 
 		}	
