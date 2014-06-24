@@ -5,20 +5,24 @@ $ROOT = plugin_dir_path( __FILE__ )."../";
 include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
 include_once $ROOT."fw/GPSUtils.php";
+include_once $ROOT."fw/ImgUtils.php";
 
 include_once $ROOT."db/CategoryDb.php";
 include_once $ROOT."db/ObjectDb.php"; 
+include_once $ROOT."db/PhotoDb.php";
 
 class ObjectController extends JPController {
 	
 	protected $db;
 	private $dbCategory;
+	private $dbPhoto;
 	
 	private $categories;
 	
 	function __construct() {
 		$this->db = new ObjectDb();
 		$this->dbCategory = new CategoryDb();
+		$this->dbPhoto = new PhotoDb();
 	}
 	
 	public function getList() {
@@ -93,13 +97,15 @@ class ObjectController extends JPController {
 		$result = $this->validate($row);
 		if ($result) {
 			$result = $this->db->create($row);
+
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nový objekt."));
 			} else {
 				array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně přidán."));
 				
 				// Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
-				$this->addPhotos();
+				$idObject = $this->db->getLastId();
+				$this->addPhotos($idObject);
 				
 				return new stdClass();
 			}
@@ -108,7 +114,7 @@ class ObjectController extends JPController {
 		return $row;
 	}
 	
-	private function addPhotos() {
+	private function addPhotos($idObject) {
 		global $_wp_additional_image_sizes;
      	$sizes = array();
 		
@@ -128,13 +134,16 @@ class ObjectController extends JPController {
 			array_push($uploadFiles, $_FILES['photo3']);
 		}
 		
+		$photos = array();
 		foreach ($uploadFiles as $uploadFile) {
 			
 			$result = wp_handle_upload($uploadFile, $upload_overrides);
+			
 			if ($result["error"] != null) {
 				array_push($this->messages, new JPErrorMessage("Při nahrávání fotky '".$uploadFile["name"]."' nastala chyba, 
 					díky které fotka nebyla k objektu nahrána. Chyba: ".$result["error"]));
 			} else {
+				$photos[0] = $this->getRelativePathToImg($result["file"]);
 				
 				// vše ok, máme info o obrázku, vygenerujeme náhledy
 				foreach (get_intermediate_image_sizes() as $s) {
@@ -148,35 +157,55 @@ class ObjectController extends JPController {
 		 			}
 		 		}
 				
+				$i = 0;
 				foreach($sizes as $size) {
+					$i++;
+					$image = wp_get_image_editor($result["file"]);
 					
+					if (!is_wp_error($image)) {
+							
+						$imgSize = $image->get_size();
+						$imgSize = ImgUtils::resizeToProporcional($imgSize["width"], $imgSize["height"], $size[0], $size[1]);
+
+						$image->resize($imgSize["width"], $imgSize["height"], true);						
+						$filename = $image->generate_filename($size[0]);
+						$output = $image->save($filename);
+						
+						// Korekce cesty k souboru pro uložení do db
+						$path = $this->getRelativePathToImg($output["path"]);
+						$photos[$i] = $path;
+					} else {
+						array_push($this->messages, new JPErrorMessage("Pro fotografii '".$uploadFile['name']." se nepodařilo 
+							vygenerovat náhled: ".$size[0].'x'.$size[1]." Chyba: ".$image->error));
+					} 
 				}
 				
-				/*$image = wp_get_image_editor($result["file"]);
-				if (!is_wp_error($image)) {
-					foreach (get_intermediate_image_sizes() as $s) {
-						
-						$sizes[ $s ] = array( 0, 0 );
-			 			if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
-			 				$sizes[ $s ][0] = get_option( $s . '_size_w' );
-			 				$sizes[ $s ][1] = get_option( $s . '_size_h' );
-			 			}else{
-			 				if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
-			 					$sizes[ $s ] = array( $_wp_additional_image_sizes[ $s ]['width'], $_wp_additional_image_sizes[ $s ]['height'], );
-			 			}
-			 		}
-			 
-			 		foreach($sizes as $size){
-						$image->resize($size[0], $size[1], true );
-			 		}
-						
-				} else {
-					array_push($this->messages, new JPErrorMessage("Při vytváření náhledů se vyskytla chyba.
-						 Chyba: ".$image->get_error_message()));
-				}*/	
+				// všechny náhledy vygenerovány?
+				if (count($photos) == 4) {
+					$photo = new stdClass();
+					$photo->img_original = $photos[0];
+					$photo->img_thumbnail = $photos[1];
+					$photo->img_medium = $photos[2];
+					$photo->img_large = $photos[3];
+					$photo->objekt = $idObject;
+					
+					$result = $this->dbPhoto->create($photo);
+					if (!$result) {
+						array_push($this->messages, new JPErrorMessage("Fotografii '".$uploadFile['name']." se nepodařilo uložit."));
+					}
+					
+					/*echo $idObject;
+					print_r($photos);*/
+				}
 			}
 		}
 		
+	}
+
+	private function getRelativePathToImg($path) {
+		$upload_dir = wp_upload_dir();
+		$baseDir = $upload_dir['basedir']; 
+		return str_replace($baseDir, "", $path);
 	}
 	
 	public function update() {
@@ -214,7 +243,16 @@ class ObjectController extends JPController {
 			array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo smazat."));
 		} else {
 			array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně smazán."));
+			$this->dbPhoto->deletePhotosByObject($id);
 		}
+	}
+	
+	public function getPhotosForObject() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->dbPhoto->getPhotosByObject($this->getObjectId());
 	}
 	
 	private function getFormValues() {

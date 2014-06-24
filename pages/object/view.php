@@ -5,6 +5,7 @@
 	$controller = new ObjectController();
 	
 	$row = $controller->getObjectFromUrl();
+	$photos = $controller->getPhotosForObject();
 ?>
 
 
@@ -26,6 +27,26 @@
 </tbody>
 </table>
 
+<h3>Fotografie</h3>
+
+<?php if (count ($photos) == 0) { ?>
+
+<p>K objektu nejsou prozatím nahrány žádné fotografie.</p>
+
+<?php } else { 
+
+	foreach($photos as $photo) {
+		$uploadDir = wp_upload_dir();
+?>
+
+<a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
+	<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt="" />
+</a>
+
+<?php 
+		}	
+	} 
+?>
 
 <p class="submit">
 	<a href="admin.php?page=object" class="button button-primary">Zpět na výpis</a>

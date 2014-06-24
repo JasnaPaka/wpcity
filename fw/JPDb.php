@@ -56,6 +56,13 @@ abstract class JPDb {
 		return $wpdb->update($this->tableName, array ("deleted" => 1), array("id" => $id), array ('%d'));
 	}
 	
+	public function getLastId() {
+		global $wpdb;
+		
+		return $wpdb->insert_id;	
+	}
+		
+	
 	abstract public function getDefaultOrder();
 
 }
