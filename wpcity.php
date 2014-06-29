@@ -147,6 +147,9 @@ function wpCityAuthorPageCallback() {
 		case 'delete':
 			require_once("pages/author/delete.php");
 			break;
+		case 'view':
+			require_once("pages/author/view.php");
+			break;
 		case 'list':
 			require_once("pages/author/list.php");
 			break;

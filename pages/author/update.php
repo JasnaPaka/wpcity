@@ -38,7 +38,7 @@
 
 <p class="submit">
 	<input name="submit" id="submit" class="button button-primary" value="Upravit" type="submit">
-	<a href="admin.php?page=author" class="button">Zpět na výpis</a>
+	<a href="admin.php?page=author&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
 </p>
 
 </form>

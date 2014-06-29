@@ -50,7 +50,7 @@
 						$barva = true;
 					}
 					
-					echo '<td><strong>'.$row->jmeno.'</strong></td>';
+					echo '<td><a href="admin.php?page=author&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->jmeno.'</strong></a></td>';
 					echo '<td>'.$row->datum_narozeni.'</td>';
 					echo '<td>'.$row->datum_umrti.'</td>';
 					echo '<td><a href="admin.php?page=author&amp;action=update&amp;id='.$row->id.'" title="Upraví autora">Upravit</a> 
