@@ -245,6 +245,21 @@ class ObjectController extends JPController {
 		return $row;
 	}
 	
+	public function uploadPhotos() {
+		$id = $this->getObjectFromUrl()->id;
+		if ($id == null) {
+			return null;	
+		}
+		
+		if ($_FILES['photo1']['name'] == null && $_FILES['photo2']['name'] && $_FILES['photo3']['name']) {
+			array_push($this->messages, new JPErrorMessage("Nebyla zvolena žádná fotografie pro nahrání."));
+		}
+		
+		$this->addPhotos($id);
+		
+		array_push($this->messages, new JPInfoMessage("Nahrávání fotografií bylo dokončeno."));
+	}	
+	
 	public function delete() {
 		$row = $this->getFormValues();
 		if ($row == null) {

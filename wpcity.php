@@ -93,6 +93,9 @@ function wpCityObjectPageCallback(){
 		case 'view':
 			require_once("pages/object/view.php");
 			break;
+		case 'photo':
+			require_once("pages/object/photo.php");
+			break;
 		default:
 			require_once("pages/object/list.php");
 			break;

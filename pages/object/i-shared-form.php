@@ -1,6 +1,6 @@
 <script src="<?php echo $ROOT_URL ?>content/js/ckeditor4.4.2/ckeditor.js"></script>
 
-<table class="form-table" enctype="multipart/form-data" method="post">
+<table class="form-table">
 <tbody>
 <tr>
 	<th scope="row"><label for="nazev">Název</label></th>

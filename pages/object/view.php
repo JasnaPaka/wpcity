@@ -102,6 +102,7 @@
 
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat fotografie</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>
 
