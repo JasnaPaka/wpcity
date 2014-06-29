@@ -90,12 +90,31 @@ class ObjectController extends JPController {
 		return count($this->messages) === 0; 
 	}
 	
+	private function setAuthors($row) {
+		global $current_user;
+		
+		$dt = new DateTime();
+		$dtStr = $dt->format('Y-m-d H:i:s'); 
+		get_currentuserinfo();
+		
+		if (!$this->getIsEdit()) {
+			$row->pridal_autor = $current_user->display_name;
+			$row->pridal_datum = $dtStr;
+		}
+		
+		$row->upravil_autor = $current_user->display_name;
+		$row->upravil_datum = $dtStr;
+		
+		return $row;
+	}
+	
 	
 	public function add() {
 		$row = $this->getFormValues();
 		
 		$result = $this->validate($row);
 		if ($result) {
+			$row = $this->setAuthors($row);
 			$result = $this->db->create($row);
 
 			if (!$result) {
@@ -213,6 +232,7 @@ class ObjectController extends JPController {
 		
 		$result = $this->validate($row);
 		if ($result) {
+			$row = $this->setAuthors($row);
 			$result = $this->db->update($row, $this->getObjectFromUrl()->id);
 			
 			if (!$result) {
@@ -260,6 +280,11 @@ class ObjectController extends JPController {
 		$row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
 		$row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
+		$row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
+		$row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);
+		$row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);
+		$row->pamatkova_ochrana = filter_input (INPUT_POST, "pamatkova_ochrana", FILTER_SANITIZE_STRING);
+		$row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
 		
 		return $row;
 	}

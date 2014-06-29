@@ -48,7 +48,16 @@ class ObjectDb extends JPDb {
 			"latitude" => $data->latitude,
 			"longitude" => $data->longitude,
 			"kategorie" => $data->kategorie,
-			"obsah" => $data->obsah
+			"obsah" => $data->obsah,
+			"rok_vzniku" => $data->rok_vzniku,
+			"prezdivka" => $data->prezdivka,
+			"material" => $data->material,
+			"pamatkova_ochrana" => $data->pamatkova_ochrana,
+			"pristupnost" => $data->pristupnost,
+			"pridal_autor" => $data->pridal_autor,
+			"pridal_datum" => $data->pridal_datum,
+			"upravil_autor" => $data->upravil_autor,
+			"upravil_datum" => $data->upravil_datum
 		);
 		
 		$types = array (
@@ -56,6 +65,11 @@ class ObjectDb extends JPDb {
 			'%f',
 			'%f',
 			'%d',
+			'%s',
+			'%s',
+			'%s',
+			'%s',
+			'%s',
 			'%s'
 		);
 		

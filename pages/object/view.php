@@ -23,7 +23,34 @@
 	<tr>
 		<th><strong>Kategorie</strong></th>
 		<td><?php echo $controller->getCategoryNameForObject($row->kategorie) ?></td>
-	</tr>	
+	</tr>
+	
+<?php if (strlen($row->prezdivka) > 0) { ?>
+	<tr>
+		<th><strong>Přezdívka</strong></th>
+		<td><?php echo $row->prezdivka ?></td>
+	</tr>
+<?php } ?>
+<?php if (strlen($row->material) > 0) { ?>
+	<tr>
+		<th><strong>Materiál</strong></th>
+		<td><?php echo $row->material ?></td>
+	</tr>
+<?php } ?>
+<?php if (strlen($row->pamatkova_ochrana) > 0) { ?>
+	<tr>
+		<th><strong>Památková ochrana</strong></th>
+		<td><?php echo $row->pamatkova_ochrana ?></td>
+	</tr>
+<?php } ?>
+<?php if (strlen($row->pristupnost) > 0) { ?>
+	<tr>
+		<th><strong>Přístupnost</strong></th>
+		<td><?php echo $row->pristupnost ?></td>
+	</tr>
+<?php } ?>
+	
+	
 </tbody>
 </table>
 
@@ -55,6 +82,23 @@
 		}	
 	} 
 ?>
+
+<table class="widefat" style="max-width: 500px; margin-top: 10px">
+<tbody>
+<?php if (strlen ($row->pridal_autor) > 0) { ?>
+	<tr>
+		<th><strong>Vytvořil</strong></th>
+		<td><?php echo $row->pridal_autor ?> (<?php echo date_format(new DateTime($row->pridal_datum), "d. m. Y") ?>)</td>
+	</tr>
+<?php } ?>
+<?php if (strlen ($row->upravil_autor) > 0) { ?>
+	<tr>
+		<th><strong>Aktualizace</strong></th>
+		<td><?php echo $row->upravil_autor ?> (<?php echo date_format(new DateTime($row->upravil_datum), "d. m. Y") ?>)</td>
+	</tr>
+<?php } ?>
+</tbody>
+</table>
 
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>

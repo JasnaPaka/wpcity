@@ -45,6 +45,26 @@
 		</td>
 	</tr>
 <?php } ?>
+<tr>
+	<th scope="row"><label for="rok_vzniku">Rok vzniku</label></th>
+	<td><input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" /></td>
+</tr>
+<tr>
+	<th scope="row"><label for="prezdivka">Přezdívka</label></th>
+	<td><input name="prezdivka" id="prezdivka" class="regular-text" type="text" value="<?php echo $row->prezdivka ?>" maxlength="250" /></td>
+</tr>
+<tr>
+	<th scope="row"><label for="material">Materiál</label></th>
+	<td><input name="material" id="material" class="regular-text" type="text" value="<?php echo $row->material ?>" maxlength="250" /></td>
+</tr>
+<tr>
+	<th scope="row"><label for="pamatkova_ochrana">Památková ochrana</label></th>
+	<td><input name="pamatkova_ochrana" id="pamatkova_ochrana" class="regular-text" type="text" value="<?php echo $row->pamatkova_ochrana ?>" maxlength="50" /></td>
+</tr>
+<tr>
+	<th scope="row"><label for="pristupnost">Přístupnost</label></th>
+	<td><input name="pristupnost" id="pristupnost" class="regular-text" type="text" value="<?php echo $row->pristupnost ?>" maxlength="250" /></td>
+</tr>
 </tbody>
 </table>
 
