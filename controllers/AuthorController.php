@@ -150,6 +150,7 @@ class AuthorController extends JPController {
 		$row->jmeno = filter_input (INPUT_POST, "jmeno", FILTER_SANITIZE_STRING);
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
+		$row->obsah = $_POST["editor"]; // TODO: sanitize 
 		
 		return $row;
 	}

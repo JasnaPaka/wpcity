@@ -1,5 +1,6 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
+	$ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
 	include_once $ROOT."controllers/AuthorController.php";
 	$controller = new AuthorController();
