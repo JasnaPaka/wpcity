@@ -49,6 +49,16 @@
 		<td><?php echo $row->pristupnost ?></td>
 	</tr>
 <?php } ?>
+<?php if (count($controller->getAuthorsForObject()) > 0) { ?>
+	<tr>
+		<th><strong>Autoři</strong></th>
+		<td>
+			<?php foreach($controller->getAuthorsForObject() as $author) { ?>
+				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?></a>
+			<?php } ?>
+		</td>
+	</tr>
+<?php } ?>
 	
 	
 </tbody>

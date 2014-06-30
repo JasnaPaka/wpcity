@@ -10,12 +10,16 @@ include_once $ROOT."fw/ImgUtils.php";
 include_once $ROOT."db/CategoryDb.php";
 include_once $ROOT."db/ObjectDb.php"; 
 include_once $ROOT."db/PhotoDb.php";
+include_once $ROOT."db/AuthorDb.php";
+include_once $ROOT."db/Object2AuthorDb.php";
 
 class ObjectController extends JPController {
 	
 	protected $db;
 	private $dbCategory;
 	private $dbPhoto;
+	private $dbAuthor;
+	private $dbObject2Author;
 	
 	private $categories;
 	
@@ -23,6 +27,8 @@ class ObjectController extends JPController {
 		$this->db = new ObjectDb();
 		$this->dbCategory = new CategoryDb();
 		$this->dbPhoto = new PhotoDb();
+		$this->dbAuthor = new AuthorDb();
+		$this->dbObject2Author = new Object2AuthorDb();
 	}
 	
 	public function getList() {
@@ -120,11 +126,16 @@ class ObjectController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nový objekt."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně přidán."));
+				$idObject = $this->db->getLastId();
+				
+				array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán. 
+					<a href="admin.php?page=object&action=view&id='.$idObject.'">Zobrazit detail</a>'));
 				
 				// Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
-				$idObject = $this->db->getLastId();
 				$this->addPhotos($idObject);
+				
+				// Nastavíme autora objektu
+				$this->addAuthor($idObject);
 				
 				return new stdClass();
 			}
@@ -218,6 +229,22 @@ class ObjectController extends JPController {
 		
 	}
 
+	private function addAuthor($idObject) {
+		$author = $this->getAuthorFromAddForm();
+		if ($author == null) {
+			return null;	
+		}
+		
+		$row = new stdClass();
+		$row->objekt = $idObject;
+		$row->autor = $author->id;
+		
+		$result = $this->dbObject2Author->create($row);
+		if (!$result) {
+			array_push($this->messages, new JPErrorMessage("Autora '".$author->jmeno."' se nepodařilo přidat k objektu."));
+		}
+	}
+
 	private function getRelativePathToImg($path) {
 		$upload_dir = wp_upload_dir();
 		$baseDir = $upload_dir['basedir']; 
@@ -286,6 +313,27 @@ class ObjectController extends JPController {
 		}
 		
 		return $this->dbPhoto->getPhotosByObject($this->getObjectId());
+	}
+	
+	public function getAllAuthors() {
+		return $this->dbAuthor->getAll();
+	}
+	
+	public function getAuthorsForObject() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->db->getAuthorsForObject($this->getObjectId());	
+	}
+	
+	private function getAuthorFromAddForm() {
+		$idAuthor = (int) filter_input (INPUT_POST, "autor", FILTER_SANITIZE_STRING);
+		if ($idAuthor <= 0) {
+			return null;	
+		}
+		
+		return $this->dbAuthor->getById($idAuthor);
 	}
 	
 	private function getFormValues() {

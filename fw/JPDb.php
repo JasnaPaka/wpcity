@@ -4,6 +4,12 @@ abstract class JPDb {
 
 	CONST MAX_ITEMS_ON_PAGE = 20;	
 	
+	function __construct() {
+		global $wpdb;
+		
+		$wpdb->show_errors();	
+	}
+	
 	public function getAll() {
 		global $wpdb;
 		

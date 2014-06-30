@@ -56,6 +56,21 @@
 		</select>
 	</td>
 </tr>
+<?php if (!$controller->getIsEdit()) { ?>
+<tr>
+	<th scope="row"><label for="autor">Autor</label></th>
+	<td>
+		<select name="autor">
+			<option value="0">(nezvoleno)</option>
+			<?php foreach ($controller->getAllAuthors() as $author) { ?>
+				<option value="<?php echo $author->id ?>">
+					<?php echo $author->jmeno ?>
+				</option>
+			<?php } ?>
+		</select>
+	</td>
+</tr>
+<?php } ?>
 <tr>
 	<th scope="row"><label for="obsah">Text</label></th>
 	<td>
