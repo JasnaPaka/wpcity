@@ -1,5 +1,25 @@
 <script src="<?php echo $ROOT_URL ?>content/js/ckeditor4.4.2/ckeditor.js"></script>
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC9G-I3g4tWPbXK-v_Ws_1_dY4V8w6Eew&amp;sensor=false"></script>
+<script type="text/javascript">
+	var map;
+	
+	var mapOptions = {
+          center: new google.maps.LatLng(49.748398, 13.377652),
+          zoom: 13
+    };
+
+	function initialize() {
+		map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		google.maps.event.addListener(map, 'click', function(event) {
+			$('#latitude').val(event.latLng.lat());
+			$('#longitude').val(event.latLng.lng());
+		});
+	}
+	
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <table class="form-table">
 <tbody>
 <tr>
@@ -7,10 +27,18 @@
 	<td><input name="nazev" id="nazev" class="regular-text" type="text" value="<?php echo $row->nazev ?>" maxlength="250" /></td>
 </tr>
 <tr>
+	<td colspan="2">
+		<div id="map-canvas"></div>
+		<?php if ($controller->getIsEdit()) { ?>
+			<div id="show-map"><a href="#" onclick="zobrazitZmenuSouradnic()">Změnit umístění objektu</a></div>
+		<?php } ?>
+	</td>
+</tr>
+<tr id="lat">
 	<th scope="row"><label for="latitude">Latitude</label></th>
 	<td><input name="latitude" id="latitude" class="regular-text" type="text" value="<?php echo $row->latitude ?>" maxlength="20" /></td>
 </tr>
-<tr>
+<tr id="long">
 	<th scope="row"><label for="longitude">Longitude</label></th>
 	<td><input name="longitude" id="longitude" class="regular-text" type="text" value="<?php echo $row->longitude ?>" maxlength="20" /></td>
 </tr>
@@ -59,15 +87,40 @@
 </tr>
 <tr>
 	<th scope="row"><label for="pamatkova_ochrana">Památková ochrana</label></th>
-	<td><input name="pamatkova_ochrana" id="pamatkova_ochrana" class="regular-text" type="text" value="<?php echo $row->pamatkova_ochrana ?>" maxlength="50" /></td>
+	<td>
+		<input name="pamatkova_ochrana" id="pamatkova_ochrana" class="regular-text" type="text" value="<?php echo $row->pamatkova_ochrana ?>" maxlength="50" />
+		<p class="description">Identifikace v systému <a href="http://monumnet.npu.cz/monumnet.php">MonumNet</a> (např. 20936/4-225)</p>	
+	</td>
 </tr>
 <tr>
 	<th scope="row"><label for="pristupnost">Přístupnost</label></th>
-	<td><input name="pristupnost" id="pristupnost" class="regular-text" type="text" value="<?php echo $row->pristupnost ?>" maxlength="250" /></td>
+	<td>
+		<input name="pristupnost" id="pristupnost" class="regular-text" type="text" value="<?php echo $row->pristupnost ?>" maxlength="250" />
+		<p class="description">Veřejné, neveřejné, částečně veřejné</p>
+	</td>
 </tr>
 </tbody>
 </table>
 
-<script>
+<?php if ($controller->getIsEdit()) { ?>
+	<script type="text/javascript">
+		// U editace implicitně skrýváme změnu souřadnic
+		$('#map-canvas').hide();
+		$('#lat').hide();
+		$('#long').hide();
+	</script>
+<?php } ?>
+
+<script type="text/javascript">
+	// Akce na zobrazení prvků (mapy, inputů apod.) pro změnu souřadnic.
+	function zobrazitZmenuSouradnic() {
+		$('#map-canvas').show();
+		$('#show-map').hide();
+		$('#lat').show();
+		$('#long').show();
+		
+		google.maps.event.trigger(map, 'resize');
+	}
+
 	CKEDITOR.replace('editor');
 </script>
