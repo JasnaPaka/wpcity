@@ -154,6 +154,7 @@ class AuthorController extends JPController {
 		
 		return $row;
 	}
+
 	
 	
 }

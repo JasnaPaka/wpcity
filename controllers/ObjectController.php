@@ -251,6 +251,33 @@ class ObjectController extends JPController {
 		return str_replace($baseDir, "", $path);
 	}
 	
+	public function manageAuthors() {
+		$authors = $this->getFormAuthorsValues();
+		
+		// Validace
+		foreach ($authors as $author) {
+			if ($author > 0 && $this->dbAuthor->getById($author) == null) {
+				array_push($this->messages, new JPErrorMessage("Jeden ze zvolených autorů nebyl nalezen. Patrně byl před chvílí smazán."));
+				return;
+			}
+		}
+		
+		// Smazání starých vazeb a vytvoření nových
+		$this->dbObject2Author->deleteOldRelationsForObject($this->getObjectId());
+		foreach($authors as $author) {
+			if ($author > 0) {
+				$row = new stdClass();
+				$row->objekt = $this->getObjectId();
+				$row->autor = $author;
+			
+				$result = $this->dbObject2Author->create($row);
+			}
+		}
+		
+		array_push($this->messages, new JPInfoMessage("Autoři byli úspěšně nastaveni."));
+		
+	}
+	
 	public function update() {
 		$row = $this->getFormValues();
 		if ($row == null) {
@@ -327,6 +354,20 @@ class ObjectController extends JPController {
 		return $this->db->getAuthorsForObject($this->getObjectId());	
 	}
 	
+	public function getSelectedAuthors() {
+		$authors = array ();
+		foreach($this->getAuthorsForObject() as $author) {
+			array_push($authors, $author->id);
+		}
+		
+		// doplníme ty nevyplněné (prázdné)
+		for ($i = count($authors); $i < 3; $i++) {
+			array_push($authors, 0);
+		}
+		
+		return $authors;
+	}
+	
 	private function getAuthorFromAddForm() {
 		$idAuthor = (int) filter_input (INPUT_POST, "autor", FILTER_SANITIZE_STRING);
 		if ($idAuthor <= 0) {
@@ -350,6 +391,16 @@ class ObjectController extends JPController {
 		$row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
 		
 		return $row;
+	}
+	
+	private function getFormAuthorsValues() {
+		$authors = array ();
+		
+		array_push($authors, (int) filter_input (INPUT_POST, "autor1", FILTER_SANITIZE_STRING));
+		array_push($authors, (int) filter_input (INPUT_POST, "autor2", FILTER_SANITIZE_STRING));
+		array_push($authors, (int) filter_input (INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
+		
+		return $authors;
 	}
 }
 

@@ -51,10 +51,10 @@
 <?php } ?>
 <?php if (count($controller->getAuthorsForObject()) > 0) { ?>
 	<tr>
-		<th><strong>Autoři</strong></th>
+		<th valign="top"><strong>Autoři</strong></th>
 		<td>
 			<?php foreach($controller->getAuthorsForObject() as $author) { ?>
-				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?></a>
+				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?><br /></a>
 			<?php } ?>
 		</td>
 	</tr>
@@ -113,6 +113,7 @@
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
 	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat fotografie</a>
+	<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>
 

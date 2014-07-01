@@ -90,6 +90,9 @@ function wpCityObjectPageCallback(){
 		case 'photo':
 			require_once("pages/object/photo.php");
 			break;
+		case 'author':
+			require_once("pages/object/author.php");
+			break;
 		default:
 			require_once("pages/object/list.php");
 			break;
