@@ -383,6 +383,7 @@ class ObjectController extends JPController {
 		$row->latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
 		$row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
 		$row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
+		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
 		$row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
 		$row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);

@@ -64,6 +64,14 @@
 </tbody>
 </table>
 
+<?php if (strlen($row->popis) > 0) { ?>
+
+<h3>Popis</h3>
+
+<?php echo $row->popis ?>
+
+<?php } ?>
+
 <?php if (strlen($row->obsah) > 0) { ?>
 
 <h3>Obsah</h3>
@@ -112,7 +120,7 @@
 
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
-	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat fotografie</a>
+	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Správa fotografií</a>
 	<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>

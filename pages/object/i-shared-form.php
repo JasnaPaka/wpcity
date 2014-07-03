@@ -27,6 +27,13 @@
 	<td><input name="nazev" id="nazev" class="regular-text" type="text" value="<?php echo $row->nazev ?>" maxlength="250" /></td>
 </tr>
 <tr>
+	<th scope="row"><label for="popis">Popis</label></th>
+	<td>
+		<textarea id="popis" name="popis" rows="4" cols="40"><?php echo $row->popis ?></textarea>
+		<p class="description">Krátký popis díla, který se zobrazuje u bodu v mapě spolu s fotkou.</p>
+	</td>
+</tr>
+<tr>
 	<td colspan="2">
 		<div id="map-canvas"></div>
 		<?php if ($controller->getIsEdit()) { ?>
