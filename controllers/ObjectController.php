@@ -165,6 +165,7 @@ class ObjectController extends JPController {
 		}
 		
 		$photos = array();
+		$isFirst = true;
 		foreach ($uploadFiles as $uploadFile) {
 			
 			$result = wp_handle_upload($uploadFile, $upload_overrides);
@@ -218,6 +219,11 @@ class ObjectController extends JPController {
 					$photo->img_medium = $photos[2];
 					$photo->img_large = $photos[3];
 					$photo->objekt = $idObject;
+					
+					if ($isFirst) {
+						$photo->primarni = 1;
+						$isFirst = false;	
+					}
 					
 					$result = $this->dbPhoto->create($photo);
 					if (!$result) {
