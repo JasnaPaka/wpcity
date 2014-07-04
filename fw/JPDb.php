@@ -65,7 +65,7 @@ abstract class JPDb {
 	public function getLastId() {
 		global $wpdb;
 		
-		return $wpdb->insert_id;	
+		return $wpdb->insert_id;
 	}
 		
 	

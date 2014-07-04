@@ -22,7 +22,6 @@ class PhotoDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
-	
 	public function update($data, $id) {
 		global $wpdb;
 		

@@ -57,9 +57,22 @@
 					&nbsp;
 				</td>
 				<td>
-					<input type="checkbox" name="primarni<?php echo $photo->id ?>" id="primarni<?php echo $photo->id ?>" <?php if ($photo->primarni) echo 'checked="checked"' ?> 
-						onclick="zmenaPrimarni('primarni<?php echo $photo->id ?>')" />
-						<label for="primarni<?php echo $photo->id ?>">Hlavní fotografie</label>
+					<table>
+						<tr>
+							<td>
+								<input type="checkbox" name="primarni<?php echo $photo->id ?>" 
+									id="primarni<?php echo $photo->id ?>" <?php if ($photo->primarni) echo 'checked="checked"' ?> 
+									onclick="zmenaPrimarni('primarni<?php echo $photo->id ?>')" />
+									<label for="primarni<?php echo $photo->id ?>">Hlavní fotografie</label>
+							</td>
+							<td>
+								<input type="checkbox" name="delete<?php echo $photo->id ?>" 
+									id="delete<?php echo $photo->id ?>"
+									onclick="deletePhoto('delete<?php echo $photo->id ?>')" />
+									<label for="delete<?php echo $photo->id ?>">Smazat fotografii?</label>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			</table>
@@ -99,7 +112,14 @@
 			});
 			$('#' + id).prop('checked', true);
 		}
-	} 
+	}
+	
+	function deletePhoto(id) {
+		result = $('#' + id).is(':checked');
+		if (result) {
+			alert("Fotografie bude po uložení smazána. Pro zrušení této akce zrušte zaškrtnutí.");
+		}
+	}
 
 </script>
 
