@@ -144,7 +144,7 @@ class ObjectController extends JPController {
 		return $row;
 	}
 	
-	private function addPhotos($idObject) {
+	private function addPhotos($idObject, $existPhotos) {
 		global $_wp_additional_image_sizes;
      	$sizes = array();
 		
@@ -165,6 +165,7 @@ class ObjectController extends JPController {
 		}
 		
 		$photos = array();
+		$newPhotos = array();
 		$isFirst = true;
 		foreach ($uploadFiles as $uploadFile) {
 			
@@ -219,8 +220,9 @@ class ObjectController extends JPController {
 					$photo->img_medium = $photos[2];
 					$photo->img_large = $photos[3];
 					$photo->objekt = $idObject;
+					$photo->primarni = 0;
 					
-					if ($isFirst) {
+					if ($isFirst && !$existPhotos) {
 						$photo->primarni = 1;
 						$isFirst = false;	
 					}
@@ -228,10 +230,14 @@ class ObjectController extends JPController {
 					$result = $this->dbPhoto->create($photo);
 					if (!$result) {
 						array_push($this->messages, new JPErrorMessage("Fotografii '".$uploadFile['name']." se nepodařilo uložit."));
+					} else {
+						array_push($newPhotos, $this->dbPhoto->getById($this->dbPhoto->getLastId()));							
 					}
 				}
 			}
 		}
+
+		return $newPhotos;
 		
 	}
 
@@ -305,20 +311,90 @@ class ObjectController extends JPController {
 		return $row;
 	}
 	
-	public function uploadPhotos() {
+	private function validatePhotos() {
+		// právě jedna fotka musí být hlavní (primární)
+		$photos = $this->getPhotosForObject();
+		$foundPrimary = false;
+		$duplicatePrimary = false;
+		
+		foreach ($photos as $photo) {
+			$id = "primarni".$photo->id;
+			
+			if (isset($_POST[$id])) {
+				if (!$foundPrimary) {
+					$foundPrimary = true;	
+				} else {
+					$duplicate = true;			
+				}
+			}
+		}
+		
+		if (!$foundPrimary) {
+			array_push($this->messages, new JPErrorMessage("Žádná z nahraných fotografií není zvolena jako hlavní."));
+		}
+		if ($duplicatePrimary) {
+			array_push($this->messages, new JPErrorMessage("Jako hlavní fotografie smí být zvolena pouze jediná."));
+		}	
+	
+		return count($this->messages) === 0; 		
+	}
+	
+	private function refreshPhoto($photo) {
+		$author = filter_input (INPUT_POST, "autor".$photo->id, FILTER_SANITIZE_STRING);
+		$description = filter_input (INPUT_POST, "popis".$photo->id, FILTER_SANITIZE_STRING);
+		
+		$id = "primarni".$photo->id;
+		if (isset($_POST[$id])) {
+			$primary = 1;	
+		} else {
+			$primary = 0;	
+		}
+		
+		$photo->autor = $author;
+		$photo->popis = $description;
+		$photo->primarni = $primary;
+		
+		return $photo;
+	}
+	
+	public function managePhotos() {
 		$id = $this->getObjectFromUrl()->id;
 		if ($id == null) {
-			return null;	
+			return null;
 		}
 		
-		if ($_FILES['photo1']['name'] == null && $_FILES['photo2']['name'] && $_FILES['photo3']['name']) {
-			array_push($this->messages, new JPErrorMessage("Nebyla zvolena žádná fotografie pro nahrání."));
+		// Nejdříve zaktualizujeme existující fotografie
+		$photos = $this->getPhotosForObject();
+		$newPhotos = array();
+		if (count($photos) > 0) {
+			if ($this->validatePhotos()) {
+				foreach ($photos as $photo) {
+					$photo = $this->refreshPhoto($photo);
+					array_push ($newPhotos, $photo);
+					$result = $this->dbPhoto->update($photo, $photo->id);
+				}
+			} else {
+				foreach ($photos as $photo) {
+					$photo = $this->refreshPhoto($photo);
+					array_push ($newPhotos, $photo);
+				}
+			}
 		}
 		
-		$this->addPhotos($id);
+		// Nahrajeme nové fotografie
+		$photos = $this->addPhotos($id, count($photos) > 0);
+		if ($photos != null && count($photos) > 0) {
+			foreach($photos as $photo) {
+				array_push($newPhotos, $photo);
+			}	
+		}
 		
-		array_push($this->messages, new JPInfoMessage("Nahrávání fotografií bylo dokončeno."));
-	}	
+		if (count($this->messages) == 0) {
+			array_push($this->messages, new JPInfoMessage("Úprava fotografií byla dokončena."));
+		}
+		
+		return $newPhotos;
+	}
 	
 	public function delete() {
 		$row = $this->getFormValues();
