@@ -61,12 +61,16 @@ class AuthorController extends JPController {
 		if ($row->datum_narozeni != null) {
 			$dt = new DateTime ($row->datum_narozeni);
 			$row->datum_narozeni = $dt->format('Y-m-d');
-		}	
+		} else {
+			unset($row->datum_narozeni);
+		}
 		
 		// datum úmrtí
 		if ($row->datum_umrti != null) {
 			$dt = new DateTime ($row->datum_umrti);
 			$row->datum_umrti = $dt->format('Y-m-d');
+		} else {
+			unset($row->datum_umrti);
 		}
 		
 		return $row;

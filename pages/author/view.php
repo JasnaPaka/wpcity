@@ -11,7 +11,7 @@
 
 <h2><?php echo $row->jmeno ?></h2>
 
-<?php if ($row->datum_narozeni != null || $row->datum_narozeni != null) { ?>
+<?php if ($row->datum_narozeni != null || $row->datum_umrti != null) { ?>
 	<table class="widefat" style="max-width: 500px; margin-top: 10px">
 	<tbody>
 	<?php if (strlen ($row->datum_narozeni) > 0) { ?>

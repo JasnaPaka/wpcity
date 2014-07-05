@@ -11,21 +11,32 @@ class AuthorDb extends JPDb {
 	public function update($data, $id) {
 		global $wpdb;
 		
-		$values = array (
-			"jmeno" => $data->jmeno,
-			"datum_narozeni" => $data->datum_narozeni,
-			"datum_umrti" => $data->datum_umrti,
-			"obsah" => $data->obsah
-		);
+		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, obsah = %s WHERE id = %d";
+		$sql = $wpdb->prepare($sql, $data->jmeno, $data->obsah, $id);
+		$result = $wpdb->query($sql);
 		
-		$types = array (
-			'%s',
-			'%s',			
-			'%s',
-			'%s'
-		);
+		echo $data->id;
 		
-		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+		// aktualizace data narození
+		if (isset($data->datum_narozeni)) {
+			$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET datum_narozeni = %s WHERE id = %d", $data->datum_narozeni, $id);
+			$result = $wpdb->query($sql);			
+		}  else {
+			$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET datum_narozeni = NULL WHERE id = %d", $id);
+			$result = $wpdb->query($sql);
+		}
+		
+
+		// aktualizace data úmrtí
+		if (isset($data->datum_umrti)) {
+			$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET datum_umrti = %s WHERE id = %d", $data->datum_umrti, $id);
+			$result = $wpdb->query($sql);		
+		}  else {
+			$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET datum_umrti = NULL WHERE id = %d", $id);
+			$result = $wpdb->query($sql);
+		}
+		
+		return true;
 	}	
 	
 }
