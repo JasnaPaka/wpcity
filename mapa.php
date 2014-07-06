@@ -35,7 +35,7 @@ function kv_MapaData() {
 		
 		$nazev = str_replace("'", "\'", $row->nazev);
 		
-		$content = "<p><strong>".$nazev."</strong></p>";
+		$content = "<p style=\"font-weight:bold\">".$nazev."</p>";
 		if ($row->img_thumbnail != null) {
 			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
 		}
