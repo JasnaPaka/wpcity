@@ -132,7 +132,7 @@ class ObjectController extends JPController {
 					<a href="admin.php?page=object&action=view&id='.$idObject.'">Zobrazit detail</a>'));
 				
 				// Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
-				$this->addPhotos($idObject);
+				$this->addPhotos($idObject, false);
 				
 				// Nastavíme autora objektu
 				$this->addAuthor($idObject);
@@ -146,6 +146,8 @@ class ObjectController extends JPController {
 	
 	private function addPhotos($idObject, $existPhotos) {
 		global $_wp_additional_image_sizes;
+		global $current_user;
+		
      	$sizes = array();
 		
 		if (!function_exists('wp_handle_upload')) {
@@ -220,6 +222,7 @@ class ObjectController extends JPController {
 					$photo->img_medium = $photos[2];
 					$photo->img_large = $photos[3];
 					$photo->objekt = $idObject;
+					$photo->autor = $current_user->display_name;;
 					$photo->primarni = 0;
 					
 					if ($isFirst && !$existPhotos) {
