@@ -23,8 +23,8 @@ function kv_MapaData() {
 	
 	$wpdb->show_errors();	
 	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
-		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id order by primarni, id) as img_thumbnail,
-		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id order by primarni, id) as img_large
+		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id order by primarni DESC, id LIMIT 1) as img_thumbnail,
+		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id order by primarni DESC, id LIMIT 1) as img_large
 		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id 
 		ORDER BY kategorie, nazev");
 		
