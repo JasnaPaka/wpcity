@@ -36,9 +36,17 @@ function kv_MapaData() {
 		$nazev = str_replace("'", "\'", $row->nazev);
 		
 		$content = "<p style=\"font-weight:bold\">".$nazev."</p>";
+		
+		// Pokud existuje obrázek, přidáme jeho náhled
 		if ($row->img_thumbnail != null) {
 			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
 		}
+		
+		// Pokud je uživatel přihlášen, přidáme odkaz do administrace
+		if (is_user_logged_in()) {
+			$content = $content.'<p><a href="wp-admin/admin.php?page=object&action=view&id='.$row->id.'">Správa objektu</a></p>';
+		}
+		
 		
 		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$content.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
 		'\',\''.$nazev.'\']';
