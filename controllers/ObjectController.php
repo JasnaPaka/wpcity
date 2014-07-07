@@ -373,8 +373,8 @@ class ObjectController extends JPController {
 			if ($this->validatePhotos()) {
 				foreach ($photos as $photo) {
 						
-					$id = "delete".$photo->id; 
-					if (isset($_POST[$id])) {
+					$idDelete = "delete".$photo->id; 
+					if (isset($_POST[$idDelete])) {
 						$this->dbPhoto->delete($photo->id);	
 					} else {						 
 						$photo = $this->refreshPhoto($photo);
