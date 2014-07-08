@@ -55,6 +55,7 @@
 
 <p class="submit">
 	<a href="admin.php?page=author&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+	<a href="admin.php?page=author&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=author" class="button">Zpět na výpis</a>
 </p>
 
