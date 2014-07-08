@@ -149,7 +149,12 @@ class JPController {
 			return null;
 		}
 		
-		return filter_input (INPUT_POST, "s", FILTER_SANITIZE_STRING);	
+		$str = filter_input (INPUT_POST, "s", FILTER_SANITIZE_STRING);
+		if ($str != null) {
+			$str = trim($str);	
+		}
+		
+		return $str;
 	}
 	
 	/**

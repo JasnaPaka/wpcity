@@ -33,6 +33,10 @@ class ObjectController extends JPController {
 	
 	public function getList() {
 		if (!$this->getSearchValueValid()) {
+			if ($this->getSearchValue() != null) {
+				array_push($this->messages, new JPErrorMessage("Hledaný výraz musí mít alespoň tři znaky."));
+			}
+			
 			return parent::getList();	
 		}
 		
