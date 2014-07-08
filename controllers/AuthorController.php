@@ -5,6 +5,7 @@ include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
 
 include_once $ROOT."db/AuthorDb.php"; 
+include_once $ROOT."db/ObjectDb.php";
 
 /**
  * Správa autorů
@@ -12,9 +13,11 @@ include_once $ROOT."db/AuthorDb.php";
 class AuthorController extends JPController {
 		
 	protected $db;
+	protected $dbObject;
 	
 	function __construct() {
 		$this->db = new AuthorDb();
+		$this->dbObject = new ObjectDb();
 	}
 	
 	public function getList() {
@@ -147,6 +150,10 @@ class AuthorController extends JPController {
 		} else {
 			array_push($this->messages, new JPInfoMessage("Autor byl úspěšně smazán."));
 		}
+	}
+	
+	public function getListByAuthor() {
+		return $this->dbObject->getListByAuthor($this->getObjectFromUrl()->id);	
 	}
 	
 	private function getFormValues() {

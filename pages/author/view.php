@@ -38,6 +38,21 @@
 
 <?php } ?>
 
+<h3>Díla</h3>
+
+<?php if (count($controller->getListByAuthor()) == 0) { ?>
+	<p>Pro autora nejsou evidována žádná díla.</p>
+<?php } else { ?>
+
+
+<ul>
+<?php foreach ($controller->getListByAuthor() as $object) { ?>
+	<li><a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $object->id ?>"><?php echo $object->nazev ?></a></li>
+<?php } ?>
+</ul>
+	
+<?php } ?>
+
 <p class="submit">
 	<a href="admin.php?page=author&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
 	<a href="admin.php?page=author" class="button">Zpět na výpis</a>

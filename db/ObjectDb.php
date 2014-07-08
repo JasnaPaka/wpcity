@@ -22,6 +22,14 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
+	public function getListByAuthor($idAuthor) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
+			WHERE o2a.autor = %d AND kv.deleted = 0 ORDER BY kv.nazev", $idAuthor);
+		return $wpdb->get_results ($sql);
+	}
+	
 	public function getPageByNazev($page, $nazev) {
 		global $wpdb;
 		
