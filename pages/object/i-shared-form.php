@@ -24,8 +24,12 @@
 	function initialize() {
 		map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 		
+		// Skryje výchozí POI
 		var styles = [ { featureType: "poi", stylers: [ { visibility: "off" } ] } ];
       	map.setOptions({styles: styles});
+      	
+      	// Zakáže "ptačí pohled"
+      	map.setTilt(0);
 		
 		google.maps.event.addListener(map, 'click', function(event) {
 			$('#latitude').val(event.latLng.lat());
