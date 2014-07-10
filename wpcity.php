@@ -9,6 +9,23 @@
  * License: Mozilla Public License 2
  */
  
+ /** Akce prováděné ještě před zobrazením stránky */
+require_once ("controllers/ExportController.php");
+
+add_action('plugins_loaded', 'wpCitySendHeadersCallback');
+
+function wpCitySendHeadersCallback() {
+	$controller = new ExportController();		
+	if (is_admin()) {
+
+		if (isset($_GET["page"]) && ($_GET["page"]) === "export" && isset($_GET["action"])) {
+			$controller = new ExportController();
+			$controller->export();
+		}
+
+	}
+}
+ 
 /** Vytvoříme výchozí data */ 
 function initWpCityData() {
 	global $wpdb;
@@ -63,6 +80,7 @@ function wpCityCategoryMenu() {
 	add_submenu_page('wpcity', 'Správa kategorií', 'Objekty', 'manage_options', 'object', 'wpCityObjectPageCallback');
 	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'manage_options', 'category', 'wpCityCategoryPageCallback');
 	add_submenu_page('wpcity', 'Správa kategorií', 'Autoři', 'manage_options', 'author', 'wpCityAuthorPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Export', 'manage_options', 'export', 'wpCityExportPageCallback');
 }
 
 function wpCityObjectPageCallback(){
@@ -155,6 +173,10 @@ function wpCityAuthorPageCallback() {
 			break;
 	}
 }
+
+function wpCityExportPageCallback() {	
+	require_once("pages/export/view.php");
+}	
 
 
 /** Mapa*/
