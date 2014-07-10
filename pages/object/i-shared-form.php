@@ -3,17 +3,34 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC9G-I3g4tWPbXK-v_Ws_1_dY4V8w6Eew&amp;sensor=false"></script>
 <script type="text/javascript">
 	var map;
+	var marker;
 	
 	var mapOptions = {
           center: new google.maps.LatLng(49.748398, 13.377652),
           zoom: 13
     };
+    
+    function placeMarker(location) {
+	  if ( marker ) {
+	    marker.setPosition(location);
+	  } else {
+	    marker = new google.maps.Marker({
+	      position: location,
+	      map: map
+	    });
+	  }
+	}
 
 	function initialize() {
 		map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		
+		var styles = [ { featureType: "poi", stylers: [ { visibility: "off" } ] } ];
+      	map.setOptions({styles: styles});
+		
 		google.maps.event.addListener(map, 'click', function(event) {
 			$('#latitude').val(event.latLng.lat());
 			$('#longitude').val(event.latLng.lng());
+			placeMarker(event.latLng);
 		});
 	}
 	
