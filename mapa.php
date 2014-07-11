@@ -38,7 +38,7 @@ function kv_MapaData() {
 		
 		// Pokud existuje obrázek, přidáme jeho náhled
 		if ($row->img_thumbnail != null) {
-			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
+			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'" target="_blank"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
 		}
 		
 		// Pokud je uživatel přihlášen, přidáme odkaz do administrace
