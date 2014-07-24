@@ -240,6 +240,7 @@ class ObjectController extends JPController {
 					$photo->objekt = $idObject;
 					$photo->autor = $current_user->display_name;;
 					$photo->primarni = 0;
+					$photo->datum_nahrani = date('Y-m-d');
 					
 					if ($isFirst && !$existPhotos) {
 						$photo->primarni = 1;
