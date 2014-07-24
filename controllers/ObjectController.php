@@ -142,7 +142,7 @@ class ObjectController extends JPController {
 				
 				if (!$public) {
 					array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán. 
-						<a href="admin.php?page=object&action=view&id='.$idObject.'">Zobrazit detail</a>'));
+						<a href="'.$this->getUrl(JPController::URL_VIEW, $idObject).'">Zobrazit detail</a>'));
 				} else {
 					array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán a čeká na schválení administrátorem. Děkujeme za přidání!'));					
 				}
@@ -306,7 +306,8 @@ class ObjectController extends JPController {
 			}
 		}
 		
-		array_push($this->messages, new JPInfoMessage("Autoři byli úspěšně nastaveni."));
+		array_push($this->messages, new JPInfoMessage('Autoři byli úspěšně nastaveni. 
+			<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 		
 	}
 	
@@ -324,7 +325,8 @@ class ObjectController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo aktualizovat."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně aktualizován."));
+				array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně aktualizován. 
+				<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 			}
 		}
 		
@@ -356,7 +358,7 @@ class ObjectController extends JPController {
 			array_push($this->messages, new JPErrorMessage("Jako hlavní fotografie smí být zvolena pouze jediná."));
 		}	
 	
-		return count($this->messages) === 0; 		
+		return count($this->messages) === 0;
 	}
 	
 	private function refreshPhoto($photo) {
@@ -416,7 +418,8 @@ class ObjectController extends JPController {
 		}
 		
 		if (count($this->messages) == 0) {
-			array_push($this->messages, new JPInfoMessage("Úprava fotografií byla dokončena."));
+			array_push($this->messages, new JPInfoMessage('Úprava fotografií byla dokončena. 
+			<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail objektu</a>'));
 		}
 		
 		return $newPhotos;
@@ -437,7 +440,8 @@ class ObjectController extends JPController {
 		if (!$result) {
 			array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo smazat."));
 		} else {
-			array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně smazán."));
+			array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně smazán. 
+				<a href="'.$this->getUrl(JPController::URL_LIST).'">Zpět na seznam</a>'));
 			$this->dbPhoto->deletePhotosByObject($id);
 		}
 	}

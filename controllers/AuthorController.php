@@ -90,7 +90,9 @@ class AuthorController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nového autora."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Autor byl úspěšně přidán."));
+				$idObject = $this->db->getLastId();
+				array_push($this->messages, new JPInfoMessage('Autor byl úspěšně přidán. 
+					<a href="'.$this->getUrl(JPController::URL_VIEW, $idObject).'">Zobrazit detail</a>'));
 				return new stdClass();
 			}
 		}
@@ -112,7 +114,8 @@ class AuthorController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Autora se nepodařilo aktualizovat."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Autor byl úspěšně aktualizován."));
+				array_push($this->messages, new JPInfoMessage('Autor byl úspěšně aktualizován. 
+					<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 			}
 		}
 		

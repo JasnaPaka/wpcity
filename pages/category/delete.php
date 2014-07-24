@@ -17,7 +17,7 @@
 	if ($row == null && isset($_POST["submit"])) {
 ?>
 
-<div class="error below-h2">
+<div class="updated below-h2">
 	<p>Kategorie byla úspěšně smazána.</p>
 	
 	<p><a href="admin.php?page=category">Zpět na výpis</a></p>

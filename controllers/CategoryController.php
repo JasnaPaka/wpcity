@@ -54,7 +54,9 @@ class CategoryController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit novou kategorii."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Kategorie byla úspěšně přidána."));
+				$idObject = $this->db->getLastId();
+				array_push($this->messages, new JPInfoMessage('Kategorie byla úspěšně přidána. 
+					<a href="'.$this->getUrl(JPController::URL_LIST).'">Zobrazit seznam</a>'));
 				return new stdClass();
 			}
 		}
@@ -74,7 +76,8 @@ class CategoryController extends JPController {
 			if (!$result) {
 				array_push($this->messages, new JPErrorMessage("Kategorii se nepodařilo aktualizovat."));
 			} else {
-				array_push($this->messages, new JPInfoMessage("Kategorie byla úspěšně aktualizována."));
+				array_push($this->messages, new JPInfoMessage('Kategorie byla úspěšně aktualizována. 
+					<a href="'.$this->getUrl(JPController::URL_LIST).'">Zobrazit seznam</a>'));
 			}
 		}
 		

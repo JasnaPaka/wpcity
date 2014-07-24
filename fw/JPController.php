@@ -4,6 +4,12 @@ include "JPDb.php";
 
 class JPController {
 	
+	const URL_VIEW   = "view";
+	const URL_CREATE = "create";
+	const URL_EDIT   = "edit";
+	const URL_DELETE = "delete";
+	const URL_LIST   = "list";
+	
 	protected $messages = array();	
 	private $pagging;
 	
@@ -144,6 +150,9 @@ class JPController {
 		return $page+1;
 	}
 	
+	/**
+	 * Pracuje se nad hledaným řetězcem? Pokud ano, vrátíme jej nebo null.
+	 */
 	public function getSearchValue() {
 		if (!isset($_POST["s"])) {
 			return null;
@@ -168,8 +177,24 @@ class JPController {
 		return strlen($this->getSearchValue()) >= 3;
 	}
 	
+	/**
+	 * Pracujeme nad již uloženým objektem?
+	 */
 	public function getIsEdit() {
 		return $this->getObjectFromUrl() != null;
+	}
+		
+	public function getUrl($action, $idObject = null) {
+		$page = filter_input (INPUT_GET, "page", FILTER_SANITIZE_STRING);
+		
+		$url = "admin.php?page=".$page."&amp;action=".$action;
+		if ($idObject != null) {
+			$url = $url."&amp;id=".$idObject;
+		} else if ($this->getObjectId() != null) {
+			$url = $url."&amp;id=".$this->getObjectId();
+		}
+		
+		return $url;
 	}
 	
 }

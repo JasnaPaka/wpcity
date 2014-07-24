@@ -17,7 +17,7 @@
 	if ($row == null && isset($_POST["submit"])) {
 ?>
 
-<div class="error below-h2">
+<div class="updated below-h2">
 	<p>Autor byl úspěšně smazán.</p>
 	
 	<p><a href="admin.php?page=author">Zpět na výpis</a></p>
