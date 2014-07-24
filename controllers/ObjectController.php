@@ -118,13 +118,21 @@ class ObjectController extends JPController {
 		return $row;
 	}
 	
+	public function addPublic() {
+		$this->addInternal(true);
+	}
 	
 	public function add() {
+		$this->addInternal(false);
+	}
+	
+	private function addInternal($public) {
 		$row = $this->getFormValues();
 		
 		$result = $this->validate($row);
 		if ($result) {
 			$row = $this->setAuthors($row);
+			$row->schvaleno = $public ? 0 : 1;
 			$result = $this->db->create($row);
 
 			if (!$result) {
@@ -132,8 +140,12 @@ class ObjectController extends JPController {
 			} else {
 				$idObject = $this->db->getLastId();
 				
-				array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán. 
-					<a href="admin.php?page=object&action=view&id='.$idObject.'">Zobrazit detail</a>'));
+				if (!$public) {
+					array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán. 
+						<a href="admin.php?page=object&action=view&id='.$idObject.'">Zobrazit detail</a>'));
+				} else {
+					array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán a čeká na schválení administrátorem. Děkujeme za přidání!'));					
+				}
 				
 				// Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
 				$this->addPhotos($idObject, false);

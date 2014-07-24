@@ -11,14 +11,14 @@ class ObjectDb extends JPDb {
 	public function getCountObjectsInCategory($idCategory) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0", $idCategory); 	
+		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1", $idCategory); 	
 		return $wpdb->get_var ($sql);
 	}
 	
 	public function getListByNazev($nazev) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 ORDER BY nazev", '%'.$nazev.'%');
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 ORDER BY nazev", '%'.$nazev.'%');
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -26,7 +26,7 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
-			WHERE o2a.autor = %d AND kv.deleted = 0 ORDER BY kv.nazev", $idAuthor);
+			WHERE o2a.autor = %d AND kv.deleted = 0 AND kv.schvaleno = 1 ORDER BY kv.nazev", $idAuthor);
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -36,7 +36,7 @@ class ObjectDb extends JPDb {
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1
 						ORDER BY nazev LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset, '%'.$nazev.'%');
 		return $wpdb->get_results ($sql); 
 	}
@@ -44,7 +44,7 @@ class ObjectDb extends JPDb {
 	public function getCountByNazev($nazev) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0", '%'.$nazev.'%');
+		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1", '%'.$nazev.'%');
 		return $wpdb->get_var ($sql); 
 	}
 	
@@ -102,7 +102,7 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt 
-			WHERE fot.id is null AND obj.deleted = 0");
+			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1");
 	}
 		
 }

@@ -47,13 +47,15 @@
 	<th scope="row"><label for="nazev">Název</label></th>
 	<td><input name="nazev" id="nazev" class="regular-text" type="text" value="<?php echo $row->nazev ?>" maxlength="250" /></td>
 </tr>
+<?php if (!$publicForm) { ?>
 <tr>
-	<th scope="row"><label for="popis">Popis</label></th>
+	<th scope="row" valign="top"><label for="popis">Popis</label></th>
 	<td>
 		<textarea id="popis" name="popis" rows="4" cols="40"><?php echo $row->popis ?></textarea>
 		<p class="description">Krátký popis díla, který se zobrazuje u bodu v mapě spolu s fotkou.</p>
 	</td>
 </tr>
+<?php } ?>
 <tr>
 	<td colspan="2">
 		<div id="map-canvas"></div>
@@ -84,7 +86,7 @@
 		</select>
 	</td>
 </tr>
-<?php if (!$controller->getIsEdit()) { ?>
+<?php if (!$controller->getIsEdit() && !$publicForm) { ?>
 <tr>
 	<th scope="row"><label for="autor">Autor</label></th>
 	<td>
@@ -100,7 +102,7 @@
 </tr>
 <?php } ?>
 <tr>
-	<th scope="row"><label for="obsah">Text</label></th>
+	<th scope="row" valign="top"><label for="obsah">Text</label></th>
 	<td>
 		<textarea id="editor" name="editor" rows="30" cols="50"><?php echo $row->obsah ?></textarea>
 	</td>
@@ -108,15 +110,20 @@
 
 <?php if (!$controller->getIsEdit()) { ?>
 	<tr>
-		<th scope="row">Fotky</th>
+		<th scope="row" valign="top">Fotky</th>
 		<td>
 			<input type="file" id="photo1" name="photo1" /><br />
 			<input type="file" id="photo2" name="photo2" /><br />
 			<input type="file" id="photo3" name="photo3" />
-			<p class="description">První fotografie bude označena jako hlavní a bude se zobrazovat jako výchozí u bodů v mapě.</p>
+			<?php if (!$publicForm) { ?>
+				<p class="description">První fotografie bude označena jako hlavní a bude se zobrazovat jako výchozí u bodů v mapě.</p>
+			<?php } else { ?>
+				<p class="description">Nahrávané fotografie zpřístupňujete pod licencí <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
+			<?php } ?>
 		</td>
 	</tr>
 <?php } ?>
+<?php if (!$publicForm) { ?>
 <tr>
 	<th scope="row"><label for="rok_vzniku">Rok vzniku</label></th>
 	<td><input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" /></td>
@@ -143,6 +150,7 @@
 		<p class="description">Veřejné, neveřejné, částečně veřejné</p>
 	</td>
 </tr>
+<?php } ?>
 </tbody>
 </table>
 

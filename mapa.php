@@ -6,7 +6,7 @@ function kv_MapaLegenda() {
 	
 	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 ORDER BY nazev");
 	foreach($rows as $row) {
-		$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND kategorie = ".$row->id);
+		$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
 		
 		$output.= '<img src="'.$row->ikona.'" alt="" />
 			<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
@@ -26,7 +26,7 @@ function kv_MapaData() {
 	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
 		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
 		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large
-		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id WHERE kv.deleted = 0 
+		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
 		ORDER BY kategorie, nazev");
 		
 	foreach($rows as $row) {		

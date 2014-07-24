@@ -11,7 +11,7 @@ class PhotoDb extends JPDb {
 	public function deletePhotosByObject($idObject) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("UPDATE ".$tableName." SET deleted = 1 WHERE object = %d", $idObject);
+		$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET deleted = 1 WHERE objekt = %d", $idObject);
 		return $wpdb->query($sql);
 	}
 	

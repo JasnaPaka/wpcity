@@ -185,3 +185,7 @@ include "mapa.php";
 
 /** Informace o objektech */
 include "objekty.php";
+
+/** Snippety do šablon */
+include "shortcodes.php";
+
