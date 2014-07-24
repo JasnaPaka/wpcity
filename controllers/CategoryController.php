@@ -117,6 +117,10 @@ class CategoryController extends JPController {
 		}
 	}
 	
+	public function getCountObjectsInCategory($idCategory) {
+		return $this->db->getCountObjectsInCategory($idCategory);	
+	}
+	
 	private function getFormValues() {
 		$row = new stdClass();
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);

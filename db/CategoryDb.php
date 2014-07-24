@@ -38,6 +38,13 @@ class CategoryDb extends JPDb {
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
 	}
 	
+	public function getCountObjectsInCategory($idCategory) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1", $idCategory);
+		return $wpdb->get_var($sql);
+	}
+	
 }
 
 ?>

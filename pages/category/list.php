@@ -17,6 +17,7 @@
 	<thead>
 		<tr>
 			<th>Název</th>
+			<th class="r">Počet objektů</th>
 			<th>URL</th>
 			<th>Ikona</th>
 			<th>Akce</th>
@@ -47,6 +48,7 @@
 					}
 					
 					echo '<td><strong>'.$row->nazev.'</strong></td>';
+					echo '<td>'.$controller->getCountObjectsInCategory($row->id).'</td>';
 					echo '<td>'.$row->url.'</td>';
 					echo '<td>'.$row->ikona.'</td>';
 					echo '<td><a href="admin.php?page=category&amp;action=update&amp;id='.$row->id.'" title="Upraví kategorii">Upravit</a> 
