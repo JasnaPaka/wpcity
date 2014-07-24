@@ -174,5 +174,7 @@
 		google.maps.event.trigger(map, 'resize');
 	}
 
+	CKEDITOR.config.entities = false;
+	CKEDITOR.config.entities_latin = false;
 	CKEDITOR.replace('editor');
 </script>
