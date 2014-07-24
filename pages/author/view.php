@@ -34,7 +34,7 @@
 
 <h3>Obsah</h3>
 
-<?php echo $row->obsah ?>
+<?php echo stripslashes($row->obsah) ?>
 
 <?php } ?>
 

@@ -17,7 +17,7 @@
 <tr>
 	<th scope="row"><label for="obsah">Text</label></th>
 	<td>
-		<textarea id="editor" name="editor" rows="30" cols="50"><?php echo $row->obsah ?></textarea>
+		<textarea id="editor" name="editor" rows="30" cols="50"><?php echo stripslashes($row->obsah) ?></textarea>
 	</td>
 </tr>
 </tbody>
