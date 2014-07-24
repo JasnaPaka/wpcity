@@ -16,7 +16,7 @@
 
 <div class="wrap">
 
-<h2>Správa fotografií</h2>
+<h2>Správa fotografií pro '<?php echo $row->nazev ?>'</h2>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
