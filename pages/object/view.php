@@ -64,6 +64,9 @@
 </tbody>
 </table>
 
+<br />
+<?php echo $controller->getGoogleMapPointContent(); ?>
+
 <?php if (strlen($row->popis) > 0) { ?>
 
 <h3>Popis</h3>

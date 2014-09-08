@@ -24,6 +24,16 @@
 </div>
 
 <?php 
+	} else if ($row->systemova) {
+?>
+
+<div class="error below-h2">
+	<p>Kategorie je systémová (vyžadovaná) a nelze ji tudíž upravovat. </p>
+	
+	<p><a href="admin.php?page=category">Zpět na výpis</a></p>
+</div>
+
+<?php 
 	} else {
 ?>
 

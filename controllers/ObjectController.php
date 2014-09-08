@@ -6,12 +6,15 @@ include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
 include_once $ROOT."fw/GPSUtils.php";
 include_once $ROOT."fw/ImgUtils.php";
+include_once $ROOT."fw/GoogleMapsBuilder.php";
 
 include_once $ROOT."db/CategoryDb.php";
 include_once $ROOT."db/ObjectDb.php"; 
 include_once $ROOT."db/PhotoDb.php";
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/Object2AuthorDb.php";
+
+include_once $ROOT."config.php";
 
 class ObjectController extends JPController {
 	
@@ -515,6 +518,13 @@ class ObjectController extends JPController {
 		
 		return $authors;
 	}
+	
+	public function getGoogleMapPointContent() {
+		echo $KV_SETTINGS["gm_lat"];
+		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $KV_SETTINGS["gm_lat"], $KV_SETTINGS["gm_lng"]);
+		return $map->getOutput();
+	}
+		
 }
 
 ?>

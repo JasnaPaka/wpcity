@@ -38,6 +38,9 @@ class CategoryDb extends JPDb {
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
 	}
 	
+	/**
+	 * Vrací počet objektů v konkrétní kategorii.
+	 */
 	public function getCountObjectsInCategory($idCategory) {
 		global $wpdb;
 		

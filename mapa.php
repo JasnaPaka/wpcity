@@ -4,14 +4,26 @@ function kv_MapaLegenda() {
 	global $wpdb;
 	$output = '<div>';
 	
-	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 ORDER BY nazev");
+	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 AND systemova = 0 ORDER BY nazev");
 	foreach($rows as $row) {
 		$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
 		
 		$output.= '<img src="'.$row->ikona.'" alt="" />
 			<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
-			onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" checked="checked" type="checkbox" />
+			onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" '.($row->checked? 'checked="checked"': '').' type="checkbox" />
 			<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
+	}
+	
+	// A nyní systémové
+	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 AND systemova = 1 ORDER BY nazev");
+	if (count($rows) > 0) {
+		$output = $output."<hr />";
+		foreach($rows as $row) {
+		$output.= '<img src="'.$row->ikona.'" alt="" />
+			<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
+			onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" type="checkbox" />
+			<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
+		}
 	}
 	
 	return $output."</div>";

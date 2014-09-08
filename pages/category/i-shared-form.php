@@ -12,5 +12,12 @@
 	<th scope="row"><label for="ikona">Ikona</label></th>
 	<td><input name="ikona" id="ikona" class="regular-text" type="text" value="<?php echo $row->ikona ?>" maxlength="250" /></td>
 </tr>
+<tr>
+	<th scope="row"><label for="checked">Zaškrtnuto</label></th>
+	<td>
+		<input name="checked" id="checked" type="checkbox" <?php if (!isset($row->checked) || $row->checked === 1) echo 'checked="checked"' ?>/>
+		<p class="description">Zaškrtněte, pokud mají být objekty této kategorie po zobrazení viditelné v mapě.</p>
+	</td>
+</tr>
 </tbody>
 </table>

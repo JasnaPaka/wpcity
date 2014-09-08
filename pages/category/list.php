@@ -47,12 +47,15 @@
 						$barva = true;
 					}
 					
-					echo '<td><strong>'.$row->nazev.'</strong></td>';
+					echo '<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>';
 					echo '<td>'.$controller->getCountObjectsInCategory($row->id).'</td>';
 					echo '<td>'.$row->url.'</td>';
 					echo '<td>'.$row->ikona.'</td>';
-					echo '<td><a href="admin.php?page=category&amp;action=update&amp;id='.$row->id.'" title="Upraví kategorii">Upravit</a> 
-						&middot; <a href="admin.php?page=category&amp;action=delete&amp;id='.$row->id.'" title="Smaže kategorii">Smazat</a></td>';
+					if (!$row->systemova) {
+						echo '<td><a href="admin.php?page=category&amp;action=update&amp;id='.$row->id.'" title="Upraví kategorii">Upravit</a>';
+						echo ' &middot; <a href="admin.php?page=category&amp;action=delete&amp;id='.$row->id.'" title="Smaže kategorii">Smazat</a>';
+						echo '</td>';
+					}
 					echo '</tr>';
 				}
 			} 
