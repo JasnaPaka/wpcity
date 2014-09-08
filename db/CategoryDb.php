@@ -27,12 +27,14 @@ class CategoryDb extends JPDb {
 			"nazev" => $data->nazev,
 			"url" => $data->url,
 			"ikona" => $data->ikona,
+			"checked" => ($data->checked ? 1 : 0)
 		);
 		
 		$types = array (
 			'%s',
 			'%s',			
-			'%s'
+			'%s',
+			'%d'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);

@@ -42,11 +42,6 @@ class CategoryController extends JPController {
 			array_push($this->messages, new JPErrorMessage("URL ikony není platnou adresou."));
 		}
 		
-		// zaškrtnuto
-		if ($row->checked < 0 || $row->checked > 1) {
-			array_push($this->messages, new JPErrorMessage("Neplatná hodnota pro pole 'Zaškrtnuto'."));
-		}
-		
 		return count($this->messages) === 0; 
 	}
 	
@@ -131,8 +126,16 @@ class CategoryController extends JPController {
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
 		$row->url = filter_input (INPUT_POST, "url", FILTER_SANITIZE_STRING);
 		$row->ikona = filter_input (INPUT_POST, "ikona", FILTER_SANITIZE_STRING);
-		$row->checked = (int) filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);
 		
+		$row->checked = filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);
+		$row->checked = ($row->checked === "on" ? 1 : 0);
+		
+		return $row;
+	}
+	
+	public function initDefaults() {
+		$row = new stdClass();
+		$row->checked = true;
 		return $row;
 	}
 

@@ -205,6 +205,10 @@ class JPController {
 		return filter_input (INPUT_GET, "order", FILTER_SANITIZE_STRING);	
 	}
 	
+	public function initDefaults() {
+		return new stdClass();
+	}
+	
 }
 
 ?>

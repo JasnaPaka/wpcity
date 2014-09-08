@@ -15,7 +15,7 @@
 <tr>
 	<th scope="row"><label for="checked">Zaškrtnuto</label></th>
 	<td>
-		<input name="checked" id="checked" type="checkbox" <?php if (!isset($row->checked) || $row->checked === 1) echo 'checked="checked"' ?>/>
+		<input name="checked" id="checked" type="checkbox" <?php if (!isset($row->checked) || $row->checked == 1 || $row->checked) echo 'checked="checked"' ?>/>
 		<p class="description">Zaškrtněte, pokud mají být objekty této kategorie po zobrazení viditelné v mapě.</p>
 	</td>
 </tr>

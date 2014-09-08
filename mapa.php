@@ -39,7 +39,8 @@ function kv_MapaData() {
 	
 	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
 		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
-		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large
+		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large,
+		kv_kategorie.checked
 		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
 		ORDER BY kategorie, nazev");
 		
@@ -64,7 +65,7 @@ function kv_MapaData() {
 		
 		
 		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$content.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
-		'\',\''.$nazev.'\']';
+		'\',\''.$nazev.'\', '.$row->checked.']';
 	}
 		
 	return $output;
