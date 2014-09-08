@@ -19,10 +19,12 @@ function kv_MapaLegenda() {
 	if (count($rows) > 0) {
 		$output = $output."<hr />";
 		foreach($rows as $row) {
-		$output.= '<img src="'.$row->ikona.'" alt="" />
-			<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
-			onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" type="checkbox" />
-			<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
+			$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
+			
+			$output.= '<img src="'.$row->ikona.'" alt="" />
+				<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
+				onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" type="checkbox" />
+				<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
 		}
 	}
 	

@@ -15,10 +15,10 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_var ($sql);
 	}
 	
-	public function getListByNazev($nazev) {
+	public function getListByNazev($nazev, $order="") {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 ORDER BY nazev", '%'.$nazev.'%');
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%');
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -30,14 +30,14 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
-	public function getPageByNazev($page, $nazev) {
+	public function getPageByNazev($page, $nazev, $order="") {
 		global $wpdb;
 		
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
 		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1
-						ORDER BY nazev LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset, '%'.$nazev.'%');
+						ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset, '%'.$nazev.'%');
 		return $wpdb->get_results ($sql); 
 	}
 	
@@ -103,6 +103,23 @@ class ObjectDb extends JPDb {
 		
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt 
 			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1");
+	}
+	
+	protected function getOrderSQL($param) {
+		if (strlen($param) == 0) {
+			return $this->getDefaultOrder();	
+		}	
+		
+		switch($param) {
+			case "nazev":
+				return "nazev";
+			case "vytvoreni":
+				return "pridal_datum desc";
+			case "aktualizace":
+				return "upravil_datum desc";
+			default:
+				return "nazev";
+		}
 	}
 		
 }

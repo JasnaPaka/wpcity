@@ -41,9 +41,9 @@ class JPController {
 	
 	public function getList() {
 		if ($this->getShowAll()) {
-			return $this->db->getAll();
+			return $this->db->getAll($this->getCurrentOrder());
 		} else {
-			return $this->db->getPage($this->getPageCurrent());	
+			return $this->db->getPage($this->getPageCurrent(), $this->getCurrentOrder());	
 		}	
 	}
 	
@@ -195,6 +195,14 @@ class JPController {
 		}
 		
 		return $url;
+	}
+	
+	public function getOrders() {
+		return array();	
+	}
+	
+	public function getCurrentOrder() {
+		return filter_input (INPUT_GET, "order", FILTER_SANITIZE_STRING);	
 	}
 	
 }

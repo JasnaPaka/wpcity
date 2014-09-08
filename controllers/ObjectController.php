@@ -49,7 +49,7 @@ class ObjectController extends JPController {
 			return $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());	
 		}
 		
-		return $this->db->getListByNazev($this->getSearchValue());
+		return $this->db->getListByNazev($this->getSearchValue(), $this->getCurrentOrder());
 	}
 	
 	public function getCount() {
@@ -523,6 +523,30 @@ class ObjectController extends JPController {
 		echo $KV_SETTINGS["gm_lat"];
 		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $KV_SETTINGS["gm_lat"], $KV_SETTINGS["gm_lng"]);
 		return $map->getOutput();
+	}
+	
+	public function getOrders() {
+		$orders = array();
+		
+		// dle názvu
+		$order = new stdClass();
+		$order->nazev = "Název";
+		$order->url = "nazev";
+		array_push($orders, $order);
+		
+		// dle vytvoření
+		$order = new stdClass();
+		$order->nazev = "Data vytvoření";
+		$order->url = "vytvoreni";
+		array_push($orders, $order);
+		
+		// dle data poslední aktualizace
+		$order = new stdClass();
+		$order->nazev = "Data aktualizace";
+		$order->url = "aktualizace";
+		array_push($orders, $order);		
+
+		return $orders;
 	}
 		
 }

@@ -10,19 +10,23 @@ abstract class JPDb {
 		$wpdb->show_errors();	
 	}
 	
-	public function getAll() {
+	protected function getOrderSQL($param) {
+		return $this->getDefaultOrder();
+	} 
+	
+	public function getAll($order = "") {
 		global $wpdb;
 		
-		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getDefaultOrder());	
+		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getOrderSQL($order));	
 	}
 	
-	public function getPage($page) {
+	public function getPage($page, $order = "") {
 		global $wpdb;
 		
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
-		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getDefaultOrder()." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
+		return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
 	}
 
 	public function getCount() {
