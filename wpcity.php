@@ -80,11 +80,11 @@ add_action( 'admin_menu', 'wpCityCategoryMenu' );
 function wpCityCategoryMenu() {
 	global $KV_SETTINGS;
 	
-	add_submenu_page('wpcity', 'Správa kategorií', 'Objekty', 'manage_options', 'object', 'wpCityObjectPageCallback');
-	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'manage_options', 'category', 'wpCityCategoryPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Objekty', 'delete_posts', 'object', 'wpCityObjectPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'delete_posts', 'category', 'wpCityCategoryPageCallback');
 	if (!$KV_SETTINGS["simple"]) {
-		add_submenu_page('wpcity', 'Správa kategorií', 'Autoři', 'manage_options', 'author', 'wpCityAuthorPageCallback');
-		add_submenu_page('wpcity', 'Správa kategorií', 'Export', 'manage_options', 'export', 'wpCityExportPageCallback');
+		add_submenu_page('wpcity', 'Správa kategorií', 'Autoři', 'delete_posts', 'author', 'wpCityAuthorPageCallback');
+		add_submenu_page('wpcity', 'Správa kategorií', 'Export', 'delete_posts', 'export', 'wpCityExportPageCallback');
 	}
 }
 
