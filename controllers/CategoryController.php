@@ -42,6 +42,11 @@ class CategoryController extends JPController {
 			array_push($this->messages, new JPErrorMessage("URL ikony není platnou adresou."));
 		}
 		
+		// přiblížení
+		if ($row->zoom != null && ($row->zoom < 1 || $row->zoom > 18)) {
+			array_push($this->messages, new JPErrorMessage("Zobrazitelné přiblížení musí být v rozsahu hodnot 1 - 18 nebo neuvedeno."));
+		}
+		
 		return count($this->messages) === 0; 
 	}
 	
@@ -129,6 +134,11 @@ class CategoryController extends JPController {
 		
 		$row->checked = filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);
 		$row->checked = ($row->checked === "on" ? 1 : 0);
+		
+		$row->zoom = (int) filter_input (INPUT_POST, "zoom", FILTER_SANITIZE_STRING);
+		if (strlen($row->zoom) === 0) { 
+			$row->zoom = 1;
+		}
 		
 		return $row;
 	}

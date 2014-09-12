@@ -27,13 +27,15 @@ class CategoryDb extends JPDb {
 			"nazev" => $data->nazev,
 			"url" => $data->url,
 			"ikona" => $data->ikona,
-			"checked" => ($data->checked ? 1 : 0)
+			"checked" => ($data->checked ? 1 : 0),
+			"zoom" => $data->zoom
 		);
 		
 		$types = array (
 			'%s',
 			'%s',			
 			'%s',
+			'%d',
 			'%d'
 		);
 		

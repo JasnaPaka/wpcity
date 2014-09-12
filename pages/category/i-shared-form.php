@@ -16,7 +16,14 @@
 	<th scope="row"><label for="checked">Zaškrtnuto</label></th>
 	<td>
 		<input name="checked" id="checked" type="checkbox" <?php if (!isset($row->checked) || $row->checked == 1 || $row->checked) echo 'checked="checked"' ?>/>
-		<p class="description">Zaškrtněte, pokud mají být objekty této kategorie po zobrazení viditelné v mapě.</p>
+		<p class="description">Zaškrtněte, pokud mají být objekty této kategorie po zobrazení viditelné v mapě (kategorie zašrktnuta).</p>
+	</td>
+</tr>
+<tr>
+	<th scope="row"><label for="zoom">Zobrazitelné při přiblížení</label></th>
+	<td>
+		<input name="zoom" id="zoom" class="regular-text" type="text" value="<?php if ($row->zoom > 0) echo $row->zoom ?>" maxlength="250" />
+		<p class="description">Číslo přiblížení mapy, při kterém se poprvé ikony z kategorie zobrazí (1 - 18). 1 - nejmenší přiblížení, 18 největší.</p>
 	</td>
 </tr>
 </tbody>
