@@ -86,7 +86,7 @@
 		</select>
 	</td>
 </tr>
-<?php if (!$controller->getIsEdit() && !$publicForm) { ?>
+<?php if (!$controller->getIsEdit() && !$publicForm && !$KV_SETTINGS["simple"]) { ?>
 <tr>
 	<th scope="row"><label for="autor">Autor</label></th>
 	<td>
