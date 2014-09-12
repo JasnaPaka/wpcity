@@ -35,6 +35,7 @@ function kv_MapaData() {
 	global $wpdb;
 	
 	$uploadDir = wp_upload_dir();
+	$siteUrl = site_url();
 	$output = "";
 	
 	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
@@ -58,14 +59,18 @@ function kv_MapaData() {
 			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'" target="_blank"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
 		}
 		
+		// Trvalý odkaz
+		$content = $content.'<p><a href="'.$siteUrl.'/?objekt='.$row->id.'" title="Trvalý odkaz na objekty do mapy"><img src="'.$siteUrl.'/wp-content/themes/krizky-vetrelci/images/link-icon.png" alt="" /></a>';
+		
 		// Pokud je uživatel přihlášen, přidáme odkaz do administrace
 		if (is_user_logged_in()) {
-			$content = $content.'<p><a href="wp-admin/admin.php?page=object&action=view&id='.$row->id.'">Správa objektu</a></p>';
+			$content = $content.'&nbsp;<a href="wp-admin/admin.php?page=object&action=view&id='.$row->id.'" title="Úprava objektu"><img src="'.$siteUrl.'/wp-content/themes/krizky-vetrelci/images/edit-icon.png" alt="" /></a>';
 		}
 		
+		$content = $content."</p>";
 		
 		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$content.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
-		'\',\''.$nazev.'\', '.$row->checked.']';
+		'\',\''.$nazev.'\', '.$row->checked.','.$row->id.']';
 	}
 		
 	return $output;
