@@ -92,7 +92,7 @@ class CategoryController extends JPController {
 	public function getCanDelete() {
 		$id = $this->getObjectId();
 		if ($id == null) {
-			return false;	
+			return false;
 		}
 		
 		return $this->dbObjects->getCountObjectsInCategory($id) == 0;
