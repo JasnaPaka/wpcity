@@ -1,6 +1,9 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
 
+	include_once $ROOT."config.php";
+	global $KV_SETTINGS;
+
 	include_once $ROOT."controllers/ObjectController.php";
 	$controller = new ObjectController();
 	
@@ -124,7 +127,9 @@
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
 	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Správa fotografií</a>
-	<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
+	<?php if (!$KV_SETTINGS["simple"]) { ?>
+		<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
+	<?php } ?>
 	<a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>

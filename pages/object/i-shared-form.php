@@ -123,7 +123,7 @@
 		</td>
 	</tr>
 <?php } ?>
-<?php if (!$publicForm) { ?>
+<?php if (!$publicForm && !$KV_SETTINGS["simple"]) { ?>
 <tr>
 	<th scope="row"><label for="rok_vzniku">Rok vzniku</label></th>
 	<td><input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" /></td>

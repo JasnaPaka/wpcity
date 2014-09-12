@@ -7,4 +7,7 @@ $KV_SETTINGS["gm_key"] = "";
 $KV_SETTINGS["gm_lat"] = 49.748398;
 $KV_SETTINGS["gm_lng"] = 13.377652;
 
+// Je správa objektů zjednodušená pouze na kategorie a body v ní? Používáme u cyklomapy.
+$KV_SETTINGS["simple"] = false;
+
 ?>
