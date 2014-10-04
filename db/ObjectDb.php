@@ -96,13 +96,15 @@ class ObjectDb extends JPDb {
 	}
 	
 	/**
-	 * Vrací seznam objektů, které u sebe nemají žádnou fotografii
+	 * Vrací seznam objektů, které u sebe nemají žádnou fotografii. Ignorují se systémové kategorie.
 	 */
 	public function getObjectsWithNoPhotos() {
 		global $wpdb;
 		
-		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt 
-			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1");
+		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
+			LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt
+			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
+			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0");
 	}
 	
 	protected function getOrderSQL($param) {

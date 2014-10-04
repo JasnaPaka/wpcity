@@ -148,6 +148,10 @@ class CategoryController extends JPController {
 		$row->checked = true;
 		return $row;
 	}
+	
+	public function getStringId() {
+		return "category";	
+	}
 
 }
 

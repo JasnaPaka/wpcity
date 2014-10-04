@@ -2,7 +2,7 @@
 
 include "JPDb.php";
 
-class JPController {
+abstract class JPController {
 	
 	const URL_VIEW   = "view";
 	const URL_CREATE = "create";
@@ -208,6 +208,8 @@ class JPController {
 	public function initDefaults() {
 		return new stdClass();
 	}
+	
+	abstract public function getStringId();
 	
 }
 

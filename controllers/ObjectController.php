@@ -548,6 +548,10 @@ class ObjectController extends JPController {
 
 		return $orders;
 	}
+
+	public function getStringId() {
+		return "object";	
+	}
 		
 }
 

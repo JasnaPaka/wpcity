@@ -84,6 +84,9 @@ class ExportController extends JPController {
 		unlink($tmpName);
 	}
 
+	public function getStringId() {
+		return "export";	
+	}
 }
 
 

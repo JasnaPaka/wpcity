@@ -168,6 +168,10 @@ class AuthorController extends JPController {
 		
 		return $row;
 	}
+	
+	public function getStringId() {
+		return "author";	
+	}
 
 	
 	
