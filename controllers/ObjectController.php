@@ -519,9 +519,8 @@ class ObjectController extends JPController {
 		return $authors;
 	}
 	
-	public function getGoogleMapPointContent() {
-		echo $KV_SETTINGS["gm_lat"];
-		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $KV_SETTINGS["gm_lat"], $KV_SETTINGS["gm_lng"]);
+	public function getGoogleMapPointContent($lat, $lng) {
+		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);
 		return $map->getOutput();
 	}
 	

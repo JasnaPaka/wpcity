@@ -68,7 +68,7 @@
 </table>
 
 <br />
-<?php echo $controller->getGoogleMapPointContent(); ?>
+<?php echo $controller->getGoogleMapPointContent($row->latitude, $row->longitude); ?>
 
 <?php if (strlen($row->popis) > 0) { ?>
 

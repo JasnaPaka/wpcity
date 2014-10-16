@@ -28,12 +28,14 @@
       	
       	// Zakáže "ptačí pohled"
       	map.setTilt(0);
-		
-		google.maps.event.addListener(map, 'click', function(event) {
-			$('#latitude').val(event.latLng.lat());
-			$('#longitude').val(event.latLng.lng());
-			placeMarker(event.latLng);
+      	
+      	var myLatlng = new google.maps.LatLng(LAT_REPLACEMENT, LNG_REPLACEMENT);
+      	var marker = new google.maps.Marker({
+      		map: map,
+		    position: myLatlng
 		});
+		map.setZoom(15);
+		map.panTo(marker.position);
 	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
