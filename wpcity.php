@@ -187,10 +187,12 @@ function wpCityExportPageCallback() {
 /** Mapa*/
 include "mapa.php";
 
-
 /** Informace o objektech */
 include "objekty.php";
 
 /** Snippety do šablon */
 include "shortcodes.php";
+
+/** Přepisovací pravidla */
+include "rewrites.php";
 

@@ -552,6 +552,17 @@ class ObjectController extends JPController {
 	public function getStringId() {
 		return "object";	
 	}
+	
+	public function getObjectId() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['objekt'];
+		if ($id == null) {
+			return parent::getObjectId();
+		}
+		
+		return $id;
+	}
 		
 }
 

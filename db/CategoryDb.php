@@ -28,7 +28,8 @@ class CategoryDb extends JPDb {
 			"url" => $data->url,
 			"ikona" => $data->ikona,
 			"checked" => ($data->checked ? 1 : 0),
-			"zoom" => $data->zoom
+			"zoom" => $data->zoom,
+			"popis" => $data->popis
 		);
 		
 		$types = array (
@@ -36,7 +37,8 @@ class CategoryDb extends JPDb {
 			'%s',			
 			'%s',
 			'%d',
-			'%d'
+			'%d',
+			'%s'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);

@@ -126,11 +126,16 @@ class CategoryController extends JPController {
 		return $this->db->getCountObjectsInCategory($idCategory);	
 	}
 	
+	public function getObjectsInCategory($idCategory) {
+		return $this->dbObjects->getListByCategory($idCategory);	
+	}
+	
 	private function getFormValues() {
 		$row = new stdClass();
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
 		$row->url = filter_input (INPUT_POST, "url", FILTER_SANITIZE_STRING);
 		$row->ikona = filter_input (INPUT_POST, "ikona", FILTER_SANITIZE_STRING);
+		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		
 		$row->checked = filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);
 		$row->checked = ($row->checked === "on" ? 1 : 0);

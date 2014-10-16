@@ -76,6 +76,15 @@ abstract class JPController {
 		return $id;
 	}
 	
+	public function getObjectById($id) {
+		$row = $this->db->getById($id);
+		if ($row == null) {
+			return null;
+		}
+		
+		return $row;
+	}
+	
 	/**
 	 * Vrátí objekt z db na základě ID v URL nebo null, pokud nebylo ID či záznam nalezen.
 	 */

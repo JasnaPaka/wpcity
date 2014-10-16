@@ -22,6 +22,13 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
+	public function getListByCategory($idCategory, $order="") {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), $idCategory);
+		return $wpdb->get_results ($sql);
+	}
+	
 	public function getListByAuthor($idAuthor) {
 		global $wpdb;
 		

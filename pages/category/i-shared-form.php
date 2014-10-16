@@ -13,6 +13,13 @@
 	<td><input name="ikona" id="ikona" class="regular-text" type="text" value="<?php echo $row->ikona ?>" maxlength="250" /></td>
 </tr>
 <tr>
+	<th scope="row" valign="top"><label for="popis">Popis</label></th>
+	<td>
+		<textarea id="popis" name="popis" rows="4" cols="40"><?php echo $row->popis ?></textarea>
+		<p class="description">Krátký popis kategorie.</p>
+	</td>
+</tr>
+<tr>
 	<th scope="row"><label for="checked">Zaškrtnuto</label></th>
 	<td>
 		<input name="checked" id="checked" type="checkbox" <?php if (!isset($row->checked) || $row->checked == 1 || $row->checked) echo 'checked="checked"' ?>/>
