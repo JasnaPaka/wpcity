@@ -506,6 +506,12 @@ class ObjectController extends JPController {
 		$row->pamatkova_ochrana = filter_input (INPUT_POST, "pamatkova_ochrana", FILTER_SANITIZE_STRING);
 		$row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
 		
+		$row->zruseno = filter_input (INPUT_POST, "zruseno", FILTER_SANITIZE_STRING);
+		$row->zruseno = ($row->zruseno === "on" ? 1 : 0);
+
+		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
+		$row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);
+		
 		return $row;
 	}
 	

@@ -75,9 +75,20 @@ function kv_object() {
 	
 	
 	// obsah
-	if (strlen ($obj->obsah) > 3) {
-		$output.= '<div>'.stripslashes($obj->obsah).'</div>';
+	if ($obj->zpracovano) {
+		$output .= '<div>'.stripslashes($obj->obsah).'</div>';
+	} else {
+		$output .= '<p><em>K památce dosud nebyl zpracován text.</em></p>';	
 	}
+	
+	// Mapa
+	$output .= '<h3>Umístění</h3>';
+	$output .= '<p><strong>GPS</strong>: '.$obj->latitude.', '.$obj->longitude;
+	$output .= ' (<a href="https://maps.google.cz/maps?q='.$obj->latitude.','.$obj->longitude.'">Google</a>';
+	$output .= ', <a href="http://www.mapy.cz?q='.$obj->latitude.','.$obj->longitude.'">Mapy.cz</a>';
+	$output .= ', <a href="http://www.openstreetmap.org/search?query='.$obj->latitude.','.$obj->longitude.'">OpenStreetMap</a>)</p>';
+	
+	$output .= $oc->getGoogleMapPointContent($obj->latitude, $obj->longitude);
 	
 	
 	return $output;
@@ -171,12 +182,14 @@ function kv_category() {
 		return $output;
 	}
 	
-	$output = '<h2>Kategorie: '.$obj->nazev.'</h2>';
+	$output = '<h2>'.$obj->nazev.'</h2>';
 	
 	$objects = $cc->getObjectsInCategory($id);
 	if (count($objects) == 0) {
 		$output.='<p>V kategorii není žádný objekt.</p>';	
 	} else {
+		$output .= '<p>'.$obj->popis.'</p>';
+		
 		$output .= '<p>Počet objektů v kategorii: '.count($objects).'</p>';	
 		
 		$output .= '<table class="list"><thead><tr><th>Název</th></thead><tbody>';

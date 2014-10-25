@@ -62,7 +62,10 @@
 		</td>
 	</tr>
 <?php } ?>
-	
+<tr>
+	<th><strong>Zpracován text</strong></th>
+	<td><?php echo ($row->zpracovano? "Ano" : "Ne") ?></td>
+</tr>
 	
 </tbody>
 </table>

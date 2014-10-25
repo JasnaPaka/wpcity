@@ -13,20 +13,17 @@ add_shortcode('kv-add-form', 'kv_AddForm');
 function kv_category_list($atts) {
 	$cc = new CategoryController();
 	
-	$output .= '<table class="list"><thead><tr><th>Název kategorie</th></thead><tbody>';
+	$output .= '<dl>';
 	
 	$i = 0;
 	foreach($cc->getList() as $category) {
 		$i++;
 		
-		if ($i % 2 == 0) {
-			$output .= '<tr><td><a href="'.get_site_url().'/katalog/kategorie/'.$category->id.'/">'.$category->nazev.'</a></td></tr>';
-		} else {
-			$output .= '<tr class="odd"><td><a href="'.get_site_url().'/katalog/kategorie/'.$category->id.'/">'.$category->nazev.'</a></td></tr>';
-		}
+		$output .= '<dt><a href="'.get_site_url().'/katalog/kategorie/'.$category->id.'/">'.$category->nazev.'</a> ('.$cc->getCountObjectsInCategory($category->id).')</dt>';
+		$output .= '<dd>'.$category->popis.'<dd>';
 	}
 	
-	$output .= '</tbody></table>';
+	$output .= '</dl>';
 	
 	return $output;
 }

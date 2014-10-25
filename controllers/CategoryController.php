@@ -156,6 +156,7 @@ class CategoryController extends JPController {
 	public function initDefaults() {
 		$row = new stdClass();
 		$row->checked = true;
+		$row->poradi = 0;
 		return $row;
 	}
 	

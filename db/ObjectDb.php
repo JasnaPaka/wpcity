@@ -11,21 +11,21 @@ class ObjectDb extends JPDb {
 	public function getCountObjectsInCategory($idCategory) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1", $idCategory); 	
+		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1", $idCategory); 	
 		return $wpdb->get_var ($sql);
 	}
 	
 	public function getListByNazev($nazev, $order="") {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%');
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND zruseno = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%');
 		return $wpdb->get_results ($sql);
 	}
 	
 	public function getListByCategory($idCategory, $order="") {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), $idCategory);
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), $idCategory);
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -33,7 +33,7 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
-			WHERE o2a.autor = %d AND kv.deleted = 0 AND kv.schvaleno = 1 ORDER BY kv.nazev", $idAuthor);
+			WHERE o2a.autor = %d AND kv.deleted = 0 AND kv.schvaleno = 1 AND kv.zruseno = 0 ORDER BY kv.nazev", $idAuthor);
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -43,7 +43,7 @@ class ObjectDb extends JPDb {
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 AND zruseno = 0
 						ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset, '%'.$nazev.'%');
 		return $wpdb->get_results ($sql); 
 	}
@@ -51,7 +51,7 @@ class ObjectDb extends JPDb {
 	public function getCountByNazev($nazev) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1", '%'.$nazev.'%');
+		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 AND zruseno = 0", '%'.$nazev.'%');
 		return $wpdb->get_var ($sql); 
 	}
 	
@@ -73,7 +73,9 @@ class ObjectDb extends JPDb {
 			"pridal_autor" => $data->pridal_autor,
 			"pridal_datum" => $data->pridal_datum,
 			"upravil_autor" => $data->upravil_autor,
-			"upravil_datum" => $data->upravil_datum
+			"upravil_datum" => $data->upravil_datum,
+			"zruseno" => ($data->zruseno ? 1 : 0),
+			"zpracovano" => ($data->zpracovano ? 1 : 0)
 		);
 		
 		$types = array (
@@ -87,7 +89,9 @@ class ObjectDb extends JPDb {
 			'%s',
 			'%s',
 			'%s',
-			'%s'
+			'%s',
+			'%d',
+			'%d'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
@@ -111,7 +115,7 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
 			LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt
 			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
-			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0");
+			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0");
 	}
 	
 	protected function getOrderSQL($param) {
