@@ -18,6 +18,7 @@
 		<tr>
 			<th>Název</th>
 			<th class="r">Počet objektů</th>
+			<th class="r">Pořadí</th>
 			<th>URL</th>
 			<th>Ikona</th>
 			<th>Akce</th>
@@ -49,6 +50,7 @@
 					
 					echo '<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>';
 					echo '<td>'.$controller->getCountObjectsInCategory($row->id).'</td>';
+					echo '<td>'.$row->poradi.'</td>';
 					echo '<td>'.$row->url.'</td>';
 					echo '<td>'.$row->ikona.'</td>';
 					if (!$row->systemova) {

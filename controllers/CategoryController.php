@@ -140,6 +140,11 @@ class CategoryController extends JPController {
 		$row->checked = filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);
 		$row->checked = ($row->checked === "on" ? 1 : 0);
 		
+		$row->poradi = (int) filter_input (INPUT_POST, "poradi", FILTER_SANITIZE_STRING);
+		if (!isset($row->poradi)) {
+			$row->poradi = 0;
+		}
+		
 		$row->zoom = (int) filter_input (INPUT_POST, "zoom", FILTER_SANITIZE_STRING);
 		if (strlen($row->zoom) === 0) { 
 			$row->zoom = 1;

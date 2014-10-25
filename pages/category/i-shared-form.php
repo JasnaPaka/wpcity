@@ -27,6 +27,13 @@
 	</td>
 </tr>
 <tr>
+	<th scope="row"><label for="poradi">Pořadí</label></th>
+	<td>
+		<input name="poradi" id="poradi" class="regular-text" type="text" value="<?php echo $row->poradi ?>" maxlength="250" />
+		<p class="description">Číslo udává pořadí kategorie. Řazení je od největší hodnoty po nejmenší. Výchozí je 0.</p>
+	</td>
+</tr>
+<tr>
 	<th scope="row"><label for="zoom">Zobrazitelné při přiblížení</label></th>
 	<td>
 		<input name="zoom" id="zoom" class="regular-text" type="text" value="<?php if ($row->zoom > 0) echo $row->zoom ?>" maxlength="250" />

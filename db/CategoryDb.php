@@ -5,7 +5,7 @@ class CategoryDb extends JPDb {
 	protected $tableName = "kv_kategorie";
 	
 	public function getDefaultOrder() {
-		return "nazev";
+		return "poradi desc, nazev";
 	}
 	
 	public function getByUrl($url) {
@@ -29,6 +29,7 @@ class CategoryDb extends JPDb {
 			"ikona" => $data->ikona,
 			"checked" => ($data->checked ? 1 : 0),
 			"zoom" => $data->zoom,
+			"poradi" => $data->poradi,
 			"popis" => $data->popis
 		);
 		
@@ -36,6 +37,7 @@ class CategoryDb extends JPDb {
 			'%s',
 			'%s',			
 			'%s',
+			'%d',
 			'%d',
 			'%d',
 			'%s'
