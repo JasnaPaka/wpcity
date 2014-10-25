@@ -156,7 +156,7 @@ class AuthorController extends JPController {
 	}
 	
 	public function getListByAuthor() {
-		return $this->dbObject->getListByAuthor($this->getObjectFromUrl()->id);	
+		return $this->dbObject->getListByAuthor($this->getObjectId());	
 	}
 	
 	private function getFormValues() {
@@ -173,7 +173,16 @@ class AuthorController extends JPController {
 		return "author";	
 	}
 
-	
+	public function getObjectId() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['autor'];
+		if ($id == null) {
+			return parent::getObjectId();
+		}
+		
+		return $id;
+	}
 	
 }
 

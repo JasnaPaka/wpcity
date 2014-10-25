@@ -32,7 +32,7 @@ class ObjectDb extends JPDb {
 	public function getListByAuthor($idAuthor) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
+		$sql = $wpdb->prepare("SELECT DISTINCT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
 			WHERE o2a.autor = %d AND kv.deleted = 0 AND kv.schvaleno = 1 AND kv.zruseno = 0 ORDER BY kv.nazev", $idAuthor);
 		return $wpdb->get_results ($sql);
 	}

@@ -4,6 +4,7 @@ $ROOT = plugin_dir_path( __FILE__ );
 
 include_once $ROOT."controllers/ObjectController.php";
 include_once $ROOT."controllers/CategoryController.php";
+include_once $ROOT."controllers/AuthorController.php";
 
 add_action('init', 'rules');
 
@@ -13,6 +14,9 @@ function rules() {
 	
 	add_rewrite_rule('^katalog/kategorie/([^/]*)/?','index.php?kategorie=$matches[1]','top');
 	add_rewrite_tag('%kategorie%','([^/]*)');
+	
+	add_rewrite_rule('^katalog/autor/([^/]*)/?','index.php?autor=$matches[1]','top');
+	add_rewrite_tag('%autor%','([^/]*)');
 	
 	flush_rewrite_rules();
 }
@@ -114,7 +118,7 @@ function kv_object_infobox() {
 	if (count($oc->getAuthorsForObject()) > 0) {
 		$infobox .= '<p><strong>Autor:</strong><br />';
 		foreach($oc->getAuthorsForObject() as $author) {
-			$infobox .= $author->jmeno.'<br />';	
+			$infobox .= '<a href="'.get_site_url().'/katalog/autor/'.$author->id.'/"">'.$author->jmeno.'</a><br />';	
 		}
 		$infobox .= '</p>';
 	}
@@ -210,5 +214,56 @@ function kv_category() {
 	return $output;
 }
 
+
+function kv_is_author() {
+	global $wp_query;
+	return isset($wp_query->query_vars['autor']);
+}
+
+
+function kv_author() {
+	global $wp_query;
+	$cc = new AuthorController();
+	
+	$id = (int) $wp_query->query_vars['autor'];
+	$obj = $cc->getObjectById($id);
+	if ($obj == null) {
+		$output = "<h2>Autor nebyl nalezen</h2>";
+		
+		$output.= '<p>Autora nebylo možné nalézt. Buď byl zrušen nebo nikdy neexistoval.
+					Přejděte zpět na <a href="'.get_site_url().'/katalog/">seznam kategorií</a>.';
+		
+		return $output;
+	}
+
+	$output.= '<h2>'.$obj->jmeno.'</h2>';
+	
+	$output.= '<h3>Realizace</h3>';
+	
+	if (count($cc->getListByAuthor()) == 0) {
+		$output.= '<p>Prozatím nejsou u autora evidovány žádné realizace.</p>';
+	} else {
+		$output.= '<ul>';
+		foreach ($cc->getListByAuthor() as $object) {
+			$output.= '<li><a href="'.get_site_url().'/katalog/objekt/'.$object->id.'/">'.$object->nazev.'</a></li>';
+		}
+		$output.= '</ul>';
+	}
+	
+	return $output;
+}
+	
+function kv_author_title() {
+	global $wp_query;
+	$oc = new AuthorController();
+	
+	$id = (int) $wp_query->query_vars['autor'];
+	$obj = $oc->getObjectById($id);
+	if ($obj == null) {
+		return "";
+	}
+	
+	return $obj->jmeno;
+}
 
 ?>
