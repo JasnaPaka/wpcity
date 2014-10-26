@@ -116,6 +116,9 @@ function wpCityObjectPageCallback(){
 		case 'author':
 			require_once("pages/object/author.php");
 			break;
+		case 'source':
+			require_once("pages/object/source.php");
+			break;
 		default:
 			require_once("pages/object/list.php");
 			break;

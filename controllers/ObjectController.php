@@ -12,6 +12,7 @@ include_once $ROOT."db/CategoryDb.php";
 include_once $ROOT."db/ObjectDb.php"; 
 include_once $ROOT."db/PhotoDb.php";
 include_once $ROOT."db/AuthorDb.php";
+include_once $ROOT."db/SourceDb.php";
 include_once $ROOT."db/Object2AuthorDb.php";
 
 include_once $ROOT."config.php";
@@ -22,6 +23,7 @@ class ObjectController extends JPController {
 	private $dbCategory;
 	private $dbPhoto;
 	private $dbAuthor;
+	private $dbSource;
 	private $dbObject2Author;
 	
 	private $categories;
@@ -31,6 +33,7 @@ class ObjectController extends JPController {
 		$this->dbCategory = new CategoryDb();
 		$this->dbPhoto = new PhotoDb();
 		$this->dbAuthor = new AuthorDb();
+		$this->dbSource = new SourceDb();
 		$this->dbObject2Author = new Object2AuthorDb();
 	}
 	
@@ -314,6 +317,35 @@ class ObjectController extends JPController {
 		
 	}
 	
+	public function manageSources() {
+		$sources = $this->getFormSourcesValues();
+		if (count($sources) == 0) {
+			return $this.getSelectedSources();	
+		}
+		
+		$result = $this->validateSources($sources);
+		if ($result) {
+			foreach ($sources as $source) {
+				if (strlen($source->nazev) == 0) {
+					continue;	
+				}
+				
+				if (isset($source->id)) {
+					$result = $this->dbSource->update($source, $source->id);
+				} else {
+					$result = $this->dbSource->create($source);
+				}
+			}
+			
+			array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány. 
+				<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
+				
+			return $this->getSelectedSources();
+		}
+		
+		return $sources;
+	}
+	
 	public function update() {
 		$row = $this->getFormValues();
 		if ($row == null) {
@@ -335,6 +367,20 @@ class ObjectController extends JPController {
 		
 		return $row;
 	}
+	
+	private function validateSources($sources) {
+		
+		foreach ($sources as $source) {
+			if (isset($source->id) && strlen($source->nazev) == 0 && !$source->deleted) {
+				array_push($this->messages, new JPErrorMessage("Každý zdroj, který byl dříve uložen, musí mít vyplněný název nebo být označen pro smazání."));
+			}
+			if (!isset($source->id) && strlen($source->nazev) == 0 && (strlen($source->url) > 0 || strlen ($source->isbn) > 0)) {
+				array_push($this->messages, new JPErrorMessage("Každý zdroj, který má zadáno URL či ISBN, musí mít i název."));
+			}
+		}
+		
+		return count($this->messages) === 0;
+	} 
 	
 	private function validatePhotos() {
 		// právě jedna fotka musí být hlavní (primární)
@@ -469,6 +515,14 @@ class ObjectController extends JPController {
 		return $this->db->getAuthorsForObject($this->getObjectId());	
 	}
 	
+	public function getSourcesForObject() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->dbSource->getSourcesForObject($this->getObjectId());	
+	}
+	
 	public function getSelectedAuthors() {
 		$authors = array ();
 		foreach($this->getAuthorsForObject() as $author) {
@@ -481,6 +535,20 @@ class ObjectController extends JPController {
 		}
 		
 		return $authors;
+	}
+	
+	public function getSelectedSources() {
+		$sources = array ();		
+		foreach($this->getSourcesForObject() as $source) {
+			array_push($sources, $source);
+		}
+		
+		// doplníme pět dalších
+		for ($i = 1; $i <= 5; $i++) {
+			array_push($sources, 0);
+		}
+		
+		return $sources;
 	}
 	
 	private function getAuthorFromAddForm() {
@@ -523,6 +591,38 @@ class ObjectController extends JPController {
 		array_push($authors, (int) filter_input (INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
 		
 		return $authors;
+	}
+	
+	private function getFormSourcesValues() {
+		$sources = array ();
+		
+		foreach($_POST as $key => $value) {
+			$pos = strpos($key, "zdroj") ;
+			
+			if ($pos === 0) {
+				
+				$source = new stdClass();
+				$id = (int) filter_input (INPUT_POST, $key, FILTER_SANITIZE_STRING);
+				if ($id > 0) {
+					$source->id = $id;	
+				}
+				
+				$source->nazev = filter_input (INPUT_POST, "nazev".$value, FILTER_SANITIZE_STRING);
+				$source->url = filter_input (INPUT_POST, "url".$value, FILTER_SANITIZE_STRING);
+				$source->isbn = filter_input (INPUT_POST, "isbn".$value, FILTER_SANITIZE_STRING);
+				
+				$source->cerpano = filter_input (INPUT_POST, "cerpano".$value, FILTER_SANITIZE_STRING);
+				$source->cerpano = ($source->cerpano === "on" ? 1 : 0);
+
+				$source->deleted = filter_input (INPUT_POST, "deleted".$value, FILTER_SANITIZE_STRING);
+				$source->deleted = ($source->deleted === "on" ? 1 : 0);
+				$source->objekt = $this->getObjectId();
+
+				array_push($sources, $source);
+			}
+		}
+		
+		return $sources;
 	}
 	
 	public function getGoogleMapPointContent($lat, $lng) {
