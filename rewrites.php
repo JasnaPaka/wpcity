@@ -85,6 +85,21 @@ function kv_object() {
 		$output .= '<p><em>K památce dosud nebyl zpracován text.</em></p>';	
 	}
 	
+	// Související odkazy
+	if (count($oc->getSourcesForObject()) > 0) {
+		$output .= '<h3>Externí zdroje</h3><ul>';
+		
+		foreach($oc->getSourcesForObject() as $source) {
+			if (strlen($source->url) == 0) {
+				$output .= 	'<li>'.$source->nazev.'</li>';
+			} else {
+				$output .= 	'<li><a href="'.$source->url.'">'.$source->nazev.'</a></li>';
+			}
+		}
+		
+		$output .= '</ul>';
+	} 
+	
 	// Mapa
 	$output .= '<h3>Umístění</h3>';
 	$output .= '<p><strong>GPS</strong>: '.$obj->latitude.', '.$obj->longitude;
