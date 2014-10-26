@@ -85,7 +85,9 @@
 
 <h3>Obsah</h3>
 
+<div style="max-width: 800px">
 <?php echo stripslashes($row->obsah) ?>
+</div>
 
 <?php } ?>
 
