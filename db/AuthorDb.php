@@ -5,14 +5,14 @@ class AuthorDb extends JPDb {
 	protected $tableName = "kv_autor";
 	
 	public function getDefaultOrder() {
-		return "jmeno";
+		return "prijmeni, jmeno";
 	}
 	
 	public function update($data, $id) {
 		global $wpdb;
 		
-		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, obsah = %s WHERE id = %d";
-		$sql = $wpdb->prepare($sql, $data->jmeno, $data->obsah, $id);
+		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, obsah = %s WHERE id = %d";
+		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->obsah, $id);
 		$result = $wpdb->query($sql);
 		
 		echo $data->id;

@@ -44,6 +44,11 @@ class AuthorController extends JPController {
 		if (strlen($row->jmeno) < 3 || strlen($row->jmeno) > 250) {
 			array_push($this->messages, new JPErrorMessage("Jméno autora musí mít min. 3 a nejvíce 250 znaků."));
 		}
+
+		// příjmení
+		if (strlen($row->prijmeni) < 3 || strlen($row->prijmeni) > 250) {
+			array_push($this->messages, new JPErrorMessage("Příjmení autora musí mít min. 3 a nejvíce 250 znaků."));
+		}
 		
 		// datum narození
 		if ($row->datum_narozeni != null && new DateTime ($row->datum_narozeni) == false) {
@@ -162,6 +167,7 @@ class AuthorController extends JPController {
 	private function getFormValues() {
 		$row = new stdClass();
 		$row->jmeno = filter_input (INPUT_POST, "jmeno", FILTER_SANITIZE_STRING);
+		$row->prijmeni = filter_input (INPUT_POST, "prijmeni", FILTER_SANITIZE_STRING);
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 

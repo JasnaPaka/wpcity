@@ -57,7 +57,7 @@
 		<th valign="top"><strong>Autoři</strong></th>
 		<td>
 			<?php foreach($controller->getAuthorsForObject() as $author) { ?>
-				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?><br /></a>
+				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?> <?php echo $author->prijmeni ?><br /></a>
 			<?php } ?>
 		</td>
 	</tr>

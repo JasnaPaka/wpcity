@@ -31,7 +31,7 @@
 			<?php foreach ($controller->getAllAuthors() as $author) { ?>
 				<option value="<?php echo $author->id ?>"
 					<?php if ($selectedAuthors[0] == $author->id) { echo 'selected="selected"'; } ?>>
-					<?php echo $author->jmeno ?>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
 				</option>
 			<?php } ?>
 		</select>	
@@ -45,7 +45,7 @@
 			<?php foreach ($controller->getAllAuthors() as $author) { ?>
 				<option value="<?php echo $author->id ?>"
 					<?php if ($selectedAuthors[1] == $author->id) { echo 'selected="selected"'; } ?>>
-					<?php echo $author->jmeno ?>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
 				</option>
 			<?php } ?>
 		</select>	
@@ -59,7 +59,7 @@
 			<?php foreach ($controller->getAllAuthors() as $author) { ?>
 				<option value="<?php echo $author->id ?>"
 					<?php if ($selectedAuthors[2] == $author->id) { echo 'selected="selected"'; } ?>>
-					<?php echo $author->jmeno ?>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
 				</option>
 			<?php } ?>
 		</select>	

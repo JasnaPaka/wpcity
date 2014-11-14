@@ -111,7 +111,7 @@
 <tr>
 	<th scope="row"><label for="zpracovano">Zpracováno</label></th>
 	<td>
-		<input name="zpracovano" id="zpracovano" type="checkbox" <?php if (!isset($row->zpracovano) || $row->zpracovano == 1 || $row->zpracovano) echo 'checked="checked"' ?>/>
+		<input name="zpracovano" id="zpracovano" type="checkbox" <?php if ($row->zpracovano == 1 || $row->zpracovano) echo 'checked="checked"' ?>/>
 		<p class="description">Zaškrtněte, pokud je text popisující objekt hotov do podoby, která je určena ke zveřejnění.</p>
 	</td>
 </tr>
@@ -162,7 +162,7 @@
 <tr>
 	<th scope="row"><label for="zruseno">Objekt již neexistuje</label></th>
 	<td>
-		<input name="zruseno" id="zruseno" type="checkbox" <?php if (!isset($row->zruseno) || $row->zruseno == 1 || $row->zruseno) echo 'checked="checked"' ?>/>
+		<input name="zruseno" id="zruseno" type="checkbox" <?php if ($row->zruseno == 1 || $row->zruseno) echo 'checked="checked"' ?>/>
 		<p class="description">Zaškrtněte, pokud již objekt neexistuje (odstraněn, zcizen).</p>
 	</td>
 </tr>
