@@ -94,7 +94,7 @@
 			<option value="0">(nezvoleno)</option>
 			<?php foreach ($controller->getAllAuthors() as $author) { ?>
 				<option value="<?php echo $author->id ?>">
-					<?php echo $author->jmeno ?>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
 				</option>
 			<?php } ?>
 		</select>

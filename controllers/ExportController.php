@@ -37,7 +37,10 @@ class ExportController extends JPController {
 		switch($this->getAction()) {
 			case "nophotos":
 				$this->exportNoPhotos();
-				break;	
+				break;
+			case "aliens":
+				$this->exportAliens();
+				break;
 		}
 	}
 	
@@ -50,7 +53,6 @@ class ExportController extends JPController {
 		putenv('TMPDIR='.getenv('TMPDIR'));
 		$tmpName = ini_get('upload_tmp_dir')."/objekty-bez-fotek";
 		
-		//tempnam(sys_get_temp_dir(), 'objekty-bez-fotek');
 		$file = fopen($tmpName, 'w');
 
 		fwrite($file, "name".$separator."latitude".$separator."longitude\n");
@@ -63,6 +65,30 @@ class ExportController extends JPController {
 		fclose($file);
 		
 		$this->download($tmpName, "objekty-bez-fotek.csv");
+	}
+	
+	/**
+	 * Export objektů kategorie Vetřelci a volavky do CSV.
+	 */
+	private function exportAliens() {
+				$separator = ",";	
+
+		putenv('TMPDIR='.getenv('TMPDIR'));
+		$tmpName = ini_get('upload_tmp_dir')."/objekty-vetrelci-volavky";
+		
+		$file = fopen($tmpName, 'w');
+
+		fwrite($file, "name".$separator."latitude".$separator."longitude\n");
+
+		foreach($this->dbObject->getObjectsAliens() as $obj) {
+			$str = $obj->nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+			fwrite($file, $str);
+		}
+		
+		fclose($file);
+		
+		$this->download($tmpName, "objekty-vetrelci-volavky.csv");
+	
 	}
 	
 	/**

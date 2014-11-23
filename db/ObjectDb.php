@@ -33,7 +33,7 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT DISTINCT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
-			WHERE o2a.autor = %d AND kv.deleted = 0 AND kv.schvaleno = 1 AND kv.zruseno = 0 ORDER BY kv.nazev", $idAuthor);
+			WHERE o2a.autor = %d AND kv.deleted = 0 AND o2a.deleted = 0 AND kv.schvaleno = 1 AND kv.zruseno = 0 ORDER BY kv.nazev", $idAuthor);
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -115,7 +115,18 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
 			LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt
 			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
-			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0");
+			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+	}
+	
+	/**
+	 * Vrací seznam objektů v kategorii Vetřelci a volavky
+	 */
+	public function getObjectsAliens() {
+		global $wpdb;
+		
+		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
+			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
+			WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND kat.url = 'vetrelci-volavky' AND obj.zruseno = 0 ORDER BY obj.nazev, obj.id");
 	}
 	
 	protected function getOrderSQL($param) {
