@@ -47,13 +47,6 @@ class AuthorDb extends JPDb {
 		return $wpdb->get_var ($sql);
 	}
 	
-	public function getAll($order = "") {
-		global $wpdb;
-		
-		return $wpdb->get_results("SELECT aut.*, count(*) as pocet FROM ".$this->tableName." aut INNER JOIN kv_objekt2autor o2a ON o2a.objekt = aut.id INNER JOIN kv_objekt obj ON obj.id o2a.objekt
-			WHERE aut.deleted = 0 AND o2a.deleted = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 GROUP BY aut.id ORDER BY ".$this->getOrderSQL($order));	
-	}
-	
 	
 	public function getPage($page, $order = "") {
 		global $wpdb;
