@@ -38,6 +38,14 @@ class AuthorDb extends JPDb {
 		
 		return true;
 	}	
+
+	public function getCountObjectsForAuthor($idAuthor) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt obj INNER JOIN kv_objekt2autor o2a ON o2a.objekt = obj.id INNER JOIN kv_autor aut ON aut.id = o2a.autor 
+			WHERE aut.id = %d AND obj.deleted = 0 AND o2a.deleted = 0 AND aut.deleted = 0 AND obj.schvaleno = 1", $idAuthor); 	
+		return $wpdb->get_var ($sql);
+	}
 	
 }
 

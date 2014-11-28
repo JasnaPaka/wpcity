@@ -190,6 +190,10 @@ class AuthorController extends JPController {
 		return $id;
 	}
 	
+	public function getCountObjectsForAuthor($idAuthor) {
+		return $this->db->getCountObjectsForAuthor($idAuthor);	
+	}
+	
 }
 
 ?>

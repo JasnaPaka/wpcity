@@ -21,8 +21,9 @@
 	<thead>
 		<tr>
 			<th>Jméno</th>
-			<th>Datum narození</th>
-			<th>Datum úmrtí</th>
+			<th class="date column-date">Datum narození</th>
+			<th class="date column-date">Datum úmrtí</th>
+			<th class="num">Počet objektů</th>
 			<th>Akce</th>
 		</tr>
 	</thead>
@@ -51,8 +52,9 @@
 					}
 					
 					echo '<td><a href="admin.php?page=author&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->prijmeni.' '.$row->jmeno.'</strong></a></td>';
-					echo '<td>'.$row->datum_narozeni.'</td>';
-					echo '<td>'.$row->datum_umrti.'</td>';
+					echo '<td class="date column-date">'.$row->datum_narozeni.'</td>';
+					echo '<td class="date column-date">'.$row->datum_umrti.'</td>';
+					echo '<td class="num">'.$controller->getCountObjectsForAuthor($row->id).'</td>';
 					echo '<td><a href="admin.php?page=author&amp;action=update&amp;id='.$row->id.'" title="Upraví autora">Upravit</a> 
 						&middot; <a href="admin.php?page=author&amp;action=delete&amp;id='.$row->id.'" title="Smaže autora">Smazat</a></td>';
 					echo '</tr>';
