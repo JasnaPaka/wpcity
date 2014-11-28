@@ -194,6 +194,25 @@ class AuthorController extends JPController {
 		return $this->db->getCountObjectsForAuthor($idAuthor);	
 	}
 	
+	public function getOrders() {
+		$orders = array();
+		
+		// dle názvu
+		$order = new stdClass();
+		$order->nazev = "Název";
+		$order->url = "nazev";
+		array_push($orders, $order);
+		
+		// dle vytvoření
+		$order = new stdClass();
+		$order->nazev = "Počet objektů";
+		$order->url = "pocet-objektu";
+		array_push($orders, $order);
+		
+
+		return $orders;
+	}
+	
 }
 
 ?>

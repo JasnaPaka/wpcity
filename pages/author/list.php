@@ -14,6 +14,7 @@
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
 <div class="tablenav top">
+	<?php include $ROOT."fw/templates/sort.php"; ?>
 	<?php include $ROOT."fw/templates/navigation.php"; ?>
 </div>
 
