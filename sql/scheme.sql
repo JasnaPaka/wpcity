@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Počítač: localhost
--- Vygenerováno: Ned 02. lis 2014, 21:30
--- Verze serveru: 5.6.12
--- Verze PHP: 5.4.17
+-- Vygenerováno: Pát 28. lis 2014, 12:05
+-- Verze serveru: 5.6.19-0ubuntu0.14.04.1
+-- Verze PHP: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,10 +17,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Databáze: `kv`
+-- Databáze: `krizkyavetrelci`
 --
-CREATE DATABASE IF NOT EXISTS `kv` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci;
-USE `kv`;
 
 -- --------------------------------------------------------
 
@@ -31,12 +29,13 @@ USE `kv`;
 CREATE TABLE IF NOT EXISTS `kv_autor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jmeno` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `prijmeni` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `datum_narozeni` date DEFAULT NULL,
   `datum_umrti` date DEFAULT NULL,
   `obsah` text COLLATE utf8_czech_ci NOT NULL,
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=49 ;
 
 -- --------------------------------------------------------
 
@@ -58,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `kv_fotografie` (
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `objekt` (`objekt`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=746 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=785 ;
 
 -- --------------------------------------------------------
 
@@ -69,14 +68,14 @@ CREATE TABLE IF NOT EXISTS `kv_fotografie` (
 CREATE TABLE IF NOT EXISTS `kv_kategorie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `popis` text COLLATE utf8_czech_ci NOT NULL,
   `url` varchar(255) COLLATE utf8_czech_ci NOT NULL,
-  `popis` text COLLATE utf8_czech_ci,
   `ikona` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `checked` int(11) DEFAULT '1',
   `zoom` int(11) NOT NULL DEFAULT '1',
   `systemova` int(11) NOT NULL DEFAULT '0',
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  `poradi` int(11) DEFAULT '0',
+  `poradi` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=13 ;
@@ -103,14 +102,14 @@ CREATE TABLE IF NOT EXISTS `kv_objekt` (
   `pamatkova_ochrana` varchar(50) COLLATE utf8_czech_ci NOT NULL,
   `pristupnost` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `zruseno` tinyint(4) NOT NULL DEFAULT '0',
-  `zpracovano` int(11) NOT NULL DEFAULT '0',
+  `zpracovano` tinyint(4) NOT NULL DEFAULT '0',
   `pridal_autor` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `pridal_datum` datetime NOT NULL,
   `upravil_autor` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `upravil_datum` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `kategorie` (`kategorie`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=615 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=675 ;
 
 -- --------------------------------------------------------
 
@@ -127,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `kv_objekt2autor` (
   KEY `objekt` (`objekt`),
   KEY `autor` (`autor`),
   KEY `objekt_2` (`objekt`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=85 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=181 ;
 
 -- --------------------------------------------------------
 
@@ -145,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `kv_zdroj` (
   `objekt` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `objekt` (`objekt`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=115 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
 --
 -- Omezení pro exportované tabulky
