@@ -10,3 +10,7 @@
 .r {
 	text-align: right;
 }
+
+.content-width {
+	max-width: 800px;
+}

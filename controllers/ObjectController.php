@@ -568,6 +568,7 @@ class ObjectController extends JPController {
 		$row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
 		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
+		$row->interni = $_POST["interni"]; // TODO: sanitize
 		$row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
 		$row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);
 		$row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);
@@ -597,7 +598,7 @@ class ObjectController extends JPController {
 		$sources = array ();
 		
 		foreach($_POST as $key => $value) {
-			$pos = strpos($key, "zdroj") ;
+			$pos = strpos($key, "zdroj");
 			
 			if ($pos === 0) {
 				

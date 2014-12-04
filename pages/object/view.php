@@ -85,7 +85,7 @@
 
 <h3>Obsah</h3>
 
-<div style="max-width: 800px">
+<div class="content-width">
 <?php echo stripslashes($row->obsah) ?>
 </div>
 
@@ -111,6 +111,16 @@
 		}	
 	} 
 ?>
+
+<?php if (strlen($row->interni) > 0) { ?>
+
+<h3>Interní poznámka</h3>
+
+<div class="content-width">
+<?php echo stripslashes($row->interni) ?>
+</div>
+
+<?php } ?>
 
 <table class="widefat" style="max-width: 500px; margin-top: 10px">
 <tbody>

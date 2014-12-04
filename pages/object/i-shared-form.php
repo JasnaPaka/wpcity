@@ -109,6 +109,13 @@
 </tr>
 
 <tr>
+	<th scope="row" valign="top"><label for="interni">Interní poznámka</label></th>
+	<td>
+		<textarea id="interni" name="interni" rows="7" cols="60"><?php echo stripslashes($row->interni) ?></textarea>
+	</td>
+</tr>
+
+<tr>
 	<th scope="row"><label for="zpracovano">Zpracováno</label></th>
 	<td>
 		<input name="zpracovano" id="zpracovano" type="checkbox" <?php if ($row->zpracovano == 1 || $row->zpracovano) echo 'checked="checked"' ?>/>
