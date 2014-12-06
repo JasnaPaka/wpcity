@@ -41,6 +41,7 @@ function kv_MapaData() {
 	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
 		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
 		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large,
+		(SELECT GROUP_CONCAT(CONCAT(ka.jmeno, ' ',ka.prijmeni) SEPARATOR ', ') FROM kv_autor ka INNER JOIN kv_objekt2autor o2a ON o2a.autor = ka.id WHERE o2a.objekt = kv.id AND ka.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id) as autori,
 		kv_kategorie.checked,
 		kv_kategorie.zoom
 		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
@@ -59,6 +60,29 @@ function kv_MapaData() {
 		if ($row->img_thumbnail != null) {
 			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'" target="_blank"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
 		}
+		
+		$content .= "<p>";
+		
+		// Atributy
+		if (strlen($row->rok_vzniku) > 0) {
+			$content .= "<span style=\"font-weight:bold\">Rok</span>: ".$row->rok_vzniku."<br />";
+		}
+
+		if (strlen($row->autori) > 0) {
+			$content .= "<span style=\"font-weight:bold\">Autoři</span>: ".$row->autori."<br />";
+		}
+		
+		if (strlen($row->material) > 0) {
+			$content .= "<span style=\"font-weight:bold\">Materiál</span>: ".$row->material."<br />";
+		}
+		
+		if (strlen($row->pristupnost) > 0) {
+			$content .= "<span style=\"font-weight:bold\">Přístupnost</span>: ".$row->pristupnost."<br />";
+		}	
+		
+		$content.='<br /><a href="mailto:krizkyavetrelci@email.cz?subject='.$row->nazev.': Doplnění informací">Doplnit informace</a>';
+		
+		$content .= "</p>";
 		
 		// Trvalý odkaz
 		$content = $content.'<p><a href="'.$siteUrl.'/?objekt='.$row->id.'" title="Trvalý odkaz na objekty do mapy"><img src="'.$siteUrl.'/wp-content/themes/krizky-vetrelci/images/link-icon.png" alt="" /></a>';
