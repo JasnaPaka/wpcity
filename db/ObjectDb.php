@@ -108,6 +108,15 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql); 
 	}
 	
+	public function getCooperationsForObject($idObject) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT o2a.spoluprace FROM kv_autor aut INNER JOIN kv_objekt2autor o2a ON aut.id = o2a.autor 
+			WHERE o2a.objekt = %d AND aut.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id", $idObject);
+			
+		return $wpdb->get_results ($sql); 
+	}
+	
 	/**
 	 * Vrací seznam objektů, které u sebe nemají žádnou fotografii. Ignorují se systémové kategorie.
 	 */

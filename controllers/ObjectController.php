@@ -291,6 +291,7 @@ class ObjectController extends JPController {
 	
 	public function manageAuthors() {
 		$authors = $this->getFormAuthorsValues();
+		$cooperations = $this->getFormCooperationsValues();
 		
 		// Validace
 		foreach ($authors as $author) {
@@ -302,14 +303,19 @@ class ObjectController extends JPController {
 		
 		// Smazání starých vazeb a vytvoření nových
 		$this->dbObject2Author->deleteOldRelationsForObject($this->getObjectId());
+		
+		$i = 0;
 		foreach($authors as $author) {
 			if ($author > 0) {
 				$row = new stdClass();
 				$row->objekt = $this->getObjectId();
 				$row->autor = $author;
+				$row->spoluprace = $cooperations[$i];
 			
 				$result = $this->dbObject2Author->create($row);
 			}
+			
+			$i++;
 		}
 		
 		array_push($this->messages, new JPInfoMessage('Autoři byli úspěšně nastaveni. 
@@ -515,6 +521,14 @@ class ObjectController extends JPController {
 		return $this->db->getAuthorsForObject($this->getObjectId());	
 	}
 	
+	public function getCooperationsForObject() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->db->getCooperationsForObject($this->getObjectId());	
+	}
+	
 	public function getSourcesForObject() {
 		if ($this->getObjectId() == null) {
 			return null;
@@ -535,6 +549,20 @@ class ObjectController extends JPController {
 		}
 		
 		return $authors;
+	}
+	
+	public function getCooperations() {
+		$cooperations = array ();
+		foreach($this->getCooperationsForObject() as $cooperation) {
+			array_push($cooperations, $cooperation->spoluprace);
+		}
+		
+		// doplníme ty nevyplněné (prázdné)
+		for ($i = count($cooperations); $i < 3; $i++) {
+			array_push($cooperations, "");
+		}
+		
+		return $cooperations;
 	}
 	
 	public function getSelectedSources() {
@@ -592,6 +620,16 @@ class ObjectController extends JPController {
 		array_push($authors, (int) filter_input (INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
 		
 		return $authors;
+	}
+	
+	private function getFormCooperationsValues() {
+		$cooperations = array ();
+		
+		array_push($cooperations, filter_input (INPUT_POST, "spoluprace1", FILTER_SANITIZE_STRING));
+		array_push($cooperations, filter_input (INPUT_POST, "spoluprace2", FILTER_SANITIZE_STRING));
+		array_push($cooperations, filter_input (INPUT_POST, "spoluprace3", FILTER_SANITIZE_STRING));
+		
+		return $cooperations;
 	}
 	
 	private function getFormSourcesValues() {
