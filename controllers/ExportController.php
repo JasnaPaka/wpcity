@@ -81,7 +81,10 @@ class ExportController extends JPController {
 		fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
 		foreach($this->dbObject->getObjectsAliens() as $obj) {
-			$str = $obj->nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+			// čárky používáme jako oddělovač, v názvu tak dělají neplechu
+			$nazev = str_replace(",", "", $obj->nazev);
+			
+			$str = $nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
 			fwrite($file, $str);
 		}
 		

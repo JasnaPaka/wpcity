@@ -27,7 +27,12 @@
 		<th><strong>Kategorie</strong></th>
 		<td><?php echo $controller->getCategoryNameForObject($row->kategorie) ?></td>
 	</tr>
-	
+<?php if (strlen($row->rok_vzniku) > 0) { ?>
+	<tr>
+		<th><strong>Rok vzniku</strong></th>
+		<td><?php echo $row->rok_vzniku ?></td>
+	</tr>
+<?php } ?>	
 <?php if (strlen($row->prezdivka) > 0) { ?>
 	<tr>
 		<th><strong>Přezdívka</strong></th>
