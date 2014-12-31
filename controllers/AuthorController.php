@@ -21,7 +21,21 @@ class AuthorController extends JPController {
 	}
 	
 	public function getList() {
-		$rows = parent::getList();
+		if (!$this->getSearchValueValid()) {
+			if ($this->getSearchValue() != null) {
+				array_push($this->messages, new JPErrorMessage("Hledaný výraz musí mít alespoň tři znaky."));
+			}
+			
+			$rows = parent::getList();	
+		} else {
+			if ($this->getShowAll()) {
+				$rows = $this->db->getListByNazev($this->getSearchValue());
+			} else {
+				$rows = $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());	
+			}
+		
+			$rows = $this->db->getListByNazev($this->getSearchValue(), $this->getCurrentOrder());	
+		}
 		
 		foreach($rows as $row) {
 			if ($row->datum_narozeni != null) {
@@ -212,6 +226,15 @@ class AuthorController extends JPController {
 
 		return $orders;
 	}
+	
+	public function getCount() {
+		if (!$this->getSearchValueValid()) {
+			return parent::getCount();	
+		}
+		
+		return $this->db->getCountByNazev($this->getSearchValue()); 
+	}
+	
 	
 }
 

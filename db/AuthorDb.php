@@ -75,6 +75,22 @@ class AuthorDb extends JPDb {
 		}
 	}
 	
+	public function getListByNazev($nazev, $order="") {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE (CONCAT (prijmeni, ' ', jmeno) LIKE %s OR CONCAT (jmeno, ' ', prijmeni) LIKE %s) 
+			AND deleted = 0 ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%', '%'.$nazev.'%');
+		return $wpdb->get_results ($sql);
+	}
+	
+	public function getCountByNazev($nazev) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE (CONCAT (prijmeni, ' ', jmeno) LIKE %s OR CONCAT (jmeno, ' ', prijmeni) LIKE %s) 
+			AND deleted = 0", '%'.$nazev.'%', '%'.$nazev.'%');
+		return $wpdb->get_var ($sql); 
+	}
+	
 }
 
 

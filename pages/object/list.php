@@ -9,7 +9,17 @@
 
 <div class="wrap">
 
-<h2>Objekty <a href="admin.php?page=object&amp;action=create" class="add-new-h2">Přidat nový</a></h2>
+<h2>
+	Objekty <a href="admin.php?page=object&amp;action=create" class="add-new-h2">Přidat nový</a>
+	
+	<?php if (strlen($controller->getSearchValue()) > 0) { ?>
+		<span class="subtitle">Výsledky vyhledávání pro "<?php echo $controller->getSearchValue() ?>"</span>
+		
+		<a href="admin.php?page=object&amp;action=list" class="add-new-h2">Zrušit vyhledávání</a>
+	<?php } ?>
+	
+	
+</h2>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 

@@ -9,9 +9,26 @@
 
 <div class="wrap">
 
-<h2>Autoři <a href="admin.php?page=author&amp;action=create" class="add-new-h2">Přidat nového</a></h2>
+<h2>
+	Autoři <a href="admin.php?page=author&amp;action=create" class="add-new-h2">Přidat nového</a>
+
+	<?php if (strlen($controller->getSearchValue()) > 0) { ?>
+		<span class="subtitle">Výsledky vyhledávání pro "<?php echo $controller->getSearchValue() ?>"</span>
+		
+		<a href="admin.php?page=author&amp;action=list" class="add-new-h2">Zrušit vyhledávání</a>
+	<?php } ?>
+</h2>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
+
+<form action="admin.php?page=author&amp;action=list" method="post">
+
+<p class="search-box">
+	<input type="search" id="s" name="s" value="<?php echo $controller->getSearchValue() ?>" placeholder="Zadejte jméno" />
+	<input type="submit" id="search" name="search" value="Hledat" class="button" />
+</p>
+
+</form>
 
 <div class="tablenav top">
 	<?php include $ROOT."fw/templates/sort.php"; ?>
