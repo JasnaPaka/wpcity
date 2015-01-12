@@ -64,6 +64,16 @@ class AuthorController extends JPController {
 			array_push($this->messages, new JPErrorMessage("Příjmení autora musí mít min. 3 a nejvíce 250 znaků."));
 		}
 		
+		// Titul před
+		if (strlen($row->titul_pred) > 250) {
+			array_push($this->messages, new JPErrorMessage("Titul před jménem nesmí mít více než 250 znaků."));
+		}
+		
+		// Titul za
+		if (strlen($row->titul_za) > 250) {
+			array_push($this->messages, new JPErrorMessage("Titul za jménem nesmí mít více než 250 znaků."));
+		}
+		
 		// datum narození
 		if ($row->datum_narozeni != null && new DateTime ($row->datum_narozeni) == false) {
 			array_push($this->messages, new JPErrorMessage("Datum narození není platným datem."));
@@ -182,6 +192,8 @@ class AuthorController extends JPController {
 		$row = new stdClass();
 		$row->jmeno = filter_input (INPUT_POST, "jmeno", FILTER_SANITIZE_STRING);
 		$row->prijmeni = filter_input (INPUT_POST, "prijmeni", FILTER_SANITIZE_STRING);
+		$row->titul_pred = filter_input (INPUT_POST, "titul_pred", FILTER_SANITIZE_STRING);
+		$row->titul_za = filter_input (INPUT_POST, "titul_za", FILTER_SANITIZE_STRING);
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
@@ -233,6 +245,12 @@ class AuthorController extends JPController {
 		}
 		
 		return $this->db->getCountByNazev($this->getSearchValue()); 
+	}
+	
+	public function getFullname() {
+		$obj = $this->getObjectById($this->getObjectId());
+		
+		return trim($obj->titul_pred." ".$obj->jmeno." ".$obj->prijmeni." ".$obj->titul_za);	
 	}
 	
 	

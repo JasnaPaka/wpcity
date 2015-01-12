@@ -52,6 +52,17 @@
 					<textarea name="popis<?php echo $photo->id ?>" id="popis<?php echo $photo->id ?>" rows="4" cols="40"><?php echo $photo->popis ?></textarea>
 				</td>
 			</tr>
+
+			<tr>
+				<td valign="top">
+					<label for="url<?php echo $photo->id ?>">URL</label>
+				</td>
+				<td>
+					<input name="url<?php echo $photo->id ?>" id="url<?php echo $photo->id ?>" class="regular-text" type="text" value="<?php echo $photo->url ?>" maxlength="250" />
+				</td>
+			</tr>			
+			
+			
 			<tr>
 				<td valign="top">
 					&nbsp;
@@ -64,6 +75,11 @@
 									id="primarni<?php echo $photo->id ?>" <?php if ($photo->primarni) echo 'checked="checked"' ?> 
 									onclick="zmenaPrimarni('primarni<?php echo $photo->id ?>')" />
 									<label for="primarni<?php echo $photo->id ?>">Hlavní fotografie</label>
+							</td>
+							<td>
+								<input type="checkbox" name="soukroma<?php echo $photo->id ?>" 
+									id="soukroma<?php echo $photo->id ?>" <?php if ($photo->soukroma) echo 'checked="checked"' ?> />
+									<label for="soukroma<?php echo $photo->id ?>">Soukromá fotografie</label>
 							</td>
 							<td>
 								<input type="checkbox" name="delete<?php echo $photo->id ?>" 

@@ -9,7 +9,7 @@
 
 <div class="wrap">
 
-<h2><?php echo $row->prijmeni ?> <?php echo $row->jmeno ?></h2>
+<h2><?php echo $controller->getFullname() ?></h2>
 
 <?php if ($row->datum_narozeni != null || $row->datum_umrti != null) { ?>
 	<table class="widefat" style="max-width: 500px; margin-top: 10px">

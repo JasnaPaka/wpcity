@@ -11,11 +11,9 @@ class AuthorDb extends JPDb {
 	public function update($data, $id) {
 		global $wpdb;
 		
-		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, obsah = %s WHERE id = %d";
-		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->obsah, $id);
+		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, titul_pred = %s, titul_za = %s, obsah = %s WHERE id = %d";
+		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->titul_pred, $data->titul_za, $data->obsah, $id);
 		$result = $wpdb->query($sql);
-		
-		echo $data->id;
 		
 		// aktualizace data narození
 		if (isset($data->datum_narozeni)) {

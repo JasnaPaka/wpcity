@@ -404,6 +404,16 @@ class ObjectController extends JPController {
 					$duplicate = true;			
 				}
 			}
+			
+			$author = filter_input (INPUT_POST, "autor".$photo->id, FILTER_SANITIZE_STRING);
+			if (strlen($author) > 255) {
+				array_push($this->messages, new JPErrorMessage("Jméno autora nesmí být delší než 255 znaků."));
+			}
+			
+			$url = filter_input (INPUT_POST, "url".$photo->id, FILTER_SANITIZE_STRING);
+			if (strlen($url) > 255) {
+				array_push($this->messages, new JPErrorMessage("Adresa (URL) u fotografie nesmí být delší než 255 znaků."));
+			}
 		}
 		
 		if (!$foundPrimary) {
@@ -419,6 +429,7 @@ class ObjectController extends JPController {
 	private function refreshPhoto($photo) {
 		$author = filter_input (INPUT_POST, "autor".$photo->id, FILTER_SANITIZE_STRING);
 		$description = filter_input (INPUT_POST, "popis".$photo->id, FILTER_SANITIZE_STRING);
+		$url = filter_input (INPUT_POST, "url".$photo->id, FILTER_SANITIZE_STRING);
 		
 		$id = "primarni".$photo->id;
 		if (isset($_POST[$id])) {
@@ -427,9 +438,18 @@ class ObjectController extends JPController {
 			$primary = 0;	
 		}
 		
+		$id = "soukroma".$photo->id;
+		if (isset($_POST[$id])) {
+			$soukroma = 1;	
+		} else {
+			$soukroma = 0;	
+		}
+		
 		$photo->autor = $author;
 		$photo->popis = $description;
 		$photo->primarni = $primary;
+		$photo->soukroma = $soukroma;
+		$photo->url = $url;
 		
 		return $photo;
 	}

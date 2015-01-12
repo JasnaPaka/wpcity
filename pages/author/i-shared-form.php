@@ -11,6 +11,14 @@
 	<td><input name="prijmeni" id="prijmeni" class="regular-text" type="text" value="<?php echo $row->prijmeni ?>" maxlength="250" /></td>
 </tr>
 <tr>
+	<th scope="row"><label for="titul_pred">Titul před</label></th>
+	<td><input name="titul_pred" id="titul_pred" class="regular-text" type="text" value="<?php echo $row->titul_pred ?>" maxlength="250" /></td>
+</tr>
+<tr>
+	<th scope="row"><label for="titul_za">Titul za</label></th>
+	<td><input name="titul_za" id="titul_za" class="regular-text" type="text" value="<?php echo $row->titul_za ?>" maxlength="250" /></td>
+</tr>
+<tr>
 	<th scope="row"><label for="datum_narozeni">Datum narození</label></th>
 	<td><input name="datum_narozeni" id="datum_narozeni" class="regular-text" type="text" value="<?php echo $row->datum_narozeni ?>" maxlength="50" /></td>
 </tr>

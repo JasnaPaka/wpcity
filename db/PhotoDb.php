@@ -33,7 +33,9 @@ class PhotoDb extends JPDb {
 			"objekt" => $data->objekt,
 			"deleted" => $data->deleted,
 			"primarni" => $data->primarni,
+			"soukroma" => $data->soukroma,
 			"autor" => $data->autor,
+			"url" => $data->url,
 			"popis" => $data->popis,
 		);
 		
@@ -45,7 +47,9 @@ class PhotoDb extends JPDb {
 			'%d',
 			'%d',
 			'%d',
+			'%d',
 			'%s',			
+			'%s',
 			'%s'
 		);
 		

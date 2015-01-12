@@ -28,7 +28,7 @@
 	} else {
 ?>
 
-<h2>Úprava autora '<?php echo $row->jmeno ?> <?php echo $row->prijmeni ?>'</h2>
+<h2>Úprava autora '<?php echo $controller->getFullname() ?>'</h2>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
