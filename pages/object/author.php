@@ -38,7 +38,7 @@
 		</select>	
 	</td>
 	<th scope="row"><label for="spoluprace1">Forma spolupráce</label></th>
-	<td><input name="spoluprace1" id="spoluprace1" class="regular-text" type="text" value="<?php echo $cooperations[0]  ?>" maxlength="20" /></td>
+	<td><input name="spoluprace1" id="spoluprace1" class="regular-text" type="text" value="<?php echo $cooperations[0]  ?>" maxlength="255" /></td>
 </tr>
 <tr>
 	<th scope="row"><label for="autor2">Autor č. 2</label></th>
@@ -54,7 +54,7 @@
 		</select>	
 	</td>
 	<th scope="row"><label for="spoluprace2">Forma spolupráce</label></th>
-	<td><input name="spoluprace2" id="spoluprace2" class="regular-text" type="text" value="<?php echo $cooperations[1]  ?>" maxlength="20" /></td>
+	<td><input name="spoluprace2" id="spoluprace2" class="regular-text" type="text" value="<?php echo $cooperations[1]  ?>" maxlength="255" /></td>
 </tr>
 <tr>
 	<th scope="row"><label for="autor3">Autor č. 3</label></th>
@@ -70,7 +70,7 @@
 		</select>	
 	</td>
 	<th scope="row"><label for="spoluprace3">Forma spolupráce</label></th>
-	<td><input name="spoluprace3" id="spoluprace3" class="regular-text" type="text" value="<?php echo $cooperations[2]  ?>" maxlength="20" /></td>
+	<td><input name="spoluprace3" id="spoluprace3" class="regular-text" type="text" value="<?php echo $cooperations[2]  ?>" maxlength="255" /></td>
 </tr>
 </tbody>
 </table>
