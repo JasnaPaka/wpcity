@@ -4,8 +4,9 @@ $ROOT = plugin_dir_path( __FILE__ )."../";
 include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
 
-include_once $ROOT."db/AuthorDb.php"; 
+include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/ObjectDb.php";
+include_once $ROOT."db/SourceDb.php";
 
 /**
  * Správa autorů
@@ -14,10 +15,12 @@ class AuthorController extends JPController {
 		
 	protected $db;
 	protected $dbObject;
+	private $dbSource;
 	
 	function __construct() {
 		$this->db = new AuthorDb();
 		$this->dbObject = new ObjectDb();
+		$this->dbSource = new SourceDb();
 	}
 	
 	public function getList() {
@@ -185,7 +188,7 @@ class AuthorController extends JPController {
 	}
 	
 	public function getListByAuthor() {
-		return $this->dbObject->getListByAuthor($this->getObjectId());	
+		return $this->dbObject->getListByAuthor($this->getObjectId(), true);	
 	}
 	
 	private function getFormValues() {
@@ -197,6 +200,9 @@ class AuthorController extends JPController {
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
+		
+		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
+		$row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);
 		
 		return $row;
 	}
@@ -253,7 +259,35 @@ class AuthorController extends JPController {
 		return trim($obj->titul_pred." ".$obj->jmeno." ".$obj->prijmeni." ".$obj->titul_za);	
 	}
 	
+	public function getSelectedSources() {
+		$sources = array ();		
+		foreach($this->getSourcesForAuthor() as $source) {
+			array_push($sources, $source);
+		}
+		
+		// doplníme pět dalších
+		for ($i = 1; $i <= 5; $i++) {
+			array_push($sources, 0);
+		}
+		
+		return $sources;
+	}
 	
+	public function getSourcesForAuthor() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->dbSource->getSourcesForAuthor($this->getObjectId());	
+	}
+	
+	public function getCatalogPage($page) {
+		return $this->db->getCatalogPage($page);		
+	}
+	
+	public function getImgForAuthor($authorId) {
+		return $this->db->getImgForAuthor($authorId);	
+	}
 }
 
 ?>

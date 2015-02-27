@@ -32,6 +32,13 @@
 		<textarea id="editor" name="editor" rows="30" cols="50"><?php echo stripslashes($row->obsah) ?></textarea>
 	</td>
 </tr>
+<tr>
+	<th scope="row"><label for="zpracovano">Zpracováno</label></th>
+	<td>
+		<input name="zpracovano" id="zpracovano" type="checkbox" <?php if ($row->zpracovano == 1 || $row->zpracovano) echo 'checked="checked"' ?>/>
+		<p class="description">Zaškrtněte, pokud je text popisující objekt hotov do podoby, která je určena ke zveřejnění.</p>
+	</td>
+</tr>
 </tbody>
 </table>
 

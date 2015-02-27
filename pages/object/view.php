@@ -7,14 +7,26 @@
 	include_once $ROOT."controllers/ObjectController.php";
 	$controller = new ObjectController();
 	
-	$row = $controller->getObjectFromUrl();
+	if (isset($_POST["approve"])) {
+		$row = $controller->approve();
+	} else {	
+		$row = $controller->getObjectFromUrl();
+	}
 	$photos = $controller->getPhotosForObject();
 ?>
 
 
 <div class="wrap">
 
-<h2><?php echo $row->nazev ?></h2>
+<h2><?php echo $row->nazev ?> &nbsp;&nbsp;<a href="/katalog/dilo/<?php echo $row->id ?>/" class="button">Detail díla</a></h2>
+
+<?php if ($row->schvaleno == 0) { ?>
+	<div class="updated below-h2">
+		<p>Tento objekt dosud nebyl schválen. Po kontrole jej můžete schválit níže.</p>
+	</div>
+<?php } ?>
+
+<?php include_once $ROOT."fw/templates/messages.php"; ?>
 
 <table class="widefat" style="max-width: 500px">
 <tbody>
@@ -48,7 +60,9 @@
 <?php if (strlen($row->pamatkova_ochrana) > 0) { ?>
 	<tr>
 		<th><strong>Památková ochrana</strong></th>
-		<td><?php echo $row->pamatkova_ochrana ?></td>
+		<td>
+			<a href="http://monumnet.npu.cz/pamfond/list.php?CiRejst=<?php echo $row->pamatkova_ochrana?>"><?php echo $row->pamatkova_ochrana?></a>
+		</td>
 	</tr>
 <?php } ?>
 <?php if (strlen($row->pristupnost) > 0) { ?>
@@ -62,7 +76,9 @@
 		<th valign="top"><strong>Autoři</strong></th>
 		<td>
 			<?php foreach($controller->getAuthorsForObject() as $author) { ?>
-				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>"><?php echo $author->jmeno ?> <?php echo $author->prijmeni ?><br /></a>
+				<a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>">
+					<?php echo trim($author->titul_pred." ".$author->jmeno." ".$author->prijmeni." ".$author->titul_za) ?></a>
+					<br />
 			<?php } ?>
 		</td>
 	</tr>
@@ -117,7 +133,7 @@
 	} 
 ?>
 
-<?php if (strlen($row->interni) > 0) { ?>
+<?php if (strlen($row->interni) > 1) { ?>
 
 <h3>Interní poznámka</h3>
 
@@ -144,8 +160,12 @@
 </tbody>
 </table>
 
+<form method="post">
 <p class="submit">
 	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+	<?php if ($row->schvaleno == 0) { ?>
+		<input name="approve" id="approve" class="button" value="Schválit" type="submit">
+	<?php } ?>
 	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Správa fotografií</a>
 	<?php if (!$KV_SETTINGS["simple"]) { ?>
 		<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
@@ -154,6 +174,6 @@
 	<a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>
-
+</form>
 
 </div>

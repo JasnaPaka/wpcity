@@ -1,8 +1,8 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
 
-	include_once $ROOT."controllers/ObjectController.php";
-	$controller = new ObjectController();
+	include_once $ROOT."controllers/AuthorController.php";
+	$controller = new AuthorController();
 	
 	$row = $controller->getObjectFromUrl();
 	
@@ -15,13 +15,13 @@
 
 <div class="wrap">
 
-<h2>Zdroje pro '<?php echo $row->nazev ?>'</h2>
+<h2>Zdroje pro '<?php echo $controller->getFullname() ?>'</h2>
 
-<p>Přehled souvisejících odkazů a zdrojů pro zvolený objekt.</p>
+<p>Přehled souvisejících odkazů a zdrojů pro zvoleného autora.</p>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
 
-<form action="admin.php?page=object&amp;action=source&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" method="post" enctype="multipart/form-data">
+<form action="admin.php?page=author&amp;action=source&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" method="post" enctype="multipart/form-data">
 
 <?php	
 	include_once $ROOT."pages/object/i-shared-source.php"; 
@@ -29,10 +29,9 @@
 
 <p class="submit">
 	<input name="submit" id="submit" class="button button-primary" value="Aktualizovat" type="submit">
-	<a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
+	<a href="admin.php?page=author&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
 </p>
 
 </form>
 
 </div>
-

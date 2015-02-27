@@ -180,7 +180,7 @@ abstract class JPController {
 	 */
 	public function getSearchValueValid() {
 		if ($this->getSearchValue() == null) {
-			return false;	
+			return false;
 		}
 		
 		return strlen($this->getSearchValue()) >= 3;

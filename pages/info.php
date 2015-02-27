@@ -1,5 +1,54 @@
-<h2>Správa objektů</h2>
+<?php
+	$ROOT = plugin_dir_path( __FILE__ )."../";
 
-<p>Plugin pro WordPress, který umožňuje spravovat body v mapě a základní informace o nich.</p>
+	include_once $ROOT."config.php";
+	global $KV_SETTINGS;
 
-<p>Zdrojový kód pluginu je <a href="https://github.com/JasnaPaka/wpcity">k dispozici na GitHubu</a>.</p>
+	include_once $ROOT."controllers/GeneralController.php";
+	
+	$controller = new GeneralController();
+	$rows = $controller->getNeschvaleneList();
+?>
+
+<h2>Nástěnka pro správu objektů</h2>
+
+<h3>Objekty ke schválení</h3>
+
+<table class="wp-list-table widefat fixed posts">
+	<thead>
+		<tr>
+			<th>Název</th>
+		</tr>
+		
+<?php if ($controller->getCountKeSchvaleni() == 0) { ?>
+		
+		<tr class="no-items">
+			<td class="colspanchange">
+				Nebyl nalezen žádný objekt.
+			</td>
+		</tr>	
+		
+<?php 	} else {
+		$barva = true;
+		foreach ($rows as $row) {
+			if ($barva) {
+				echo '<tr class="alternate">';
+				$barva = false;
+			} else {
+				echo '<tr>';
+				$barva = true;
+			}
+			
+			echo '<td><a href="admin.php?page=object&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->nazev.'</strong></a></td>';
+			echo '</tr>';
+					
+		}
+
+}  ?>
+		
+	</thead>
+
+	</tbody>
+</table>
+
+

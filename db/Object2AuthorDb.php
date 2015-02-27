@@ -2,7 +2,11 @@
 
 class Object2AuthorDb extends JPDb {
 	
-	protected $tableName = "kv_objekt2autor";
+	function __construct() {
+		parent::__construct();
+		
+		$this->tableName = $this->dbPrefix."objekt2autor";
+	}
 	
 	public function getDefaultOrder() {
 		return "id";

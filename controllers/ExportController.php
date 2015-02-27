@@ -6,6 +6,7 @@ include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
 
 include_once $ROOT."db/ObjectDb.php";
+include_once $ROOT."db/PhotoDb.php";
 
 /**
  * Nástroje na export
@@ -13,9 +14,11 @@ include_once $ROOT."db/ObjectDb.php";
 class ExportController extends JPController {
 	
 	private $dbObject;
+	private $dbPhoto;
 	
 	function __construct() {
 		$this->dbObject = new ObjectDb();
+		$this->dbPhoto = new PhotoDb();
 	}
 
 	/**
@@ -40,6 +43,15 @@ class ExportController extends JPController {
 				break;
 			case "aliens":
 				$this->exportAliens();
+				break;
+			case "img_512":
+				$this->rebuildImages512();
+				break;
+			case "img_100":
+				$this->rebuildImages100();
+				break;
+			default:
+				echo "Nedefinovana akce.";
 				break;
 		}
 	}
@@ -116,6 +128,56 @@ class ExportController extends JPController {
 	public function getStringId() {
 		return "export";	
 	}
+	
+	private function rebuildImages512() {
+		global $wpdb;
+		
+		$images = $this->dbPhoto->getPhotosWithoug512();
+		
+		foreach ($images as $image) {
+			$editor = wp_get_image_editor(ABSPATH."wp-content/uploads/sites/".$wpdb->blogid.$image->img_original);
+			if (!is_wp_error($editor)) {
+				$editor->resize(512, 384, true);
+				
+				$fn = $editor->generate_filename(512);
+				$output = $editor->save($fn);
+						
+				$path = $this->getRelativePathToImg($output["path"]);
+
+				$image->img_512 = $path;
+				$this->dbPhoto->update($image, $image->id);
+			}
+		}
+	}
+	
+	private function rebuildImages100() {
+		global $wpdb;
+		
+		$images = $this->dbPhoto->getPhotosWithoug100();
+		
+		foreach ($images as $image) {
+			$editor = wp_get_image_editor(ABSPATH."wp-content/uploads/sites/".$wpdb->blogid.$image->img_original);
+			if (!is_wp_error($editor)) {
+				$editor->resize(100, 75, true);
+				
+				$fn = $editor->generate_filename(100);
+				$output = $editor->save($fn);
+						
+				$path = $this->getRelativePathToImg($output["path"]);
+
+				$image->img_100 = $path;
+				$this->dbPhoto->update($image, $image->id);
+			}
+		}
+	}	
+	
+	
+	private function getRelativePathToImg($path) {
+		$upload_dir = wp_upload_dir();
+		$baseDir = $upload_dir['basedir']; 
+		return str_replace($baseDir, "", $path);
+	}	
+	
 }
 
 

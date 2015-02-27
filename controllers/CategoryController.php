@@ -38,8 +38,17 @@ class CategoryController extends JPController {
 		}
 		
 		// ikona
+		if (strlen($row->ikona) < 3 || strlen($row->ikona) > 250) {
+			array_push($this->messages, new JPErrorMessage("Ikona musí mít min. 3 a nejvíce 250 znaků."));
+		}		
+		
 		if (!preg_match("%^((http?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i", $row->ikona)) {
 			array_push($this->messages, new JPErrorMessage("URL ikony není platnou adresou."));
+		}
+		
+		// barva
+		if (strlen($row->barva) < 3 || strlen($row->barva) > 250) {
+			array_push($this->messages, new JPErrorMessage("Barva musí mít min. 3 a nejvíce 250 znaků."));
 		}
 		
 		// přiblížení
@@ -135,6 +144,7 @@ class CategoryController extends JPController {
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
 		$row->url = filter_input (INPUT_POST, "url", FILTER_SANITIZE_STRING);
 		$row->ikona = filter_input (INPUT_POST, "ikona", FILTER_SANITIZE_STRING);
+		$row->barva = filter_input (INPUT_POST, "barva", FILTER_SANITIZE_STRING);
 		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		
 		$row->checked = filter_input (INPUT_POST, "checked", FILTER_SANITIZE_STRING);

@@ -1,34 +1,25 @@
 <?php
 
-function kv_MapaLegenda() {
+function kv_MapCategories() {
 	global $wpdb;
-	$output = '<div>';
+	$categories = array();
 	
-	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 AND systemova = 0 ORDER BY nazev");
+	$rows = $wpdb->get_results("SELECT * FROM ".getKvDbPrefix()."kategorie WHERE deleted = 0 ORDER BY nazev");
 	foreach($rows as $row) {
-		$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
+		$count = $wpdb->get_var("SELECT count(*) FROM ".getKvDbPrefix()."objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
 		
-		$output.= '<img src="'.$row->ikona.'" alt="" />
-			<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
-			onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" '.($row->checked? 'checked="checked"': '').' type="checkbox" />
-			<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
+		$category = new stdClass();
+		$category->id = $row->id;
+		$category->nazev = $row->nazev;
+		$category->ikona = $row->ikona;
+		$category->barva = strlen($row->barva) > 0 ? $row->barva : "white";
+		$category->pocet = $count;
+		$category->zaskrtnuto = $row->checked ? "active" : "";
+		
+		array_push($categories, $category);
 	}
 	
-	// A nyní systémové
-	$rows = $wpdb->get_results("SELECT * FROM kv_kategorie WHERE deleted = 0 AND systemova = 1 ORDER BY nazev");
-	if (count($rows) > 0) {
-		$output = $output."<hr />";
-		foreach($rows as $row) {
-			$count = $wpdb->get_var("SELECT count(*) FROM kv_objekt WHERE deleted = 0 AND schvaleno = 1 AND kategorie = ".$row->id);
-			
-			$output.= '<img src="'.$row->ikona.'" alt="" />
-				<input name="'.$row->url.'" id="kv_category'.$row->id.'" 
-				onclick="kv_zmenaViditelnostiSkupiny(\''.$row->id.'\')" type="checkbox" />
-				<label for="kv_category'.$row->id.'" title="Počet objektů v kategorii: '.$count.'">'.$row->nazev.'</label><br />';
-		}
-	}
-	
-	return $output."</div>";
+	return $categories;
 }
 
 function kv_MapaData() {
@@ -36,15 +27,15 @@ function kv_MapaData() {
 	
 	$uploadDir = wp_upload_dir();
 	$siteUrl = site_url();
-	$output = "";
+	$themeUrl = get_template_directory_uri()."-child-krizkyavetrelci";
 	
-	$rows = $wpdb->get_results("SELECT kv.*, kv_kategorie.ikona,
-		(SELECT img_thumbnail FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
-		(SELECT img_large FROM kv_fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large,
-		(SELECT GROUP_CONCAT(CONCAT(ka.jmeno, ' ',ka.prijmeni) SEPARATOR ', ') FROM kv_autor ka INNER JOIN kv_objekt2autor o2a ON o2a.autor = ka.id WHERE o2a.objekt = kv.id AND ka.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id) as autori,
-		kv_kategorie.checked,
-		kv_kategorie.zoom
-		FROM kv_objekt AS kv INNER JOIN kv_kategorie ON kv.kategorie = kv_kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
+	$rows = $wpdb->get_results("SELECT kv.*, ".getKvDbPrefix()."kategorie.ikona,
+		(SELECT img_thumbnail FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
+		(SELECT img_large FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large,
+		(SELECT GROUP_CONCAT(CONCAT(ka.jmeno, ' ',ka.prijmeni) SEPARATOR ', ') FROM ".getKvDbPrefix()."autor ka INNER JOIN ".getKvDbPrefix()."objekt2autor o2a ON o2a.autor = ka.id WHERE o2a.objekt = kv.id AND ka.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id) as autori,
+		".getKvDbPrefix()."kategorie.checked,
+		".getKvDbPrefix()."kategorie.zoom
+		FROM ".getKvDbPrefix()."objekt AS kv INNER JOIN ".getKvDbPrefix()."kategorie ON kv.kategorie = ".getKvDbPrefix()."kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
 		ORDER BY kategorie, nazev");
 		
 	foreach($rows as $row) {		
@@ -54,51 +45,35 @@ function kv_MapaData() {
 		
 		$nazev = str_replace("'", "\'", $row->nazev);
 		
-		$content = "<p style=\"font-weight:bold\">".$nazev."</p>";
+		$content = "<p style=\"font-weight:bold\"><a href=\"".$siteUrl."/katalog/dilo/".$row->id."/\">".$nazev."</a></p>";
 		
 		// Pokud existuje obrázek, přidáme jeho náhled
 		if ($row->img_thumbnail != null) {
-			$content = $content.'<div><a href="'.$uploadDir["baseurl"].$row->img_large.'" target="_blank"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /"></a>';
+			$content = $content.'<div><a href="'.$siteUrl.'/katalog/dilo/'.$row->id.'/"><img src="'.$uploadDir["baseurl"].$row->img_thumbnail.'" alt="" /></a>';
 		}
-		
-		$content .= "<p>";
-		
-		// Atributy
-		if (strlen($row->rok_vzniku) > 0) {
-			$content .= "<span style=\"font-weight:bold\">Rok</span>: ".$row->rok_vzniku."<br />";
-		}
-
-		if (strlen($row->autori) > 0) {
-			$content .= "<span style=\"font-weight:bold\">Autoři</span>: ".$row->autori."<br />";
-		}
-		
-		if (strlen($row->material) > 0) {
-			$content .= "<span style=\"font-weight:bold\">Materiál</span>: ".$row->material."<br />";
-		}
-		
-		if (strlen($row->pristupnost) > 0) {
-			$content .= "<span style=\"font-weight:bold\">Přístupnost</span>: ".$row->pristupnost."<br />";
-		}	
-		
-		$content.='<br /><a href="mailto:krizkyavetrelci@email.cz?subject='.$row->nazev.': Doplnění informací">Doplnit informace</a>';
-		
-		$content .= "</p>";
-		
-		// Trvalý odkaz
-		$content = $content.'<p><a href="'.$siteUrl.'/?objekt='.$row->id.'" title="Trvalý odkaz na objekty do mapy"><img src="'.$siteUrl.'/wp-content/themes/krizky-vetrelci/images/link-icon.png" alt="" /></a>';
 		
 		// Pokud je uživatel přihlášen, přidáme odkaz do administrace
 		if (is_user_logged_in()) {
-			$content = $content.'&nbsp;<a href="wp-admin/admin.php?page=object&action=view&id='.$row->id.'" title="Úprava objektu"><img src="'.$siteUrl.'/wp-content/themes/krizky-vetrelci/images/edit-icon.png" alt="" /></a>';
+			$content = $content."<p>";
+			$content = $content.'&nbsp;<a href="/wp-admin/admin.php?page=object&action=view&id='.$row->id.'" title="Úprava objektu"><img src="'.$themeUrl.'/images/edit-icon.png" alt="" /></a>';
+			$content = $content."</p>";
 		}
 		
-		$content = $content."</p>";
 		
-		$output.= '[\'<div style="white-space:nowrap; font-family: Verdana">'.$content.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
-		'\',\''.$nazev.'\', '.$row->checked.','.$row->id.', '.$row->zoom.']';
+		
+		// <div style="white-space:nowrap; font-family: Verdana">'.$content.'</div>\
+		$output.= '[\'<div class="scrollFix">'.$content.'</div>\','.$row->latitude.','.$row->longitude.','.$row->kategorie.',\''.$row->ikona.
+		'\',\''.$nazev.'\', '.$row->checked.','.$row->id.', '.$row->zoom.', '.$row->zruseno.', \''.($row->img_thumbnail != null ? $row->img_thumbnail : "NENI").'\']';
 	}
 		
 	return $output;
 }
+
+function kv_ObjektPocet() {
+	global $wpdb;
+	
+	return $wpdb->get_var("SELECT count(*) FROM ".getKvDbPrefix()."objekt WHERE deleted = 0 AND schvaleno = 1");
+}
+
 
 ?>

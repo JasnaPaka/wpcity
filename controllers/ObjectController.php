@@ -47,12 +47,12 @@ class ObjectController extends JPController {
 		}
 		
 		if ($this->getShowAll()) {
-			return $this->db->getListByNazev($this->getSearchValue());
+			return $this->db->getListByNazev($this->getSearchValue(), $this->getCurrentOrder(), true, true);
 		} else {
 			return $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());	
 		}
 		
-		return $this->db->getListByNazev($this->getSearchValue(), $this->getCurrentOrder());
+		return $this->db->getListByNazev($this->getSearchValue());
 	}
 	
 	public function getCount() {
@@ -106,6 +106,11 @@ class ObjectController extends JPController {
 		return count($this->messages) === 0; 
 	}
 	
+	private function getCurrentDateStr() {
+		$dt = new DateTime();
+		return $dt->format('Y-m-d H:i:s');
+	}
+	
 	private function setAuthors($row) {
 		global $current_user;
 		
@@ -125,7 +130,75 @@ class ObjectController extends JPController {
 	}
 	
 	public function addPublic() {
-		$this->addInternal(true);
+		// Získání dat z formuláře		
+		$nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
+		if (strlen (trim($nazev)) == 0) {
+			$nazev = "Bez názvu";
+		}			
+			
+		$info = filter_input (INPUT_POST, "info", FILTER_SANITIZE_STRING);
+		if (!is_user_logged_in()) {
+			$author = filter_input (INPUT_POST, "author", FILTER_SANITIZE_STRING);
+		} else {
+			$current_user = wp_get_current_user();
+			$author = $current_user->display_name;
+		}
+		$author = trim ($author);
+		
+		if (strlen($author) == 0) {
+			$author = "Neuveden";	
+		}
+		
+		$latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
+		$longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);		
+		
+
+		// Validace
+		if (strlen($author) > 250) {
+			array_push($this->messages, new JPErrorMessage("Jméno autora příspěvku může mít maximálně 250 znaků."));
+		}
+		
+		if ($latitude == 0 || $longitude == 0) {
+			array_push($this->messages, new JPErrorMessage('Nebylo zvoleno umístění bodu v mapě.'));
+			
+			$objekt = new stdClass();
+			$objekt->info = $info;
+			$objekt->latitude = $latitude;
+			$objekt->longitude = $longitude;
+			
+			return $objekt;	
+		}
+		
+		$kategorie = $this->dbCategory->getCategoryByUrl('ostatni');
+		
+		// Uložení
+		$objekt = new stdClass();
+		$objekt->nazev = $nazev;
+		$objekt->latitude = $latitude;
+		$objekt->longitude = $longitude;
+		$objekt->kategorie = $kategorie->id;
+		$objekt->interni = $info;
+		$objekt->deleted = 0;
+		$objekt->schvaleno = 0;
+		$objekt->pridal_autor = $author;
+		$objekt->pridal_datum = $this->getCurrentDateStr();
+		
+		$this->db->create($objekt);
+		
+		$this->addPhotos($this->db->getLastId(), false);
+		
+		array_push($this->messages, new JPInfoMessage("Dílo bylo úspěšně přidáno. Po schválení se objeví v katalogu. Děkujeme!"));
+		
+		return $this->getInitPublicForm();
+	}
+	
+	public function getInitPublicForm() {
+		$objekt = new stdClass();
+		$objekt->info = "";
+		$objekt->latitude = 0;
+		$objekt->longitude = 0;
+		
+		return $objekt;
 	}
 	
 	public function add() {
@@ -202,16 +275,11 @@ class ObjectController extends JPController {
 				$photos[0] = $this->getRelativePathToImg($result["file"]);
 				
 				// vše ok, máme info o obrázku, vygenerujeme náhledy
-				foreach (get_intermediate_image_sizes() as $s) {
-					$sizes[ $s ] = array( 0, 0 );
-		 			if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
-		 				$sizes[ $s ][0] = get_option( $s . '_size_w' );
-		 				$sizes[ $s ][1] = get_option( $s . '_size_h' );
-		 			}else{
-		 				if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
-		 					$sizes[ $s ] = array( $_wp_additional_image_sizes[ $s ]['width'], $_wp_additional_image_sizes[ $s ]['height'], );
-		 			}
-		 		}
+				$sizes["thumbnail"] = array(200, 200, true);
+				$sizes["medium"] = array(600, 600, true);
+				$sizes["large"] = array(1024, 1024, true);
+				$sizes["512"] = array(512, 384, false);
+				$sizes["100"] = array(100, 75, false);
 				
 				$i = 0;
 				foreach($sizes as $size) {
@@ -221,7 +289,12 @@ class ObjectController extends JPController {
 					if (!is_wp_error($image)) {
 							
 						$imgSize = $image->get_size();
-						$imgSize = ImgUtils::resizeToProporcional($imgSize["width"], $imgSize["height"], $size[0], $size[1]);
+						if ($size[2]) {
+							$imgSize = ImgUtils::resizeToProporcional($imgSize["width"], $imgSize["height"], $size[0], $size[1], $size[2]);
+						} else {
+							$imgSize["width"] = $size[0];
+							$imgSize["height"] = $size[1];
+						}
 
 						$image->resize($imgSize["width"], $imgSize["height"], true);						
 						$filename = $image->generate_filename($size[0]);
@@ -237,12 +310,14 @@ class ObjectController extends JPController {
 				}
 				
 				// všechny náhledy vygenerovány?
-				if (count($photos) == 4) {
+				if (count($photos) == 6) {
 					$photo = new stdClass();
 					$photo->img_original = $photos[0];
 					$photo->img_thumbnail = $photos[1];
 					$photo->img_medium = $photos[2];
 					$photo->img_large = $photos[3];
+					$photo->img_512 = $photos[4];
+					$photo->img_100 = $photos[5];
 					$photo->objekt = $idObject;
 					$photo->autor = $current_user->display_name;;
 					$photo->primarni = 0;
@@ -372,6 +447,20 @@ class ObjectController extends JPController {
 		}
 		
 		return $row;
+	}
+	
+	public function approve() {
+		$object = $this->getObjectById($this->getObjectFromUrl()->id);
+		if ($object == null) {
+			return null;	
+		}		
+		
+		$this->db->approveObject($this->getObjectFromUrl()->id);
+		$object->schvaleno = 1;
+		
+		array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně schválen."));
+		
+		return $object;
 	}
 	
 	private function validateSources($sources) {
@@ -529,6 +618,32 @@ class ObjectController extends JPController {
 		return $this->dbPhoto->getPhotosByObject($this->getObjectId());
 	}
 	
+	public function getPhotosForObjectMain() {
+		$photos = $this->getPhotosForObject();
+		
+		foreach($photos as $photo) {
+			if ($photo->primarni) {
+				return $photo;	
+			}
+		}
+		
+		return null;
+	}
+	
+	public function getPhotosForObjectNotMain() {
+		$newPhotos = array ();
+		$photos = $this->getPhotosForObject();
+		
+		foreach($photos as $photo) {
+			if (!$photo->primarni) {
+				array_push($newPhotos, $photo);	
+			}
+		}
+		
+		return $newPhotos;
+		
+	}
+	
 	public function getAllAuthors() {
 		return $this->dbAuthor->getAll();
 	}
@@ -540,6 +655,11 @@ class ObjectController extends JPController {
 		
 		return $this->db->getAuthorsForObject($this->getObjectId());	
 	}
+	
+	public function getAuthorsByObject($idObject) {
+		return $this->db->getAuthorsForObject($idObject);	
+	}
+	
 	
 	public function getCooperationsForObject() {
 		if ($this->getObjectId() == null) {
@@ -732,7 +852,33 @@ class ObjectController extends JPController {
 		
 		return $id;
 	}
+	
+	public function getObjectCategory($id) {
+		return $this->dbCategory->getById($id);	
+	}
+	
+	public function getRandomObjectWithPhoto() {
+		$count = $this->db->getCountObjectsWithPhotos();		
+		$randNumber = rand(1, $count);
+
+		return $this->db->getRandomObjectWithPhoto($randNumber);
+	}
+	
+	public function getLastObjectWithPhoto() {
+		return $this->db->getLastObjectWithPhoto();
+	}
+	
+	public function getCatalogPage($page) {
+		return $this->db->getCatalogPage($page);		
+	}
 		
+	public function getAuthorFullname($obj) {
+		return trim($obj->titul_pred." ".$obj->jmeno." ".$obj->prijmeni." ".$obj->titul_za);	
+	}		
+	
+	public function getCountKeSchvaleni() {
+		return $this->db->getCountKeSchvaleni();	
+	}
 }
 
 ?>

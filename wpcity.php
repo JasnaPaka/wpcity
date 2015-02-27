@@ -11,7 +11,13 @@
  
  /** Akce prováděné ještě před zobrazením stránky */
 require_once ("controllers/ExportController.php");
+require_once ("controllers/ObjectController.php");
 require_once ("config.php");
+
+if (WP_DEBUG && WP_DEBUG_DISPLAY) 
+{
+   ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED);
+}
 
 add_action('plugins_loaded', 'wpCitySendHeadersCallback');
 
@@ -26,35 +32,10 @@ function wpCitySendHeadersCallback() {
 
 	}
 }
- 
-/** Vytvoříme výchozí data */ 
-function initWpCityData() {
-	global $wpdb;
-	
-	// tabulka pro kategorie
-	$table_name = $wpdb->prefix . "kv_category";
-	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-		$sql = "CREATE TABLE $table_name (
-			id int NOT NULL AUTO_INCREMENT,
-			name tinytext NOT NULL,
-			url tinytext NOT NULL,
-			description text NOT NULL
-		);";
-		
-    	//reference to upgrade.php file
-    	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    	dbDelta($sql);
-	}
-	
-	update_option( "wpCityDbVersion", 1);
-}
-
-register_activation_hook( __FILE__, 'initWpCityData');
 
 function pageScripts() {
 	wp_enqueue_script('jQuery', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-1.10.2.js');
 	wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-ui-1.10.4.custom.min.js');
-	//wp_enqueue_script('jQuery UI dt cs', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery.ui.datepicker-cs.js');
 	
 	wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');	
 	wp_enqueue_style('WPCity CSS', plugin_dir_url(__FILE__). '/content/css/wpcity.css');
@@ -67,7 +48,7 @@ add_action('admin_enqueue_scripts', 'pageScripts');
 add_action('admin_menu', 'wpCityMenu');
 
 function wpCityMenu(){
-   add_menu_page('Správa objektů', 'Správa objektů', 'manage_options', 'wpcity', 'wpCityMenuPageCallback', plugins_url( 'myplugin/images/icon.png' ), 90); 
+   add_menu_page('Správa objektů', getNeschvalenoTitle('Správa objektů'), 'manage_options', 'wpcity', 'wpCityMenuPageCallback', 'dashicons-location', 90); 
 }
 
 function wpCityMenuPageCallback(){
@@ -75,6 +56,19 @@ function wpCityMenuPageCallback(){
 }
 
 /** Přidáme podnabídku */
+function getNeschvalenoTitle($title) {
+		
+	$controller = new ObjectController();
+	$neschvaleno = $controller->getCountKeSchvaleni();
+	
+	if ($neschvaleno > 0) {
+		$title = $title.' <span class="update-plugins count-1"><span class="update-count">'.$neschvaleno.'</span></span>';	
+	}	
+	
+	return $title;	
+}
+
+
 add_action( 'admin_menu', 'wpCityCategoryMenu' );
 
 function wpCityCategoryMenu() {
@@ -87,6 +81,7 @@ function wpCityCategoryMenu() {
 		add_submenu_page('wpcity', 'Export', 'Export', 'delete_posts', 'export', 'wpCityExportPageCallback');
 	}
 }
+
 
 function wpCityObjectPageCallback(){
 	if (!isset($_GET["action"])) {
@@ -176,6 +171,9 @@ function wpCityAuthorPageCallback() {
 		case 'list':
 			require_once("pages/author/list.php");
 			break;
+		case 'source':
+			require_once("pages/author/source.php");
+			break;
 		default:
 			require_once("pages/author/list.php");
 			break;
@@ -186,16 +184,26 @@ function wpCityExportPageCallback() {
 	require_once("pages/export/view.php");
 }	
 
+function getKvDbPrefix() {
+	global $wpdb;
+	
+	if (is_multisite()) {
+		return "kv_".$wpdb->blogid."_";
+	}
+	
+	return "kv_";
+}
+
 
 /** Mapa*/
 include "mapa.php";
-
-/** Informace o objektech */
-include "objekty.php";
 
 /** Snippety do šablon */
 include "shortcodes.php";
 
 /** Přepisovací pravidla */
 include "rewrites.php";
+
+/** Objekty */
+include "object.php";
 

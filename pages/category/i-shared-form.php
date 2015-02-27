@@ -13,6 +13,10 @@
 	<td><input name="ikona" id="ikona" class="regular-text" type="text" value="<?php echo $row->ikona ?>" maxlength="250" /></td>
 </tr>
 <tr>
+	<th scope="row"><label for="barva">Barva ikony</label></th>
+	<td><input name="barva" id="barva" class="regular-text" type="text" value="<?php echo $row->barva ?>" maxlength="250" /></td>
+</tr>
+<tr>
 	<th scope="row" valign="top"><label for="popis">Popis</label></th>
 	<td>
 		<textarea id="popis" name="popis" rows="4" cols="40"><?php echo $row->popis ?></textarea>

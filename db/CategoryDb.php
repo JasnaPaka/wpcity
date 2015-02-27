@@ -2,7 +2,11 @@
 
 class CategoryDb extends JPDb {
 	
-	protected $tableName = "kv_kategorie";
+	function __construct() {
+		parent::__construct();
+		
+		$this->tableName = $this->dbPrefix."kategorie";
+	}
 	
 	public function getDefaultOrder() {
 		return "poradi desc, nazev";
@@ -11,7 +15,7 @@ class CategoryDb extends JPDb {
 	public function getByUrl($url) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM kv_kategorie WHERE url = %s AND deleted = 0", $url); 
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE url = %s AND deleted = 0", $url); 
 		$rows = $wpdb->get_results ($sql);
 		if (count($rows) === 0) {
 			return null;
@@ -27,6 +31,7 @@ class CategoryDb extends JPDb {
 			"nazev" => $data->nazev,
 			"url" => $data->url,
 			"ikona" => $data->ikona,
+			"barva" => $data->barva,
 			"checked" => ($data->checked ? 1 : 0),
 			"zoom" => $data->zoom,
 			"poradi" => $data->poradi,
@@ -36,6 +41,7 @@ class CategoryDb extends JPDb {
 		$types = array (
 			'%s',
 			'%s',			
+			'%s',
 			'%s',
 			'%d',
 			'%d',
@@ -52,8 +58,20 @@ class CategoryDb extends JPDb {
 	public function getCountObjectsInCategory($idCategory) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1", $idCategory);
+		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->dbPrefix."objekt WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1", $idCategory);
 		return $wpdb->get_var($sql);
+	}
+	
+	public function getCategoryByUrl($url) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE url LIKE %s AND deleted = 0", '%'.$url.'%');
+		$results = $wpdb->get_results ($sql);
+		if (count($results) > 0) {
+			return $results[0];	
+		}
+		
+		return null; 
 	}
 	
 }

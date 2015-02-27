@@ -2,7 +2,11 @@
 
 class PhotoDb extends JPDb {
 	
-	protected $tableName = "kv_fotografie";
+	function __construct() {
+		parent::__construct();
+		
+		$this->tableName = $this->dbPrefix."fotografie";
+	}	
 	
 	public function getDefaultOrder() {
 		return "id";
@@ -30,6 +34,8 @@ class PhotoDb extends JPDb {
 			"img_thumbnail" => $data->img_thumbnail,
 			"img_medium" => $data->img_medium,
 			"img_large" => $data->img_large,
+			"img_512" => $data->img_512,
+			"img_100" => $data->img_100,
 			"objekt" => $data->objekt,
 			"deleted" => $data->deleted,
 			"primarni" => $data->primarni,
@@ -40,6 +46,8 @@ class PhotoDb extends JPDb {
 		);
 		
 		$types = array (
+			'%s',
+			'%s',
 			'%s',
 			'%s',
 			'%s',
@@ -55,6 +63,21 @@ class PhotoDb extends JPDb {
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
 	}
+	
+	
+	public function getPhotosWithoug512() {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE img_512 IS NULL"); 
+		return $wpdb->get_results ($sql);
+	}
+	
+	public function getPhotosWithoug100() {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE img_100 IS NULL"); 
+		return $wpdb->get_results ($sql);
+	}		
 	
 }
 

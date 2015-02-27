@@ -8,7 +8,8 @@
 	
 	var mapOptions = {
           center: new google.maps.LatLng(49.748398, 13.377652),
-          zoom: 13
+          zoom: 13,
+          mapTypeId: google.maps.MapTypeId.SATELLITE
     };
     
     function placeMarker(location) {
@@ -33,8 +34,10 @@
       	map.setTilt(0);
 		
 		google.maps.event.addListener(map, 'click', function(event) {
-			$('#latitude').val(event.latLng.lat());
-			$('#longitude').val(event.latLng.lng());
+			jQuery(function($) {
+				$('#latitude').val(event.latLng.lat());
+				$('#longitude').val(event.latLng.lng());
+			});
 			placeMarker(event.latLng);
 		});
 		

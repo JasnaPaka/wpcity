@@ -5,7 +5,8 @@
 	
 	var mapOptions = {
           center: new google.maps.LatLng(49.748398, 13.377652),
-          zoom: 13
+          zoom: 13,
+          mapTypeId: google.maps.MapTypeId.SATELLITE
     };
     
     function placeMarker(location) {
@@ -41,4 +42,4 @@
 	google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
-<div id="map-canvas" style="height:300px"></div>
+<div id="map-canvas"></div>

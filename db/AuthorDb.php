@@ -2,7 +2,11 @@
 
 class AuthorDb extends JPDb {
 	
-	protected $tableName = "kv_autor";
+	function __construct() {
+		parent::__construct();
+		
+		$this->tableName = $this->dbPrefix."autor";
+	}
 	
 	public function getDefaultOrder() {
 		return "prijmeni, jmeno";
@@ -11,8 +15,8 @@ class AuthorDb extends JPDb {
 	public function update($data, $id) {
 		global $wpdb;
 		
-		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, titul_pred = %s, titul_za = %s, obsah = %s WHERE id = %d";
-		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->titul_pred, $data->titul_za, $data->obsah, $id);
+		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, titul_pred = %s, titul_za = %s, obsah = %s, zpracovano = %d WHERE id = %d";
+		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->titul_pred, $data->titul_za, $data->obsah, $data->zpracovano, $id);
 		$result = $wpdb->query($sql);
 		
 		// aktualizace data narození
@@ -37,11 +41,13 @@ class AuthorDb extends JPDb {
 		return true;
 	}	
 
-	public function getCountObjectsForAuthor($idAuthor) {
+	public function getCountObjectsForAuthor($idAuthor, $iZrusene = false) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt obj INNER JOIN kv_objekt2autor o2a ON o2a.objekt = obj.id INNER JOIN kv_autor aut ON aut.id = o2a.autor 
-			WHERE aut.id = %d AND obj.deleted = 0 AND o2a.deleted = 0 AND aut.deleted = 0 AND obj.schvaleno = 1", $idAuthor); 	
+		$sql = $wpdb->prepare("SELECT count(DISTINCT obj.id) FROM ".$this->dbPrefix."objekt obj INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON o2a.objekt = obj.id 
+			INNER JOIN ".$this->dbPrefix."autor aut ON aut.id = o2a.autor 
+			WHERE aut.id = %d AND obj.deleted = 0 AND o2a.deleted = 0 AND aut.deleted = 0 AND obj.schvaleno = 1", $idAuthor);
+			 	
 		return $wpdb->get_var ($sql);
 	}
 	
@@ -53,7 +59,7 @@ class AuthorDb extends JPDb {
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
 		return $wpdb->get_results("SELECT aut.*, count(*) as pocet FROM ".$this->tableName." aut 
-			INNER JOIN kv_objekt2autor o2a ON o2a.autor = aut.id INNER JOIN kv_objekt obj ON obj.id = o2a.objekt
+			INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON o2a.autor = aut.id INNER JOIN ".$this->dbPrefix."objekt obj ON obj.id = o2a.objekt
 			WHERE aut.deleted = 0 AND o2a.deleted = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 
 			GROUP BY aut.id ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
 	}
@@ -89,6 +95,31 @@ class AuthorDb extends JPDb {
 		return $wpdb->get_var ($sql); 
 	}
 	
+	
+	public function getCatalogPage($page) {
+		global $wpdb;
+
+		$startObject = $page * 9;
+		
+		return $wpdb->get_results("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 ORDER BY ".$this->getOrderSQL($order)." LIMIT 9 OFFSET ".$startObject);
+	}	
+	
+	
+	public function getImgForAuthor($authorId) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT fot.img_512 FROM ".$this->dbPrefix."objekt2autor o2a INNER JOIN ".$this->dbPrefix."objekt obj ON obj.id = o2a.objekt
+			INNER JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = obj.id WHERE o2a.deleted = 0 AND obj.deleted = 0 AND fot.deleted = 0 
+			AND fot.primarni = 1 AND o2a.autor = %d
+			ORDER BY fot.id LIMIT 1", $authorId);
+			
+		$authors = $wpdb->get_results ($sql);
+		if (count($authors) > 0) {
+			return $authors[0];
+		}
+			
+		return null;
+	}
 }
 
 

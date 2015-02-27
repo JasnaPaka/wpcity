@@ -2,7 +2,11 @@
 
 class ObjectDb extends JPDb {
 	
-	protected $tableName = "kv_objekt";
+	function __construct() {
+		parent::__construct();
+		
+		$this->tableName = $this->dbPrefix."objekt";
+	}
 	
 	public function getDefaultOrder() {
 		return "nazev";
@@ -11,14 +15,18 @@ class ObjectDb extends JPDb {
 	public function getCountObjectsInCategory($idCategory) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM kv_objekt WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1", $idCategory); 	
+		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1", $idCategory); 	
 		return $wpdb->get_var ($sql);
 	}
 	
-	public function getListByNazev($nazev, $order="") {
+	public function getListByNazev($nazev, $order="", $iZrusene = false, $iNeschvalene = false) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 AND zruseno = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%');
+		$iZrusene = $iZrusene ? " " : "AND zruseno = 1";
+		$iNeschvalene = $iNeschvalene ? " " : "AND schvaleno = 1";
+		
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE nazev LIKE %s AND deleted = 0 ".$iZrusene." ".$iNeschvalene." ORDER BY ".$this->getOrderSQL($order), '%'.$nazev.'%');
+		
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -29,11 +37,15 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
-	public function getListByAuthor($idAuthor) {
+	public function getListByAuthor($idAuthor, $iZrusene = false) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT DISTINCT kv.* FROM ".$this->tableName." kv INNER JOIN kv_objekt2autor o2a ON kv.id = o2a.objekt 
-			WHERE o2a.autor = %d AND kv.deleted = 0 AND o2a.deleted = 0 AND kv.schvaleno = 1 AND kv.zruseno = 0 ORDER BY kv.nazev", $idAuthor);
+		$iZruseneStr = $iZrusene ? " " : "AND kv.zruseno = 0";
+		
+		$sql = $wpdb->prepare("SELECT DISTINCT kv.*, fot.img_512 as img_512 FROM ".$this->tableName." kv INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON kv.id = o2a.objekt
+			LEFT JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = kv.id
+			WHERE o2a.autor = %d AND kv.deleted = 0 AND o2a.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND kv.schvaleno = 1 ".$iZruseneStr." AND (fot.primarni IS NULL OR fot.primarni = 1) ORDER BY kv.nazev", $idAuthor);
+			
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -93,6 +105,7 @@ class ObjectDb extends JPDb {
 			'%s',
 			'%s',
 			'%d',
+			'%d',
 			'%d'
 		);
 		
@@ -102,7 +115,7 @@ class ObjectDb extends JPDb {
 	public function getAuthorsForObject($idObject) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT aut.* FROM kv_autor aut INNER JOIN kv_objekt2autor o2a ON aut.id = o2a.autor 
+		$sql = $wpdb->prepare("SELECT aut.* FROM ".$this->dbPrefix."autor aut INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON aut.id = o2a.autor 
 			WHERE o2a.objekt = %d AND aut.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id", $idObject);
 			
 		return $wpdb->get_results ($sql); 
@@ -111,7 +124,7 @@ class ObjectDb extends JPDb {
 	public function getCooperationsForObject($idObject) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT o2a.spoluprace FROM kv_autor aut INNER JOIN kv_objekt2autor o2a ON aut.id = o2a.autor 
+		$sql = $wpdb->prepare("SELECT o2a.spoluprace FROM ".$this->dbPrefix."autor aut INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON aut.id = o2a.autor 
 			WHERE o2a.objekt = %d AND aut.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id", $idObject);
 			
 		return $wpdb->get_results ($sql); 
@@ -124,8 +137,8 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
-			LEFT JOIN kv_fotografie fot ON obj.id = fot.objekt
-			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
+			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
 			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
 	}
 	
@@ -136,7 +149,7 @@ class ObjectDb extends JPDb {
 		global $wpdb;
 		
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
-			INNER JOIN kv_kategorie kat ON obj.kategorie = kat.id 
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
 			WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND kat.url = 'vetrelci-volavky' AND obj.zruseno = 0 ORDER BY obj.nazev, obj.id");
 	}
 	
@@ -155,6 +168,72 @@ class ObjectDb extends JPDb {
 			default:
 				return "nazev";
 		}
+	}
+	
+	public function getCountObjectsWithPhotos() {
+		global $wpdb;
+
+		return $wpdb->get_var("SELECT count(*) FROM ".$this->tableName." obj 
+			INNER JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE fot.primarni = 1 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+	}
+	
+	public function getRandomObjectWithPhoto($randomNumber) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512 FROM ".$this->tableName." obj 
+			INNER JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE fot.primarni = 1 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.id LIMIT 1 OFFSET %d", $randomNumber);		
+			
+		$results = $wpdb->get_results ($sql);
+		return $results[0];
+	}
+	
+	
+	public function getLastObjectWithPhoto() {
+		global $wpdb;
+		
+		$results = $wpdb->get_results ("SELECT obj.id, obj.nazev, fot.img_512 FROM ".$this->tableName." obj 
+			INNER JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE fot.primarni = 1 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.id DESC LIMIT 1");
+		return $results[0];		
+	}
+	
+	
+	public function getCatalogPage($page) {
+		global $wpdb;
+
+		$startObject = $page * 9;
+		
+		return $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
+			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND fot.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.nazev 
+			LIMIT 9 OFFSET ".$startObject);
+	}
+	
+	
+	public function getCountKeSchvaleni() {
+		global $wpdb;
+		
+		return $wpdb->get_var ("SELECT count(*) FROM ".$this->tableName." WHERE schvaleno = 0 AND deleted = 0"); 
+	}
+	
+	public function getNeschvaleneList($order="") {
+		global $wpdb;
+		
+		return $wpdb->get_results ("SELECT * FROM ".$this->tableName." WHERE schvaleno = 0 AND deleted = 0 ORDER BY ".$this->getOrderSQL($order)); 		
+	}
+			
+		
+	public function approveObject($id) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET schvaleno = 1 WHERE id = %d", $id);
+		return $wpdb->get_results ($sql);
 	}
 		
 }

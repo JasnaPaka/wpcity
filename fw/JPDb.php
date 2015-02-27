@@ -1,11 +1,21 @@
 <?php
 
 abstract class JPDb {
+	
+	protected $tableName;
+	protected $dbPrefix;
 
 	CONST MAX_ITEMS_ON_PAGE = 20;	
 	
 	function __construct() {
 		global $wpdb;
+		
+		
+		if (is_multisite()) {
+			$this->dbPrefix = "kv_".$wpdb->blogid."_";
+		} else {
+			$this->dbPrefix = "kv_";	
+		}
 		
 		$wpdb->show_errors();	
 	}
