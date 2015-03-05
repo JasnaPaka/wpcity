@@ -868,8 +868,8 @@ class ObjectController extends JPController {
 		return $this->db->getLastObjectWithPhoto();
 	}
 	
-	public function getCatalogPage($page) {
-		return $this->db->getCatalogPage($page);		
+	public function getCatalogPage($page, $search) {
+		return $this->db->getCatalogPage($page, $search);		
 	}
 		
 	public function getAuthorFullname($obj) {

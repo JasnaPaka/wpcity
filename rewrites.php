@@ -148,7 +148,7 @@ function kv_object_seznam() {
 		$page = 0;	
 	}
 	
-	$objects = $oc->getCatalogPage($page);
+	$objects = $oc->getCatalogPage($page, $oc->getSearchValue());
 	foreach($objects as $object) {
 		$object->autori = $oc->getAuthorsByObject($object->id);
 	}
@@ -158,7 +158,10 @@ function kv_object_seznam() {
 
 function kv_autor_controller() {
 	return new AuthorController();
-	//return $ac->getSearchValue();
+}
+
+function kv_object_controller() {
+	return new ObjectController();
 }
 
 function kv_autor_pages_count() {
@@ -180,6 +183,10 @@ function kv_autor_pages_count() {
 
 function kv_object_pages_count() {
 	$oc = new ObjectController();
+	if ($oc->getSearchValue() != null) {
+		return 0;	
+	}	
+	
 	$count = $oc->getCount();
 	$pages = round ($count / 9, 0, PHP_ROUND_HALF_UP);
 	

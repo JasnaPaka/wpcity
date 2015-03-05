@@ -203,10 +203,20 @@ class ObjectDb extends JPDb {
 	}
 	
 	
-	public function getCatalogPage($page) {
+	public function getCatalogPage($page, $search) {
 		global $wpdb;
 
 		$startObject = $page * 9;
+		
+		if ($search != null) {
+			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
+				LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+				INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+				WHERE obj.nazev LIKE %s AND (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND fot.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.nazev", 
+				"%".$search."%");
+			return $wpdb->get_results($sql);
+		}
+			
 		
 		return $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
