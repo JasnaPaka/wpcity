@@ -31,14 +31,6 @@ class SourceDb extends JPDb {
 		return $wpdb->get_results ($sql); 
 	}
 	
-	public function getSourcesForAuthor($idObject) {
-		global $wpdb;
-		
-		$sql = $wpdb->prepare("SELECT * FROM kv_zdroj zdr WHERE zdr.deleted = 0 AND zdr.autor = %d ORDER BY ".$this->getDefaultOrder(), $idObject);
-		
-		return $wpdb->get_results ($sql); 
-	}
-	
 	public function update($data, $id) {
 		global $wpdb;
 		

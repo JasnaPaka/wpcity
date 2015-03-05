@@ -96,10 +96,18 @@ class AuthorDb extends JPDb {
 	}
 	
 	
-	public function getCatalogPage($page) {
+	public function getCatalogPage($page, $search) {
 		global $wpdb;
 
 		$startObject = $page * 9;
+		
+		if ($search != null) {
+				$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 AND 
+					((CONCAT (aut.prijmeni, ' ', aut.jmeno) LIKE %s OR CONCAT (aut.jmeno, ' ', aut.prijmeni) LIKE %s)) 
+					ORDER BY ".$this->getOrderSQL($order), "%".$search."%", "%".$search."%");
+				return $wpdb->get_results($sql);
+		} 
+		
 		
 		return $wpdb->get_results("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 ORDER BY ".$this->getOrderSQL($order)." LIMIT 9 OFFSET ".$startObject);
 	}	

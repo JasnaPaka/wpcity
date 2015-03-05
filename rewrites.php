@@ -20,6 +20,7 @@ function rules() {
 
 	add_rewrite_rule('^katalog/autori/?','index.php?autori=1','top');
 	add_rewrite_tag('%autori%','([^/]*)');
+	add_rewrite_tag('%search%','([^/]*)');
 
 	add_rewrite_rule('^katalog/?','index.php?prehled=1','top');
 	add_rewrite_tag('%prehled%','([^/]*)');
@@ -128,8 +129,8 @@ function kv_autor_seznam() {
 	if ($page == null) {
 		$page = 0;	
 	}
-	
-	$authors = $ac->getCatalogPage($page);
+		
+	$authors = $ac->getCatalogPage($page, $ac->getSearchValue());
 	foreach($authors as $author) {
 		$author->img_512 = $ac->getImgForAuthor($author->id)->img_512;
 	}
@@ -155,8 +156,18 @@ function kv_object_seznam() {
 	return $objects;
 }
 
+function kv_autor_controller() {
+	return new AuthorController();
+	//return $ac->getSearchValue();
+}
+
 function kv_autor_pages_count() {
 	$ac = new AuthorController();
+	
+	if ($ac->getSearchValue() != null) {
+		return 0;	
+	}
+	
 	$count = $ac->getCount();
 	$pages = round ($count / 9, 0, PHP_ROUND_HALF_UP);
 	

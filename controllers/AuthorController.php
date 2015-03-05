@@ -281,8 +281,8 @@ class AuthorController extends JPController {
 		return $this->dbSource->getSourcesForAuthor($this->getObjectId());	
 	}
 	
-	public function getCatalogPage($page) {
-		return $this->db->getCatalogPage($page);		
+	public function getCatalogPage($page, $search) {
+		return $this->db->getCatalogPage($page, $search);		
 	}
 	
 	public function getImgForAuthor($authorId) {
