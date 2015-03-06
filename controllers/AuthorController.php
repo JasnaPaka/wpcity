@@ -314,6 +314,7 @@ class AuthorController extends JPController {
 				$source->deleted = filter_input (INPUT_POST, "deleted".$value, FILTER_SANITIZE_STRING);
 				$source->deleted = ($source->deleted === "on" ? 1 : 0);
 				$source->autor = $this->getObjectId();
+				$source->objekt = null;
 
 				array_push($sources, $source);
 			}
@@ -351,7 +352,7 @@ class AuthorController extends JPController {
 				}
 				
 				if (isset($source->id)) {
-					$result = $this->dbSource->update($source, $source->id);
+					$result = $this->dbSource->update($source, $source->id, false);
 				} else {
 					$result = $this->dbSource->create($source);
 				}

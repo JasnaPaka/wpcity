@@ -119,6 +119,13 @@ function kv_author_objects() {
 	return $ac->getListByAuthor();
 	
 }
+
+function kv_author_sources() {
+	global $wp_query;
+	
+	$ac = new AuthorController();
+	return $ac->getSourcesForAuthor();	
+}
 	
 function kv_autor_seznam() {
 	global $wp_query;

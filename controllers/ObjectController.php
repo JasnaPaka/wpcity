@@ -412,7 +412,7 @@ class ObjectController extends JPController {
 				}
 				
 				if (isset($source->id)) {
-					$result = $this->dbSource->update($source, $source->id);
+					$result = $this->dbSource->update($source, $source->id, true);
 				} else {
 					$result = $this->dbSource->create($source);
 				}
@@ -796,6 +796,7 @@ class ObjectController extends JPController {
 				$source->deleted = filter_input (INPUT_POST, "deleted".$value, FILTER_SANITIZE_STRING);
 				$source->deleted = ($source->deleted === "on" ? 1 : 0);
 				$source->objekt = $this->getObjectId();
+				$source->autor = null;
 
 				array_push($sources, $source);
 			}

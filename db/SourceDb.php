@@ -31,7 +31,7 @@ class SourceDb extends JPDb {
 		return $wpdb->get_results ($sql); 
 	}
 	
-	public function update($data, $id) {
+	public function update($data, $id, $isObject) {
 		global $wpdb;
 		
 		$values = array (
@@ -40,9 +40,13 @@ class SourceDb extends JPDb {
 			"isbn" => $data->isbn,
 			"cerpano" => $data->cerpano,
 			"deleted" => $data->deleted,
-			"objekt" => $data->objekt,
-			"autor" => $data->autor
 		);
+		
+		if ($isObject) {
+			$values["objekt"] = $data->objekt;
+		} else {
+			$values["autor"] = $data->autor;
+		}
 		
 		$types = array (
 			'%s',
@@ -50,11 +54,12 @@ class SourceDb extends JPDb {
 			'%s',
 			'%d',
 			'%d',
-			'%d',
 			'%d'
 		);
-		
+				
 		$wpdb->update($this->tableName, $values, array("id" => $id), $types);
+		
+		$wpdb->print_error();
 	}	
 		
 }

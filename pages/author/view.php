@@ -9,7 +9,7 @@
 
 <div class="wrap">
 
-<h2><?php echo $controller->getFullname() ?></h2>
+<h2><?php echo $controller->getFullname() ?> &nbsp;&nbsp;<a href="/katalog/autor/<?php echo $row->id ?>/" class="button">Detail autora</a></h2>
 
 <?php if ($row->datum_narozeni != null || $row->datum_umrti != null) { ?>
 	<table class="widefat" style="max-width: 500px; margin-top: 10px">
