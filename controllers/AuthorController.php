@@ -288,6 +288,83 @@ class AuthorController extends JPController {
 	public function getImgForAuthor($authorId) {
 		return $this->db->getImgForAuthor($authorId);	
 	}
+	
+	
+	private function getFormSourcesValues() {
+		$sources = array ();
+		
+		foreach($_POST as $key => $value) {
+			$pos = strpos($key, "zdroj");
+			
+			if ($pos === 0) {
+				
+				$source = new stdClass();
+				$id = (int) filter_input (INPUT_POST, $key, FILTER_SANITIZE_STRING);
+				if ($id > 0) {
+					$source->id = $id;	
+				}
+				
+				$source->nazev = filter_input (INPUT_POST, "nazev".$value, FILTER_SANITIZE_STRING);
+				$source->url = filter_input (INPUT_POST, "url".$value, FILTER_SANITIZE_STRING);
+				$source->isbn = filter_input (INPUT_POST, "isbn".$value, FILTER_SANITIZE_STRING);
+				
+				$source->cerpano = filter_input (INPUT_POST, "cerpano".$value, FILTER_SANITIZE_STRING);
+				$source->cerpano = ($source->cerpano === "on" ? 1 : 0);
+
+				$source->deleted = filter_input (INPUT_POST, "deleted".$value, FILTER_SANITIZE_STRING);
+				$source->deleted = ($source->deleted === "on" ? 1 : 0);
+				$source->autor = $this->getObjectId();
+
+				array_push($sources, $source);
+			}
+		}
+		
+		return $sources;
+	}
+	
+	private function validateSources($sources) {
+		
+		foreach ($sources as $source) {
+			if (isset($source->id) && strlen($source->nazev) == 0 && !$source->deleted) {
+				array_push($this->messages, new JPErrorMessage("Každý zdroj, který byl dříve uložen, musí mít vyplněný název nebo být označen pro smazání."));
+			}
+			if (!isset($source->id) && strlen($source->nazev) == 0 && (strlen($source->url) > 0 || strlen ($source->isbn) > 0)) {
+				array_push($this->messages, new JPErrorMessage("Každý zdroj, který má zadáno URL či ISBN, musí mít i název."));
+			}
+		}
+		
+		return count($this->messages) === 0;
+	} 	
+	
+	public function manageSources() {
+		$sources = $this->getFormSourcesValues();
+		
+		if (count($sources) == 0) {
+			return $this.getSelectedSources();	
+		}
+		
+		$result = $this->validateSources($sources);
+		if ($result) {
+			foreach ($sources as $source) {
+				if (strlen($source->nazev) == 0) {
+					continue;	
+				}
+				
+				if (isset($source->id)) {
+					$result = $this->dbSource->update($source, $source->id);
+				} else {
+					$result = $this->dbSource->create($source);
+				}
+			}
+			
+			array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány. 
+				<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
+				
+			return $this->getSelectedSources();
+		}
+		
+		return $sources;
+	}
 }
 
 ?>
