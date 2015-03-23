@@ -212,8 +212,9 @@ class ObjectDb extends JPDb {
 			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
 				LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 				INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
-				WHERE obj.nazev LIKE %s AND (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND fot.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.nazev", 
-				"%".$search."%");
+				WHERE obj.nazev LIKE %s AND (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ORDER BY obj.nazev", 
+				"%".$search."%");	
+				
 			return $wpdb->get_results($sql);
 		}
 			
@@ -221,7 +222,7 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
-			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND fot.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.nazev 
+			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ORDER BY obj.nazev 
 			LIMIT 9 OFFSET ".$startObject);
 	}
 	
