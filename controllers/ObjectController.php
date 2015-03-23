@@ -414,7 +414,7 @@ class ObjectController extends JPController {
 				if (isset($source->id)) {
 					$result = $this->dbSource->update($source, $source->id, true);
 				} else {
-					$result = $this->dbSource->create($source);
+					$result = $this->dbSource->create($source, true);
 				}
 			}
 			

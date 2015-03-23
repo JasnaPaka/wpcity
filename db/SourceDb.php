@@ -61,6 +61,36 @@ class SourceDb extends JPDb {
 		
 		$wpdb->print_error();
 	}	
+	
+	public function create($data, $isObject) {
+		global $wpdb;
+		
+		$values = array (
+			"nazev" => $data->nazev,
+			"url" => $data->url,
+			"isbn" => $data->isbn,
+			"cerpano" => $data->cerpano,
+			"deleted" => $data->deleted,
+		);
+		
+		if ($isObject) {
+			$values["objekt"] = $data->objekt;
+		} else {
+			$values["autor"] = $data->autor;
+		}
+		
+		$types = array (
+			'%s',
+			'%s',
+			'%s',
+			'%d',
+			'%d',
+			'%d'
+		);		
+		
+		
+		return $wpdb->insert($this->tableName, (array) $values, $types);
+	}	
 		
 }
 
