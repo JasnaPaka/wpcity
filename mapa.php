@@ -53,11 +53,12 @@ function kv_MapaData() {
 		}
 		
 		// Pokud je uživatel přihlášen, přidáme odkaz do administrace
-		if (is_user_logged_in()) {
-			$content = $content."<p>";
-			$content = $content.'&nbsp;<a href="/wp-admin/admin.php?page=object&action=view&id='.$row->id.'" title="Úprava objektu"><img src="'.$themeUrl.'/images/edit-icon.png" alt="" /></a>';
+		//if (is_user_logged_in()) {
+			$content = $content."<p style=\"margin-top: 10px\">";
+			$content = $content.'<a class="buttonGreen" style="color:white;" href="/katalog/dilo/'.$row->id.'/">Více o díle</a>';
+			//$content = $content.'&nbsp;<a href="/wp-admin/admin.php?page=object&action=view&id='.$row->id.'" title="Úprava objektu"><img src="'.$themeUrl.'/images/edit-icon.png" alt="" /></a>';
 			$content = $content."</p>";
-		}
+		//}
 		
 		
 		
