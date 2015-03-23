@@ -185,7 +185,7 @@ function kv_autor_pages_count() {
 		return $pages-1;
 	}
 	
-	return 0;	
+	return 0;
 }
 
 function kv_object_pages_count() {
@@ -221,7 +221,7 @@ function kv_object_title($title, $sep) {
 		$id = (int) $wp_query->query_vars['objekt'];
 		$obj = $oc->getObjectById($id);
 		if ($obj == null) {
-			return "";	
+			return "Dílo nebylo nalezeno"." ".$sep." ".$title;
 		}
 		
 		return $obj->nazev." ".$sep." ".$title;
@@ -245,8 +245,7 @@ function kv_object_title($title, $sep) {
 	
 	if ($pridat > 0) {
 		return "Přidat dílo"." ".$sep." ".$title;
-	}
-	
+	}	
 	
 	return $title;
 }
