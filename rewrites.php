@@ -250,4 +250,20 @@ function kv_object_title($title, $sep) {
 	return $title;
 }
 
+
+/** Odstranění Yoast SEO u stránek katalogu */
+/*function remove_yoast_seo() {
+	global $wp_query;
+	
+	$object_id = (int) get_query_var('objekt');
+	$author_id = (int) get_query_var('autor');
+	
+	if ($object_id > 0 || $author_id > 0) {
+		global $wpseo_front;
+		remove_action('wp_head', array($wpseo_front,'head'), 1);
+	}
+}
+add_filter('wp_title', 'remove_yoast_seo', 99, 3); */
+
+
 ?>
