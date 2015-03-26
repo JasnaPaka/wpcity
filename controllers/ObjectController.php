@@ -202,7 +202,7 @@ class ObjectController extends JPController {
 	}
 	
 	public function add() {
-		$this->addInternal(false);
+		return $this->addInternal(false);
 	}
 	
 	private function addInternal($public) {
