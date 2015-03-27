@@ -47,6 +47,19 @@
 		</select>
 	</td>
 </tr>
+
+<?php if (count($controller->getAllTags()) > 0) {  ?> 
+<tr>
+	<th scope="row"><label for="stitky">Štítky</label></th>
+	<td>
+		<?php foreach ($controller->getAllTags() as $tag) { ?>
+			<input name="tag<?php printf ($tag->id) ?>" id="tag<?php printf ($tag->id) ?>" type="checkbox" <?php if ($controller->getIsTagSelected($tag->id)) echo 'checked="checked"' ?>/>
+			<label for="tag<?php printf ($tag->id) ?>"><?php printf ($tag->nazev) ?></label>&nbsp;&nbsp;&nbsp;
+		<?php } ?>
+	</td>
+</tr>
+<?php } ?>
+
 <?php if (!$controller->getIsEdit() && !$publicForm && !$KV_SETTINGS["simple"]) { ?>
 <tr>
 	<th scope="row"><label for="autor">Autor</label></th>

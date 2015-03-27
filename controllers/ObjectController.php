@@ -13,7 +13,9 @@ include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/PhotoDb.php";
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/SourceDb.php";
+include_once $ROOT."db/TagDb.php";
 include_once $ROOT."db/Object2AuthorDb.php";
+include_once $ROOT."db/Object2TagDb.php";
 
 include_once $ROOT."config.php";
 
@@ -25,8 +27,11 @@ class ObjectController extends JPController {
 	private $dbAuthor;
 	private $dbSource;
 	private $dbObject2Author;
+	private $dbTag;
+	private $dbObject2Tag;
 	
 	private $categories;
+	private $cacheTagSelected;
 	
 	function __construct() {
 		$this->db = new ObjectDb();
@@ -34,7 +39,9 @@ class ObjectController extends JPController {
 		$this->dbPhoto = new PhotoDb();
 		$this->dbAuthor = new AuthorDb();
 		$this->dbSource = new SourceDb();
+		$this->dbTag = new TagDb();
 		$this->dbObject2Author = new Object2AuthorDb();
+		$this->dbObject2Tag = new Object2TagDb();
 	}
 	
 	public function getList() {
@@ -232,6 +239,9 @@ class ObjectController extends JPController {
 				// Nastavíme autora objektu
 				$this->addAuthor($idObject);
 				
+				// Nastavíme štítky
+				$this->addTags($idObject);
+				
 				return new stdClass();
 			}
 		}
@@ -357,6 +367,24 @@ class ObjectController extends JPController {
 			array_push($this->messages, new JPErrorMessage("Autora '".$author->jmeno."' se nepodařilo přidat k objektu."));
 		}
 	}
+	
+	private function addTags($idObject) {
+		
+		foreach ($this->getAllTags() as $tag) {
+			$tagName = "tag".$tag->id;
+			$value = filter_input (INPUT_POST, $tagName, FILTER_SANITIZE_STRING); 
+			if ($value == "on") {
+				
+				$row = new stdClass();
+				$row->objekt = $idObject;
+				$row->stitek = $tag->id;
+
+				$result = $this->dbObject2Tag->create($row);
+				
+				$this->cacheTagSelected = null;
+			}
+		}	
+	}
 
 	private function getRelativePathToImg($path) {
 		$upload_dir = wp_upload_dir();
@@ -444,6 +472,10 @@ class ObjectController extends JPController {
 				array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně aktualizován. 
 				<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 			}
+			
+			// Nastavíme štítky
+			$this->dbObject2Tag->deleteTagsForObject($this->getObjectFromUrl()->id);
+			$this->addTags($this->getObjectFromUrl()->id);
 		}
 		
 		return $row;
@@ -880,6 +912,31 @@ class ObjectController extends JPController {
 	public function getCountKeSchvaleni() {
 		return $this->db->getCountKeSchvaleni();	
 	}
+	
+	public function getAllTags() {
+		return $this->dbTag->getAll();	
+	}
+	
+	public function getIsTagSelected($idTag) {
+			
+		$idObject = $this->getObjectId(); 
+		if ($idObject == null) {
+			return false;
+		}
+
+		if ($this->cacheTagSelected == null) {
+			$this->cacheTagSelected = $this->dbObject2Tag->getTagsForObject($idObject);	
+		}
+		
+		foreach($this->cacheTagSelected as $selectedTag) {
+			if ($selectedTag->stitek == $idTag) {
+				return true;	
+			}
+		}
+		
+		return false; 
+	}
 }
 
 ?>
+
