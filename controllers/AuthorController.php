@@ -58,8 +58,8 @@ class AuthorController extends JPController {
 	private function validate($row) {
 		
 		// jméno
-		if (strlen($row->jmeno) < 3 || strlen($row->jmeno) > 250) {
-			array_push($this->messages, new JPErrorMessage("Jméno autora musí mít min. 3 a nejvíce 250 znaků."));
+		if (strlen($row->jmeno) < 2 || strlen($row->jmeno) > 250) {
+			array_push($this->messages, new JPErrorMessage("Jméno autora musí mít min. 2 a nejvíce 250 znaků."));
 		}
 
 		// příjmení
