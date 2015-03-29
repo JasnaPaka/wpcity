@@ -5,6 +5,7 @@ $ROOT = plugin_dir_path( __FILE__ );
 include_once $ROOT."controllers/ObjectController.php";
 include_once $ROOT."controllers/CategoryController.php";
 include_once $ROOT."controllers/AuthorController.php";
+include_once $ROOT."controllers/TagController.php";
 
 add_action('init', 'rules');
 
@@ -227,6 +228,7 @@ function kv_object_title($title, $sep) {
 	
 	$object_id = (int) get_query_var('objekt');
 	$author_id = (int) get_query_var('autor');
+	$tag_id = (int) get_query_var('stitek');
 	$autori = (int) get_query_var('autori');
 	$catalog = (int) get_query_var('prehled');	
 	$pridat = (int) get_query_var('pridat');
@@ -250,6 +252,15 @@ function kv_object_title($title, $sep) {
 		
 		return trim($autor->titul_pred." ".$autor->jmeno." ".$autor->prijmeni." ".$autor->titul_za)." ".$sep." ".$title;
 	}
+	
+	if ($tag_id > 0) {
+		$tc = new TagController();
+		$id = (int) $wp_query->query_vars['stitek'];
+		$tag = $tc->getObjectById($id);
+		
+		return $tag->nazev." ".$sep." ".$title;
+	}	
+	
 	
 	if ($autori > 0) {
 		return "Autoři"." ".$sep." ".$title;
