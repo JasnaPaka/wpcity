@@ -203,7 +203,7 @@ class ObjectDb extends JPDb {
 	}
 	
 	
-	public function getCatalogPage($page, $search) {
+	public function getCatalogPage($page, $search, $tag) {
 		global $wpdb;
 
 		$startObject = $page * 9;
@@ -217,6 +217,18 @@ class ObjectDb extends JPDb {
 				
 			return $wpdb->get_results($sql);
 		}
+		
+		if ($tag != null) {
+			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 
+			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			INNER JOIN ".$this->dbPrefix."objekt2stitek o2s ON o2s.objekt = obj.id
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 
+				AND o2s.stitek = %d ORDER BY obj.nazev", $tag->id);
+			
+			return $wpdb->get_results($sql);
+		}
+			
 			
 		
 		return $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev FROM ".$this->tableName." obj 

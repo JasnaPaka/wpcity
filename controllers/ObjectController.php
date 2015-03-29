@@ -902,7 +902,7 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCatalogPage($page, $search) {
-		return $this->db->getCatalogPage($page, $search);		
+		return $this->db->getCatalogPage($page, $search, $this->getCurrentTag());		
 	}
 		
 	public function getAuthorFullname($obj) {
@@ -936,6 +936,37 @@ class ObjectController extends JPController {
 		
 		return false; 
 	}
+	
+	public function getIsShowedTag() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['stitek'];
+		return $this->dbTag->getById($id) != null;
+	}
+	
+	public function getCurrentTag() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['stitek'];
+		return $this->dbTag->getById($id);
+	}
+	
+	public function getTagsForObjectStr($idObject) {
+		$str = "";
+		
+		$tags = $this->dbObject2Tag->getTagsForObject($idObject);
+		foreach ($tags as $tag) {
+			
+			if (strlen($str) > 0) {
+				$str = $str.", ";	
+			}	
+			
+			$str = $str.$tag->nazev;
+		}
+		
+		return $str;
+	}
+	
 }
 
 ?>

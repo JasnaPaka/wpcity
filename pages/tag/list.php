@@ -46,7 +46,7 @@
 					}
 					
 					printf ('<td><strong>'.$row->nazev.'</strong> '.'</td>');
-					printf ('<td>'.$controller->getCountObjectsWithTag($row->id).'</td>');
+					printf ('<td><a href="/katalog/stitek/'.$row->id.'/">'.$controller->getCountObjectsWithTag($row->id).'</a></td>');
 					printf ('<td><a href="admin.php?page=tag&amp;action=update&amp;id='.$row->id.'" title="Upraví štítek">Upravit</a>');
 					printf (' &middot; <a href="admin.php?page=tag&amp;action=delete&amp;id='.$row->id.'" title="Smaže štítek">Smazat</a>');
 					printf ('</td>');

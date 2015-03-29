@@ -43,6 +43,7 @@
 			<th>Název</th>
 			<th>Souřadnice</th>
 			<th>Kategorie</th>
+			<th>Štítky</th>
 			<th>Akce</th>
 		</tr>
 	</thead>
@@ -74,6 +75,7 @@
 					echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
 						$row->latitude.', '.$row->longitude.'</a></td>';
 					echo '<td>'.$controller->getCategoryNameForObject($row->kategorie).'</td>';
+					echo '<td>'.$controller->getTagsForObjectStr($row->id).'</td>';
 					echo '<td><a href="admin.php?page=object&amp;action=update&amp;id='.$row->id.'" title="Upraví objekt">Upravit</a> 
 						&middot; <a href="admin.php?page=object&amp;action=delete&amp;id='.$row->id.'" title="Smaže objekt">Smazat</a></td>';
 					echo '</tr>';

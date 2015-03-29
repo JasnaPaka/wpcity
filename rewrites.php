@@ -16,7 +16,10 @@ function rules() {
 	add_rewrite_tag('%objekt%','([^/]*)');
 	
 	add_rewrite_rule('^katalog/autor/([^/]*)/?','index.php?autor=$matches[1]','top');
-	add_rewrite_tag('%autor%','([^/]*)');	
+	add_rewrite_tag('%autor%','([^/]*)');
+	
+	add_rewrite_rule('^katalog/stitek/([^/]*)/?','index.php?stitek=$matches[1]','top');
+	add_rewrite_tag('%stitek%','([^/]*)');	
 
 	add_rewrite_rule('^katalog/autori/?','index.php?autori=1','top');
 	add_rewrite_tag('%autori%','([^/]*)');
@@ -35,6 +38,7 @@ function wpcity_plugin_display($template) {
 	
 	$object_id = (int) get_query_var('objekt');
 	$author_id = (int) get_query_var('autor');
+	$tag_id = (int) get_query_var('stitek');
 	$catalog = (int) get_query_var('prehled');
 	$autori = (int) get_query_var('autori');
 	$pridat = (int) get_query_var('pridat');
@@ -45,15 +49,23 @@ function wpcity_plugin_display($template) {
 			return $new_template ;
 		}
 	}
-
+	
 	if ($author_id > 0) {
 		$new_template = locate_template( array( 'page-autor-detail.php' ) );
 		if ( '' != $new_template ) {
 			return $new_template ;
 		}
 	}
+		
 	
-	if ($catalog > 0) {
+	if ($tag_id > 0) {
+		$new_template = locate_template( array( 'page-stitek.php' ) );
+		if ( '' != $new_template ) {
+			return $new_template ;
+		}
+	}
+	
+	if ($catalog > 0 || $tag_id > 0) {
 		$new_template = locate_template( array( 'page-katalog.php' ) );
 		if ( '' != $new_template ) {
 			return $new_template ;
@@ -193,6 +205,10 @@ function kv_object_pages_count() {
 	if ($oc->getSearchValue() != null) {
 		return 0;	
 	}	
+	
+	if ($oc->getIsShowedTag()) {
+		return 0;	
+	}
 	
 	$count = $oc->getCount();
 	$pages = round ($count / 9, 0, PHP_ROUND_HALF_UP);

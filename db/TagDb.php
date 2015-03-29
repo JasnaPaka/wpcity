@@ -9,7 +9,7 @@ class TagDb extends JPDb {
 	}
 	
 	public function getDefaultOrder() {
-		return "id";
+		return "nazev";
 	}
 	
 }
