@@ -11,7 +11,7 @@
 
 <h2><?php echo $controller->getFullname() ?> &nbsp;&nbsp;<a href="/katalog/autor/<?php echo $row->id ?>/" class="button">Detail autora</a></h2>
 
-<?php if ($row->datum_narozeni != null || $row->datum_umrti != null) { ?>
+<?php if ($row->datum_narozeni != null || $row->datum_umrti != null || strlen($row->web) > 3) { ?>
 	<table class="widefat" style="max-width: 500px; margin-top: 10px">
 	<tbody>
 	<?php if (strlen ($row->datum_narozeni) > 0) { ?>
@@ -24,6 +24,12 @@
 		<tr>
 			<th><strong>Datum úmrtí</strong></th>
 			<td><?php echo date_format(new DateTime($row->datum_umrti), "d. m. Y") ?></td>
+		</tr>
+	<?php } ?>
+	<?php if (strlen ($row->web) > 0) { ?>
+		<tr>
+			<th><strong>Webová stránka</strong></th>
+			<td><a href="<?php printf ($row->web) ?>"><?php printf ($row->web) ?></a></td>
 		</tr>
 	<?php } ?>
 	</tbody>

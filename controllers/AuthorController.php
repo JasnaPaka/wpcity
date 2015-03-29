@@ -86,6 +86,10 @@ class AuthorController extends JPController {
 		if ($row->datum_umrti != null && new DateTime ($row->datum_umrti) == false) {
 			array_push($this->messages, new JPErrorMessage("Datum umrtí není platným datem."));
 		}
+		
+		if (strlen($row->web) < 3 || strlen($row->web) > 250) {
+			array_push($this->messages, new JPErrorMessage("Webová stránka autora musí mít min. 3 a nejvíce 250 znaků."));
+		}
 	
 		return count($this->messages) === 0; 	
 	}
@@ -200,6 +204,7 @@ class AuthorController extends JPController {
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
+		$row->web = filter_input (INPUT_POST, "web", FILTER_SANITIZE_STRING);
 		
 		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
 		$row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);

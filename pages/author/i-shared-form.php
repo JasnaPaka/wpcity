@@ -33,6 +33,10 @@
 	</td>
 </tr>
 <tr>
+	<th scope="row"><label for="web">Webová stránka</label></th>
+	<td><input name="web" id="web" class="regular-text" type="text" value="<?php if (isset($row)) printf($row->web) ?>" maxlength="250" /></td>
+</tr>
+<tr>
 	<th scope="row"><label for="obsah">Text</label></th>
 	<td>
 		<textarea id="editor" name="editor" rows="30" cols="50"><?php if (isset($row)) printf(stripslashes($row->obsah)) ?></textarea>
