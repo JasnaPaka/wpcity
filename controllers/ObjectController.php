@@ -951,6 +951,10 @@ class ObjectController extends JPController {
 		return $this->dbTag->getById($id);
 	}
 	
+	public function getTagsForObject($idObject) {
+		return $this->dbObject2Tag->getTagsForObject($idObject);
+	}
+	
 	public function getTagsForObjectStr($idObject) {
 		$str = "";
 		

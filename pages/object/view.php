@@ -39,6 +39,14 @@
 		<th><strong>Kategorie</strong></th>
 		<td><?php echo $controller->getCategoryNameForObject($row->kategorie) ?></td>
 	</tr>
+	
+<?php if (strlen($controller->getTagsForObjectStr($row->id)) > 0) { ?>
+	<tr>
+		<th><strong>Štítky</strong></th>
+		<td><?php echo $controller->getTagsForObjectStr($row->id)?></td>
+	</tr>
+<?php } ?>	
+	
 <?php if (strlen($row->rok_vzniku) > 0) { ?>
 	<tr>
 		<th><strong>Rok vzniku</strong></th>
