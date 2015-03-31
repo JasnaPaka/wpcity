@@ -87,8 +87,8 @@ class AuthorController extends JPController {
 			array_push($this->messages, new JPErrorMessage("Datum umrtí není platným datem."));
 		}
 		
-		if (strlen($row->web) < 3 || strlen($row->web) > 250) {
-			array_push($this->messages, new JPErrorMessage("Webová stránka autora musí mít min. 3 a nejvíce 250 znaků."));
+		if (strlen($row->web) > 250) {
+			array_push($this->messages, new JPErrorMessage("Webová stránka nesmí mít více než 250 znaků."));
 		}
 	
 		return count($this->messages) === 0; 	
