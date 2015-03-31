@@ -78,12 +78,12 @@ class AuthorController extends JPController {
 		}
 		
 		// datum narození
-		if ($row->datum_narozeni != null && new DateTime ($row->datum_narozeni) == false) {
+		if ($row->datum_narozeni != null && DateTime::createFromFormat('d. m. Y', $row->datum_narozeni) == false) {
 			array_push($this->messages, new JPErrorMessage("Datum narození není platným datem."));
 		}
 		
 		// datum úmrtí
-		if ($row->datum_umrti != null && new DateTime ($row->datum_umrti) == false) {
+		if ($row->datum_umrti != null && DateTime::createFromFormat('d. m. Y', $row->datum_umrti) == false) {
 			array_push($this->messages, new JPErrorMessage("Datum umrtí není platným datem."));
 		}
 		
@@ -98,16 +98,14 @@ class AuthorController extends JPController {
 		
 		// datum narození
 		if ($row->datum_narozeni != null) {
-			$dt = new DateTime ($row->datum_narozeni);
-			$row->datum_narozeni = $dt->format('Y-m-d');
+			$row->datum_narozeni = DateTime::createFromFormat('d. m. Y', $row->datum_narozeni)->format("Y-m-d");
 		} else {
 			unset($row->datum_narozeni);
 		}
 		
 		// datum úmrtí
 		if ($row->datum_umrti != null) {
-			$dt = new DateTime ($row->datum_umrti);
-			$row->datum_umrti = $dt->format('Y-m-d');
+			$row->datum_umrti = DateTime::createFromFormat('d. m. Y', $row->datum_umrti)->format("Y-m-d");
 		} else {
 			unset($row->datum_umrti);
 		}
