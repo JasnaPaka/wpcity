@@ -76,11 +76,13 @@ function wpCityCategoryMenu() {
 	global $KV_SETTINGS;
 	
 	add_submenu_page('wpcity', 'Správa objektů', 'Objekty', 'delete_posts', 'object', 'wpCityObjectPageCallback');
-	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'delete_posts', 'category', 'wpCityCategoryPageCallback');
 	if (!$KV_SETTINGS["simple"]) {
 		add_submenu_page('wpcity', 'Správa autorů', 'Autoři', 'delete_posts', 'author', 'wpCityAuthorPageCallback');
 	}
+	add_submenu_page('wpcity', 'Správa souborů děl', 'Soubory děl', 'delete_posts', 'collection', 'wpCityCollectionPageCallback');
+	add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'delete_posts', 'category', 'wpCityCategoryPageCallback');	
 	add_submenu_page('wpcity', 'Správa štítků', 'Štítky', 'delete_posts', 'tag', 'wpCityTagPageCallback');
+	
 	if (!$KV_SETTINGS["simple"]) {
 		add_submenu_page('wpcity', 'Export', 'Export', 'delete_posts', 'export', 'wpCityExportPageCallback');
 	}
@@ -149,6 +151,34 @@ function wpCityCategoryPageCallback() {
 			require_once("pages/category/list.php");
 			break;
 	}
+}
+
+function wpCityCollectionPageCallback() {
+	if (!isset($_GET["action"])) {
+		require_once("pages/collection/list.php");	
+	}
+	
+	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
+	switch ($action) {
+		case 'create':
+			require_once("pages/collection/create.php");
+			break;
+		case 'update':
+			require_once("pages/collection/update.php");
+			break;
+		case 'delete':
+			require_once("pages/collection/delete.php");
+			break;
+		case 'list':
+			require_once("pages/collection/list.php");
+			break;
+		case 'view':
+			require_once("pages/collection/view.php");
+			break;
+		default:
+			require_once("pages/collection/list.php");
+			break;
+	}	
 }
 
 function wpCityTagPageCallback() {
