@@ -83,12 +83,31 @@ class CollectionController extends JPController {
 		return count($this->messages) === 0; 
 	}	
 	
+	private function setAuthors($row) {
+		global $current_user;
+		
+		$dt = new DateTime();
+		$dtStr = $dt->format('Y-m-d H:i:s'); 
+		get_currentuserinfo();
+		
+		if (!$this->getIsEdit()) {
+			$row->pridal_autor = $current_user->display_name;
+			$row->pridal_datum = $dtStr;
+		}
+		
+		$row->upravil_autor = $current_user->display_name;
+		$row->upravil_datum = $dtStr;
+		
+		return $row;
+	}	
+	
 	
 	public function add() {
 		$row = $this->getFormValues();
 		
 		$result = $this->validate($row);
 		if ($result) {
+			$row = $this->setAuthors($row);
 			
 			$result = $this->db->create($row);
 
@@ -115,7 +134,7 @@ class CollectionController extends JPController {
 		
 		$result = $this->validate($row);
 		if ($result) {
-			
+			$row = $this->setAuthors($row);
 			$result = $this->db->update($row, $this->getObjectFromUrl()->id);
 			
 			if (!$result) {
