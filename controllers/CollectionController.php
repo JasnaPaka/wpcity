@@ -183,6 +183,22 @@ class CollectionController extends JPController {
 		
 		return $this->dbObject2Collection->getCountObjectsInCollection($id) == 0;
 	}	
+	
+	public function getList() {
+		return $this->db->getAll();	
+	}
+	
+	
+	public function getCollectionId() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['soubor'];
+		if ($id == null) {
+			return parent::getObjectId();
+		}
+		
+		return $id;
+	}
 		
 }
 

@@ -6,6 +6,7 @@ include_once $ROOT."controllers/ObjectController.php";
 include_once $ROOT."controllers/CategoryController.php";
 include_once $ROOT."controllers/AuthorController.php";
 include_once $ROOT."controllers/TagController.php";
+include_once $ROOT."controllers/CollectionController.php";
 
 add_action('init', 'rules');
 
@@ -19,12 +20,18 @@ function rules() {
 	add_rewrite_rule('^katalog/autor/([^/]*)/?','index.php?autor=$matches[1]','top');
 	add_rewrite_tag('%autor%','([^/]*)');
 	
+	add_rewrite_rule('^katalog/soubor/([^/]*)/?','index.php?soubor=$matches[1]','top');
+	add_rewrite_tag('%soubor%','([^/]*)');	
+	
 	add_rewrite_rule('^katalog/stitek/([^/]*)/?','index.php?stitek=$matches[1]','top');
 	add_rewrite_tag('%stitek%','([^/]*)');	
 
 	add_rewrite_rule('^katalog/autori/?','index.php?autori=1','top');
 	add_rewrite_tag('%autori%','([^/]*)');
 	add_rewrite_tag('%search%','([^/]*)');
+	
+	add_rewrite_rule('^katalog/soubory/?','index.php?soubory=1','top');
+	add_rewrite_tag('%soubory%','([^/]*)');	
 
 	add_rewrite_rule('^katalog/?','index.php?prehled=1','top');
 	add_rewrite_tag('%prehled%','([^/]*)');
@@ -39,9 +46,11 @@ function wpcity_plugin_display($template) {
 	
 	$object_id = (int) get_query_var('objekt');
 	$author_id = (int) get_query_var('autor');
+	$collection_id = (int) get_query_var('soubor');
 	$tag_id = (int) get_query_var('stitek');
 	$catalog = (int) get_query_var('prehled');
 	$autori = (int) get_query_var('autori');
+	$soubory = (int) get_query_var('soubory');
 	$pridat = (int) get_query_var('pridat');
 	
 	if ($object_id > 0) {
@@ -53,6 +62,13 @@ function wpcity_plugin_display($template) {
 	
 	if ($author_id > 0) {
 		$new_template = locate_template( array( 'page-autor-detail.php' ) );
+		if ( '' != $new_template ) {
+			return $new_template ;
+		}
+	}
+
+	if ($collection_id > 0) {
+		$new_template = locate_template( array( 'page-soubor-detail.php' ) );
 		if ( '' != $new_template ) {
 			return $new_template ;
 		}
@@ -75,6 +91,13 @@ function wpcity_plugin_display($template) {
 	
 	if ($autori > 0) {
 		$new_template = locate_template( array( 'page-autori.php' ) );
+		if ( '' != $new_template ) {
+			return $new_template ;
+		}	
+	}
+	
+	if ($soubory > 0) {
+		$new_template = locate_template( array( 'page-soubory.php' ) );
 		if ( '' != $new_template ) {
 			return $new_template ;
 		}	
@@ -125,12 +148,34 @@ function kv_author_info() {
 	return $author;
 }
 
+function kv_collection_info() {
+	global $wp_query;
+	
+	$cc = new CollectionController();
+	$id = (int) $wp_query->query_vars['soubor'];
+	$collection = $cc->getObjectById($id);
+	if ($collection == null) {
+		return "";	
+	}	
+	
+	$collection->pocet = $cc->getCountObjectsInCollection($id);
+	return $collection;	
+}
+
 function kv_author_objects() {
 	global $wp_query;
 	
 	$ac = new AuthorController();
 	return $ac->getListByAuthor();
 	
+}
+
+function kv_collection_objects() {
+	global $wp_query;
+	
+	$cc = new CollectionController();
+	return $cc->getObjectsInCollection($cc->getCollectionId());
+		
 }
 
 function kv_author_sources() {
@@ -156,7 +201,21 @@ function kv_autor_seznam() {
 	}
 	
 	return $authors;		
+}
+
+function kv_soubor_seznam() {
+	global $wp_query;
+	
+	$cc = new CollectionController();
+		
+	$collections = $cc->getList();
+	foreach($collections as $collection) {
+		//$author->img_512 = $ac->getImgForAuthor($author->id)->img_512;
+	}
+	
+	return $collections;		
 }		
+		
 
 function kv_object_seznam() {
 	global $wp_query;
@@ -178,6 +237,10 @@ function kv_object_seznam() {
 
 function kv_autor_controller() {
 	return new AuthorController();
+}
+
+function kv_soubor_controller() {
+	return new CollectionController();
 }
 
 function kv_object_controller() {
@@ -228,8 +291,10 @@ function kv_object_title($title, $sep) {
 	
 	$object_id = (int) get_query_var('objekt');
 	$author_id = (int) get_query_var('autor');
+	$collection_id = (int) get_query_var('soubor');
 	$tag_id = (int) get_query_var('stitek');
 	$autori = (int) get_query_var('autori');
+	$soubory = (int) get_query_var('soubory');
 	$catalog = (int) get_query_var('prehled');	
 	$pridat = (int) get_query_var('pridat');
 	
@@ -252,6 +317,14 @@ function kv_object_title($title, $sep) {
 		
 		return trim($autor->titul_pred." ".$autor->jmeno." ".$autor->prijmeni." ".$autor->titul_za)." ".$sep." ".$title;
 	}
+
+	if ($collection_id > 0) {
+		$cc = new CollectionController();
+		$id = (int) $wp_query->query_vars['soubor'];
+		$collection = $cc->getObjectById($id);
+		
+		return $collection->nazev." ".$sep." ".$title;
+	}
 	
 	if ($tag_id > 0) {
 		$tc = new TagController();
@@ -265,6 +338,10 @@ function kv_object_title($title, $sep) {
 	if ($autori > 0) {
 		return "Autoři"." ".$sep." ".$title;
 	}
+	
+	if ($soubory > 0) {
+		return "Soubory děl"." ".$sep." ".$title;
+	}	
 	
 	if ($catalog > 0) {
 		return "Katalog děl"." ".$sep." ".$title;
