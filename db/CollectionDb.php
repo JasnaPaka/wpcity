@@ -36,7 +36,7 @@ class CollectionDb extends JPDb {
 			'%d',
 			'%s',
 			'%s',
-			'%d'
+			'%s'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
