@@ -199,6 +199,11 @@ class CollectionController extends JPController {
 		
 		return $id;
 	}
+	
+	
+	public function getImgForCollection($idCollection) {
+		return $this->dbObject2Collection->getImgForCollection($idCollection);
+	}
 		
 }
 

@@ -210,7 +210,7 @@ function kv_soubor_seznam() {
 		
 	$collections = $cc->getList();
 	foreach($collections as $collection) {
-		//$author->img_512 = $ac->getImgForAuthor($author->id)->img_512;
+		$collection->img_512 = $cc->getImgForCollection($collection->id);
 	}
 	
 	return $collections;		
