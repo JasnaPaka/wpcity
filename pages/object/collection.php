@@ -58,7 +58,7 @@
 	<td>	
 		<select name="collection3">
 			<option value="0">(nezvoleno)</option>
-			<?php foreach ($controller->getAllCollections() as $author) { ?>
+			<?php foreach ($controller->getAllCollections() as $collection) { ?>
 				<option value="<?php echo $collection->id ?>"
 					<?php if ($selectedCollections[2] == $collection->id) { printf('selected="selected"'); } ?>>
 					<?php printf($collection->nazev) ?>

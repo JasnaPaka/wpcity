@@ -23,7 +23,7 @@ class Object2CollectionDb extends JPDb {
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT obj.* FROM ".$this->tableName." o2c INNER JOIN ".$this->dbPrefix."objekt obj ON o2c.objekt = obj.id
-			  WHERE o2c.soubor = %d AND o2c.deleted = 0", $idCollection);
+			  WHERE o2c.soubor = %d AND o2c.deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idCollection);
 		return $wpdb->get_results($sql);			
 	}	
 	
