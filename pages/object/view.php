@@ -91,6 +91,23 @@
 		</td>
 	</tr>
 <?php } ?>
+
+
+<?php if (count($controller->getSelectedCollections()) > 0) { ?>
+	<tr>
+		<th valign="top"><strong>Soubory děl</strong></th>
+		<td>
+			<?php foreach($controller->getCollectionsForObject() as $collection) { ?>
+				<a href="admin.php?page=collection&action=view&id=<?php echo $collection->id ?>">
+					<?php printf($collection->nazev) ?></a>
+					<br />
+			<?php } ?>
+		</td>
+	</tr>
+<?php } ?>
+
+
+
 <tr>
 	<th><strong>Zpracován text</strong></th>
 	<td><?php echo ($row->zpracovano? "Ano" : "Ne") ?></td>
@@ -175,10 +192,9 @@
 		<input name="approve" id="approve" class="button" value="Schválit" type="submit">
 	<?php } ?>
 	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Správa fotografií</a>
-	<?php if (!$KV_SETTINGS["simple"]) { ?>
-		<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
-		<a href="admin.php?page=object&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
-	<?php } ?>
+	<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
+	<a href="admin.php?page=object&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
+	<a href="admin.php?page=object&amp;action=collection&amp;id=<?php echo $row->id ?>" class="button">Správa souborů děl</a>
 	<a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>

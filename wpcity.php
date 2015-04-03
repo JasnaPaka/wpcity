@@ -120,6 +120,9 @@ function wpCityObjectPageCallback(){
 		case 'source':
 			require_once("pages/object/source.php");
 			break;
+		case 'collection':
+			require_once("pages/object/collection.php");
+			break;
 		default:
 			require_once("pages/object/list.php");
 			break;

@@ -13,9 +13,11 @@ include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/PhotoDb.php";
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/SourceDb.php";
+include_once $ROOT."db/CollectionDb.php";
 include_once $ROOT."db/TagDb.php";
 include_once $ROOT."db/Object2AuthorDb.php";
 include_once $ROOT."db/Object2TagDb.php";
+include_once $ROOT."db/Object2CollectionDb.php";
 
 include_once $ROOT."config.php";
 
@@ -29,6 +31,8 @@ class ObjectController extends JPController {
 	private $dbObject2Author;
 	private $dbTag;
 	private $dbObject2Tag;
+	private $dbObject2Collection;
+	private $dbCollection;
 	
 	private $categories;
 	private $cacheTagSelected;
@@ -42,6 +46,8 @@ class ObjectController extends JPController {
 		$this->dbTag = new TagDb();
 		$this->dbObject2Author = new Object2AuthorDb();
 		$this->dbObject2Tag = new Object2TagDb();
+		$this->dbCollection = new CollectionDb();
+		$this->dbObject2Collection = new Object2CollectionDb(); 
 	}
 	
 	public function getList() {
@@ -423,8 +429,40 @@ class ObjectController extends JPController {
 		
 		array_push($this->messages, new JPInfoMessage('Autoři byli úspěšně nastaveni. 
 			<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
-		
 	}
+	
+	public function manageCollections() {
+		$collections = $this->getFormCollectionsValues();
+		
+		// Validace
+		foreach ($collections as $collection) {
+			if ($collection > 0 && $this->dbCollection->getById($collection) == null) {
+				array_push($this->messages, new JPErrorMessage("Jeden ze svolených souborů děl nebyl nalezen. Patrně byl před chvílí smazán."));
+				return;
+			}
+		}		
+		
+		// Smazání starých vazeb a vytvoření nových
+		$this->dbObject2Collection->deleteOldRelationsForObject($this->getObjectId());
+		
+		$i = 0;
+		foreach($collections as $collection) {
+			if ($collection > 0) {
+				$row = new stdClass();
+				$row->objekt = $this->getObjectId();
+				$row->soubor = $collection;
+			
+				$result = $this->dbObject2Collection->create($row);
+			}
+			
+			$i++;
+		}
+		
+		array_push($this->messages, new JPInfoMessage('Soubory děl byly úspěšně nastaveny. 
+			<a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));		
+		
+	}	
+	
 	
 	public function manageSources() {
 		$sources = $this->getFormSourcesValues();
@@ -680,6 +718,10 @@ class ObjectController extends JPController {
 		return $this->dbAuthor->getAll();
 	}
 	
+	public function getAllCollections() {
+		return $this->dbCollection->getAll();
+	}	
+	
 	public function getAuthorsForObject() {
 		if ($this->getObjectId() == null) {
 			return null;
@@ -687,6 +729,14 @@ class ObjectController extends JPController {
 		
 		return $this->db->getAuthorsForObject($this->getObjectId());	
 	}
+	
+	public function getCollectionsForObject() {
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+		
+		return $this->dbObject2Collection->getCollectionsForObject($this->getObjectId());	
+	}	
 	
 	public function getAuthorsByObject($idObject) {
 		return $this->db->getAuthorsForObject($idObject);	
@@ -722,6 +772,21 @@ class ObjectController extends JPController {
 		
 		return $authors;
 	}
+	
+	public function getSelectedCollections() {
+		$collections = array ();
+		
+		foreach($this->getCollectionsForObject() as $collection) {
+			array_push($collections, $collection->id);
+		}	
+		
+		// doplníme ty nevyplněné (prázdné)
+		for ($i = count($collections); $i < 3; $i++) {
+			array_push($collections, 0);
+		}		
+		
+		return $collections;
+	}	
 	
 	public function getCooperations() {
 		$cooperations = array ();
@@ -803,6 +868,16 @@ class ObjectController extends JPController {
 		
 		return $cooperations;
 	}
+	
+	private function getFormCollectionsValues() {
+		$collections = array ();
+		
+		array_push($collections, (int) filter_input (INPUT_POST, "collection1", FILTER_SANITIZE_STRING));
+		array_push($collections, (int) filter_input (INPUT_POST, "collection2", FILTER_SANITIZE_STRING));
+		array_push($collections, (int) filter_input (INPUT_POST, "collection3", FILTER_SANITIZE_STRING));
+		
+		return $collections;
+	}		
 	
 	private function getFormSourcesValues() {
 		$sources = array ();

@@ -27,6 +27,10 @@ class CollectionController extends JPController {
 	public function getCountObjectsInCollection($idCollection) {
 		return $this->dbObject2Collection->getCountObjectsInCollection($idCollection);	
 	}	
+		
+	public function getObjectsInCollection($idCollection) {
+		return $this->dbObject2Collection->getObjectsInCollection($idCollection);
+	}
 	
 	public function getGoogleMapPointContent($lat, $lng) {
 		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);

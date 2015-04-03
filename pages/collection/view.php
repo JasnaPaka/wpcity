@@ -66,6 +66,21 @@
 
 <?php } ?>
 
+<?php if (count($controller->getObjectsInCollection($row->id)) > 0) { ?>
+
+<h3>Díla v souboru</h3>
+
+<ul>
+
+<?php 
+
+foreach ($controller->getObjectsInCollection($row->id) as $object) {
+	printf('<li><a href="admin.php?page=object&amp;action=view&amp;id='.$object->id.'">'.$object->nazev.'</a></li>');
+}
+
+} ?>
+
+</ul>
 
 <form method="post">
 <p class="submit">
