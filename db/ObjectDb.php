@@ -30,10 +30,10 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
-	public function getListByCategory($idCategory, $order="") {
+	public function getListByCategory($idCategory, $order="", $withCanceled = false) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order), $idCategory);
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 ".($withCanceled ? "" : "AND zruseno = 0")." ORDER BY ".$this->getOrderSQL($order), $idCategory);
 		return $wpdb->get_results ($sql);
 	}
 	
@@ -140,17 +140,6 @@ class ObjectDb extends JPDb {
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
 			WHERE fot.id is null AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
-	}
-	
-	/**
-	 * Vrací seznam objektů v kategorii Vetřelci a volavky
-	 */
-	public function getObjectsAliens() {
-		global $wpdb;
-		
-		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
-			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
-			WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND kat.url = 'vetrelci-volavky' AND obj.zruseno = 0 ORDER BY obj.nazev, obj.id");
 	}
 	
 	protected function getOrderSQL($param) {

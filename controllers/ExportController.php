@@ -7,6 +7,7 @@ include_once $ROOT."fw/JPController.php";
 
 include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/PhotoDb.php";
+include_once $ROOT."db/CategoryDb.php";
 
 /**
  * Nástroje na export
@@ -15,10 +16,12 @@ class ExportController extends JPController {
 	
 	private $dbObject;
 	private $dbPhoto;
+	private $dbCategory;
 	
 	function __construct() {
 		$this->dbObject = new ObjectDb();
 		$this->dbPhoto = new PhotoDb();
+		$this->dbCategory = new CategoryDB();
 	}
 
 	/**
@@ -37,12 +40,17 @@ class ExportController extends JPController {
 	 * Hlavní metoda, která rozhoduje na základě parametrů v URL, jaký export se chce.
 	 */
 	public function export() {
+		$id = (int) filter_input (INPUT_GET, "id", FILTER_SANITIZE_STRING);
+		
 		switch($this->getAction()) {
 			case "nophotos":
 				$this->exportNoPhotos();
 				break;
-			case "aliens":
-				$this->exportAliens();
+			case "category":			
+				$this->exportCategory($id, false);
+				break;
+			case "categoryWithCanceled": 
+				$this->exportCategory($id, true);
 				break;
 			case "img_512":
 				$this->rebuildImages512();
@@ -51,8 +59,12 @@ class ExportController extends JPController {
 				$this->rebuildImages100();
 				break;
 			default:
-				echo "Nedefinovana akce.";
-				break;
+				if (strpos($this->getAction(), "category") == 0) {
+					$id = str_replace($this->getAction(), "category", "");
+				} else {
+					printf("Nedefinovana akce.");
+					break;					
+				}				
 		}
 	}
 	
@@ -80,19 +92,25 @@ class ExportController extends JPController {
 	}
 	
 	/**
-	 * Export objektů kategorie Vetřelci a volavky do CSV.
+	 * Export objektů kategorie do CSV.
 	 */
-	private function exportAliens() {
+	private function exportCategory($categoryId, $withCanceled) {
 				$separator = ",";	
+				
+		$category = $this->dbCategory->getById($categoryId);
+		if ($category == null) {
+			printf("Kategorie pod zadaným ID nebyla nalezena.");
+			return;
+		}
 
 		putenv('TMPDIR='.getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir')."/objekty-vetrelci-volavky";
+		$tmpName = ini_get('upload_tmp_dir')."/objekty-kategorie";
 		
 		$file = fopen($tmpName, 'w');
 
 		fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
-		foreach($this->dbObject->getObjectsAliens() as $obj) {
+		foreach($this->dbObject->getListByCategory($categoryId, "", $withCanceled) as $obj) {
 			// čárky používáme jako oddělovač, v názvu tak dělají neplechu
 			$nazev = str_replace(",", "", $obj->nazev);
 			
@@ -102,9 +120,11 @@ class ExportController extends JPController {
 		
 		fclose($file);
 		
-		$this->download($tmpName, "objekty-vetrelci-volavky.csv");
-	
+		$nazev = "objekty-".str_replace(" ", "-", $category->nazev).".csv";
+		$this->download($tmpName, $nazev);	
 	}
+	
+	
 	
 	/**
 	 * Nabídnutí vygenerovaného souboru ke stažení. Parametrem je název vygenerovaného souboru na 
@@ -171,11 +191,14 @@ class ExportController extends JPController {
 		}
 	}	
 	
-	
 	private function getRelativePathToImg($path) {
 		$upload_dir = wp_upload_dir();
 		$baseDir = $upload_dir['basedir']; 
 		return str_replace($baseDir, "", $path);
+	}
+	
+	public function getCategories() {
+		return $this->dbCategory->getAll();		
 	}	
 	
 }
