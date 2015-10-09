@@ -29,6 +29,7 @@ class TagController extends JPController {
 	private function getFormValues() {
 		$row = new stdClass();
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
+		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		
 		return $row;
 	}

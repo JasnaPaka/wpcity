@@ -17,11 +17,12 @@ class TagDb extends JPDb {
 		global $wpdb;
 		
 		$values = array (
-			"nazev" => $data->nazev
+			"nazev" => $data->nazev,
+			"popis" => $data->popis
 		);
 		
 		$types = array (
-			'%s'
+			'%s', '%s'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
