@@ -171,7 +171,7 @@ class ObjectDb extends JPDb {
 	public function getRandomObjectWithPhoto($randomNumber) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512 FROM ".$this->tableName." obj 
+		$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, obj.kategorie FROM ".$this->tableName." obj 
 			INNER JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
 			WHERE fot.primarni = 1 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.id LIMIT 1 OFFSET %d", $randomNumber);		
