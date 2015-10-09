@@ -271,3 +271,6 @@ include "rewrites.php";
 /** Objekty */
 include "object.php";
 
+/** OpenGraph */
+include "opengraph.php";
+

@@ -146,6 +146,8 @@ function kv_author_info() {
 	}	
 	
 	$author->pocet = $ac->getCountObjectsForAuthor($id);
+	$author->img_512 = $ac->getImgForAuthor($author->id)->img_512;
+	
 	return $author;
 }
 
@@ -160,6 +162,7 @@ function kv_collection_info() {
 	}	
 	
 	$collection->pocet = $cc->getCountObjectsInCollection($id);
+	$collection->img_512 = $cc->getImgForCollection($id);
 	return $collection;	
 }
 
