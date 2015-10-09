@@ -112,6 +112,13 @@ class AuthorDb extends JPDb {
 		return $wpdb->get_results("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 ORDER BY ".$this->getOrderSQL($order)." LIMIT 9 OFFSET ".$startObject);
 	}	
 	
+	public function getCatalogPageByChar($ch) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 AND prijmeni LIKE %s ORDER BY ".$this->getOrderSQL($order), $ch."%");
+		return $wpdb->get_results($sql);
+	}
+	
 	
 	public function getImgForAuthor($authorId) {
 		global $wpdb;
@@ -128,6 +135,14 @@ class AuthorDb extends JPDb {
 			
 		return null;
 	}
+	
+	public function getUniqueFirstCharSurname() {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT DISTINCT LEFT(prijmeni, 1) as znak FROM ".$this->tableName." order by znak;", "");
+		return $wpdb->get_results ($sql);
+	}
+		
 }
 
 

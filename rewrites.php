@@ -19,6 +19,7 @@ function rules() {
 	
 	add_rewrite_rule('^katalog/autor/([^/]*)/?','index.php?autor=$matches[1]','top');
 	add_rewrite_tag('%autor%','([^/]*)');
+	add_rewrite_tag('%znak%','([^/]*)');
 	
 	add_rewrite_rule('^katalog/soubor/([^/]*)/?','index.php?soubor=$matches[1]','top');
 	add_rewrite_tag('%soubor%','([^/]*)');	
@@ -190,12 +191,17 @@ function kv_autor_seznam() {
 	
 	$ac = new AuthorController();
 	
-	$page = (int) $wp_query->query_vars['stranka'];	 
-	if ($page == null) {
-		$page = 0;	
-	}
-		
-	$authors = $ac->getCatalogPage($page, $ac->getSearchValue());
+	$ch = $wp_query->query_vars['znak'];
+	if ($ch != null && strlen($ch) > 0) {
+		$authors = $ac->getCatalogByChar($ch);
+	} else {
+		$page = (int) $wp_query->query_vars['stranka'];	 
+		if ($page == null) {
+			$page = 0;	
+		}
+		$authors = $ac->getCatalogPage($page, $ac->getSearchValue());
+	}	
+	
 	foreach($authors as $author) {
 		$author->img_512 = $ac->getImgForAuthor($author->id)->img_512;
 	}
@@ -251,6 +257,10 @@ function kv_autor_pages_count() {
 	$ac = new AuthorController();
 	
 	if ($ac->getSearchValue() != null) {
+		return 0;	
+	}
+	
+	if ($ac->getSearchFirstChar() != null) {
 		return 0;	
 	}
 	

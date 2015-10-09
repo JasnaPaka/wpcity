@@ -383,6 +383,32 @@ class AuthorController extends JPController {
 		
 		return $sources;
 	}
+	
+	public function getUniqueFirstCharSurname() {
+		return $this->db->getUniqueFirstCharSurname();
+	}
+	
+	public function getFirstCharFromURL() {
+		$str = filter_input (INPUT_GET, "znak", FILTER_SANITIZE_STRING);
+		if (strlen($str) > 0) {
+			return urldecode($str);
+		}
+		
+		return null;
+	}
+	
+	function getCatalogByChar($ch) {
+		return $this->db->getCatalogPageByChar($ch);
+	}
+	
+	function getSearchFirstChar() {
+		if (!isset($_GET["znak"])) {
+			return null;	
+		}	
+		
+		return filter_input (INPUT_GET, "znak", FILTER_SANITIZE_STRING);
+	}
+		
 }
 
 ?>
