@@ -78,7 +78,7 @@ function yoast_change_opengraph_image($image) {
 	if (isset($wp_query->query_vars['objekt'])) {
 		$obj = kv_object_info();
 		if ($obj != null) {
-			if ($obj->fotografiePrim->img_512 != null) {
+			if ($obj->fotografiePrim != null && $obj->fotografiePrim->img_512 != null) {
 				$upload_dir = wp_upload_dir();
 				return $upload_dir['baseurl'].$obj->fotografiePrim->img_512;
 			}
