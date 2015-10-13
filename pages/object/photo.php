@@ -82,6 +82,11 @@
 									<label for="soukroma<?php echo $photo->id ?>">Soukromá fotografie</label>
 							</td>
 							<td>
+								<input type="checkbox" name="skryta<?php echo $photo->id ?>" 
+									id="skryta<?php echo $photo->id ?>" <?php if ($photo->skryta) echo 'checked="checked"' ?> />
+									<label for="skryta<?php echo $photo->id ?>">Skryta na webu</label>
+							</td>
+							<td>
 								<input type="checkbox" name="delete<?php echo $photo->id ?>" 
 									id="delete<?php echo $photo->id ?>"
 									onclick="deletePhoto('delete<?php echo $photo->id ?>')" />

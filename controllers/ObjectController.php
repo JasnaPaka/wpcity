@@ -604,10 +604,18 @@ class ObjectController extends JPController {
 			$soukroma = 0;	
 		}
 		
+		$id = "skryta".$photo->id;
+		if (isset($_POST[$id])) {
+			$skryta = 1;	
+		} else {
+			$skryta = 0;	
+		}		
+		
 		$photo->autor = $author;
 		$photo->popis = $description;
 		$photo->primarni = $primary;
 		$photo->soukroma = $soukroma;
+		$photo->skryta = $skryta;
 		$photo->url = $url;
 		
 		return $photo;
@@ -692,7 +700,7 @@ class ObjectController extends JPController {
 		$photos = $this->getPhotosForObject();
 		
 		foreach($photos as $photo) {
-			if ($photo->primarni) {
+			if ($photo->primarni && !$photo->skryta) {
 				return $photo;	
 			}
 		}
@@ -705,7 +713,7 @@ class ObjectController extends JPController {
 		$photos = $this->getPhotosForObject();
 		
 		foreach($photos as $photo) {
-			if (!$photo->primarni) {
+			if (!$photo->primarni && !$photo->skryta) {
 				array_push($newPhotos, $photo);	
 			}
 		}
@@ -977,7 +985,15 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCatalogPage($page, $search) {
-		return $this->db->getCatalogPage($page, $search, $this->getCurrentTag());		
+		$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag());
+		
+		foreach($objects as $object) {
+			if ($object->skryta == 1) {
+				$object->img_512 = null;	
+			}
+		}
+		
+		return $objects;		
 	}
 		
 	public function getAuthorFullname($obj) {

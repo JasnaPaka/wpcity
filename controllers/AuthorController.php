@@ -204,7 +204,15 @@ class AuthorController extends JPController {
 	}
 	
 	public function getListByAuthor() {
-		return $this->dbObject->getListByAuthor($this->getObjectId(), true);	
+		$objects = $this->dbObject->getListByAuthor($this->getObjectId(), true);
+		
+		foreach($objects as $object) {
+			if ($object->skryta == 1) {
+				$object->img_512 = null;	
+			}
+		}
+		
+		return $objects;			
 	}
 	
 	private function getFormValues() {
