@@ -985,7 +985,7 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCatalogPage($page, $search) {
-		$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag());
+		$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag(), $this->getCurrentCategory());
 		
 		foreach($objects as $object) {
 			if ($object->skryta == 1) {
@@ -1035,11 +1035,25 @@ class ObjectController extends JPController {
 		return $this->dbTag->getById($id) != null;
 	}
 	
+	public function getIsShowedCategory() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['kategorie'];
+		return $this->dbCategory->getById($id) != null;
+	}
+	
 	public function getCurrentTag() {
 		global $wp_query;
 		
 		$id = (int) $wp_query->query_vars['stitek'];
 		return $this->dbTag->getById($id);
+	}
+	
+	public function getCurrentCategory() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['kategorie'];
+		return $this->dbCategory->getById($id);
 	}
 	
 	public function getTagsForObject($idObject) {

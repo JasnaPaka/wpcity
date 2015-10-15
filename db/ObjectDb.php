@@ -192,13 +192,13 @@ class ObjectDb extends JPDb {
 	}
 	
 	
-	public function getCatalogPage($page, $search, $tag) {
+	public function getCatalogPage($page, $search, $tag, $category) {
 		global $wpdb;
 
 		$startObject = $page * 9;
 		
 		if ($search != null) {
-			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta FROM ".$this->tableName." obj 
+			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie FROM ".$this->tableName." obj 
 				LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 				INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
 				WHERE obj.nazev LIKE %s AND (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ORDER BY obj.nazev", 
@@ -208,7 +208,7 @@ class ObjectDb extends JPDb {
 		}
 		
 		if ($tag != null) {
-			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta FROM ".$this->tableName." obj 
+			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie FROM ".$this->tableName." obj 
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."objekt2stitek o2s ON o2s.objekt = obj.id
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
@@ -218,13 +218,24 @@ class ObjectDb extends JPDb {
 			return $wpdb->get_results($sql);
 		}
 			
-			
-		
-		return $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta FROM ".$this->tableName." obj 
+		$sql = "SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie FROM ".$this->tableName." obj 
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
-			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ORDER BY obj.nazev 
-			LIMIT 9 OFFSET ".$startObject);
+			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ";
+			
+		if ($category != null) {
+			$sql = $sql."AND kat.id = %d "; 	
+		}			
+		
+		$sql = $sql."ORDER BY obj.nazev LIMIT 9 OFFSET ".$startObject; 		
+			
+		if ($category != null) {
+			$sql = $wpdb->prepare($sql, $category->id);
+		} else {
+			$sql = $wpdb->prepare($sql, null);
+		}
+		
+		return $wpdb->get_results($sql);
 	}
 	
 	

@@ -25,7 +25,10 @@ function rules() {
 	add_rewrite_tag('%soubor%','([^/]*)');	
 	
 	add_rewrite_rule('^katalog/stitek/([^/]*)/?','index.php?stitek=$matches[1]','top');
-	add_rewrite_tag('%stitek%','([^/]*)');	
+	add_rewrite_tag('%stitek%','([^/]*)');
+	
+	add_rewrite_rule('^katalog/kategorie/([^/]*)/?','index.php?kategorie=$matches[1]','top');
+	add_rewrite_tag('%kategorie%','([^/]*)');	
 
 	add_rewrite_rule('^katalog/autori/?','index.php?autori=1','top');
 	add_rewrite_tag('%autori%','([^/]*)');
@@ -53,6 +56,7 @@ function wpcity_plugin_display($template) {
 	$autori = (int) get_query_var('autori');
 	$soubory = (int) get_query_var('soubory');
 	$pridat = (int) get_query_var('pridat');
+	$category_id = (int) get_query_var('kategorie');
 	
 	if ($object_id > 0) {
 		$new_template = locate_template( array( 'page-dilo-detail.php' ) );
@@ -83,7 +87,7 @@ function wpcity_plugin_display($template) {
 		}
 	}
 	
-	if ($catalog > 0 || $tag_id > 0) {
+	if ($catalog > 0 || $tag_id > 0 || $category_id > 0) {
 		$new_template = locate_template( array( 'page-katalog.php' ) );
 		if ( '' != $new_template ) {
 			return $new_template ;
@@ -310,6 +314,7 @@ function kv_object_title($title, $sep) {
 	$soubory = (int) get_query_var('soubory');
 	$catalog = (int) get_query_var('prehled');	
 	$pridat = (int) get_query_var('pridat');
+	$category_id = (int) get_query_var('kategorie');
 	
 	if ($object_id > 0) {
 		$oc = new ObjectController();
@@ -321,6 +326,18 @@ function kv_object_title($title, $sep) {
 		}
 		
 		return $obj->nazev." ".$sep." ".$title;
+	}
+	
+	if ($category_id > 0) {
+		$cc = new CategoryController();
+		
+		$id = (int) $wp_query->query_vars['kategorie'];
+		$cat = $cc->getObjectById($id);
+		if ($cat == null) {
+			return "Kategorie nebyla nalezena"." ".$sep." ".$title;
+		}
+		
+		return "Kategorie děl"." ".$cat->nazev." ".$sep." ".$title;
 	}
 	
 	if ($author_id > 0) {
@@ -366,21 +383,6 @@ function kv_object_title($title, $sep) {
 	
 	return $title;
 }
-
-
-/** Odstranění Yoast SEO u stránek katalogu */
-/*function remove_yoast_seo() {
-	global $wp_query;
-	
-	$object_id = (int) get_query_var('objekt');
-	$author_id = (int) get_query_var('autor');
-	
-	if ($object_id > 0 || $author_id > 0) {
-		global $wpseo_front;
-		remove_action('wp_head', array($wpseo_front,'head'), 1);
-	}
-}
-add_filter('wp_title', 'remove_yoast_seo', 99, 3); */
 
 
 ?>
