@@ -30,8 +30,8 @@ function kv_MapaData() {
 	$themeUrl = get_template_directory_uri()."-child-krizkyavetrelci";
 	
 	$rows = $wpdb->get_results("SELECT kv.*, ".getKvDbPrefix()."kategorie.ikona,
-		(SELECT img_thumbnail FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
-		(SELECT img_large FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 order by primarni DESC, id LIMIT 1) as img_large,
+		(SELECT img_thumbnail FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 AND skryta = 0 order by primarni DESC, id LIMIT 1) as img_thumbnail,
+		(SELECT img_large FROM ".getKvDbPrefix()."fotografie WHERE objekt = kv.id AND deleted = 0 AND skryta = 0 order by primarni DESC, id LIMIT 1) as img_large,
 		(SELECT GROUP_CONCAT(CONCAT(ka.jmeno, ' ',ka.prijmeni) SEPARATOR ', ') FROM ".getKvDbPrefix()."autor ka INNER JOIN ".getKvDbPrefix()."objekt2autor o2a ON o2a.autor = ka.id WHERE o2a.objekt = kv.id AND ka.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id) as autori,
 		".getKvDbPrefix()."kategorie.checked,
 		".getKvDbPrefix()."kategorie.zoom
