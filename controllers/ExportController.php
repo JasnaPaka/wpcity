@@ -52,6 +52,9 @@ class ExportController extends JPController {
 			case "categoryWithCanceled": 
 				$this->exportCategory($id, true);
 				break;
+			case "categoryNoAuthors":
+				$this->exportNoAuthors($id);
+				break;
 			case "img_512":
 				$this->rebuildImages512();
 				break;
@@ -89,6 +92,31 @@ class ExportController extends JPController {
 		fclose($file);
 		
 		$this->download($tmpName, "objekty-bez-fotek.csv");
+	}
+	
+	/**
+	 * Export bodů bez uvedeného autora do CSV.
+	 * 
+	 * @param unknown $id
+	 */
+	private function exportNoAuthors($id) {
+		$separator = ",";
+		
+		putenv('TMPDIR='.getenv('TMPDIR'));
+		$tmpName = ini_get('upload_tmp_dir')."/objekty-bez-autora";
+		
+		$file = fopen($tmpName, 'w');
+		
+		fwrite($file, "name".$separator."latitude".$separator."longitude\n");
+		
+		foreach($this->dbObject->getObjectsWithoutAuthors($id) as $obj) {
+			$str = $obj->nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+			fwrite($file, $str);
+		}
+		
+		fclose($file);
+		
+		$this->download($tmpName, "objekty-bez-autora.csv");
 	}
 	
 	/**

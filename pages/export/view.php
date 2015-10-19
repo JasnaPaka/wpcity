@@ -31,15 +31,16 @@
 <p>Provede export CSV s objekty kategorie, aby pomocí výstupu šla snadno vygenerovat
 mapa pomocí <a href="http://www.gpsvisualizer.com/map_input?form=google">GPSVisualiser</a></p>
 
-<table class="wp-list-table widefat fixed posts" style="max-width: 500px;">
+<table class="wp-list-table widefat fixed posts" style="max-width: 650px;">
 	<tbody>
 		<?php
 			$i = 0;
 			foreach ($categories as $category) {
 				printf("<tr class=\"%s\">", $i % 2 == 0 ? "alternate" : "");
 				printf("<td>%s</td>", $category->nazev);
-				printf("<td><a href=\"admin.php?page=export&amp;action=category&amp;id=%d\">Bez zaniklých</a> &middot; 
-					<a href=\"admin.php?page=export&amp;action=categoryWithCanceled&amp;id=%d\">Včetně zaniklých</a></td>", $category->id, $category->id);
+				printf('<td><a href="admin.php?page=export&amp;action=category&amp;id=%d">Bez zaniklých</a> &middot; 
+					<a href="admin.php?page=export&amp;action=categoryWithCanceled&amp;id=%d">Včetně zaniklých</a></td>', $category->id, $category->id);
+				printf('<td><a href="admin.php?page=export&amp;action=categoryNoAuthors&amp;id=%d">Bez vyplněného autora</a></td>', $category->id);
 				printf("<tr>");				
 				
 				$i++;

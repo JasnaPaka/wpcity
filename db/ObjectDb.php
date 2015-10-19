@@ -142,6 +142,22 @@ class ObjectDb extends JPDb {
 			WHERE (fot.id is null OR fot.skryta = 1) AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
 	}
 	
+	/**
+	 * Vrací seznam děl, u kterých není vyplněn autor, dle vstupní kategorie.
+	 * @param unknown $id
+	 */
+	public function getObjectsWithoutAuthors($idCategory) {
+		global $wpdb;
+		
+		$sql = $wpdb->prepare("SELECT DISTINCT obj.* FROM ".$this->tableName." obj
+			LEFT JOIN ".$this->dbPrefix."objekt2autor o2a ON obj.id = o2a.objekt
+			WHERE obj.deleted = 0 AND (o2a.id IS NULL OR
+				(SELECT count(*) FROM ".$this->dbPrefix."objekt2autor AS objekt2autor WHERE objekt2autor.objekt = obj.id AND objekt2autor.deleted = 0) = 0
+				) AND obj.schvaleno = 1 AND obj.zruseno = 0 AND obj.kategorie = %d", $idCategory);
+		
+		return $wpdb->get_results ($sql);
+	}
+	
 	protected function getOrderSQL($param) {
 		if (strlen($param) == 0) {
 			return $this->getDefaultOrder();	
