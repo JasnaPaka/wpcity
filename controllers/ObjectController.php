@@ -985,6 +985,8 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCatalogPage($page, $search) {
+	
+		
 		$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag(), $this->getCurrentCategory());
 		
 		foreach($objects as $object) {
@@ -1056,6 +1058,14 @@ class ObjectController extends JPController {
 		return $this->dbCategory->getById($id);
 	}
 	
+	public function getIShowedBezAutora() {
+		global $wp_query;
+		
+		$id = (int) $wp_query->query_vars['bezautora'];
+		
+		return $id > 0;
+	}
+	
 	public function getTagsForObject($idObject) {
 		return $this->dbObject2Tag->getTagsForObject($idObject);
 	}
@@ -1074,6 +1084,10 @@ class ObjectController extends JPController {
 		}
 		
 		return $str;
+	}
+	
+	public function getIsZobrazeniList() {
+		return true;
 	}
 	
 }

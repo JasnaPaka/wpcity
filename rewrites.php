@@ -26,10 +26,14 @@ function rules() {
 	
 	add_rewrite_rule('^katalog/stitek/([^/]*)/?','index.php?stitek=$matches[1]','top');
 	add_rewrite_tag('%stitek%','([^/]*)');
+
+	add_rewrite_rule('^katalog/kategorie/([^/]*)/bez-autora/?','index.php?kategorie=$matches[1]&bezautora=1','top');
+	add_rewrite_tag('%kategorie%','([^/]*)');
+	add_rewrite_tag('%bezautora%','([^/]*)');
 	
 	add_rewrite_rule('^katalog/kategorie/([^/]*)/?','index.php?kategorie=$matches[1]','top');
 	add_rewrite_tag('%kategorie%','([^/]*)');	
-
+	
 	add_rewrite_rule('^katalog/autori/?','index.php?autori=1','top');
 	add_rewrite_tag('%autori%','([^/]*)');
 	add_rewrite_tag('%search%','([^/]*)');
@@ -314,6 +318,7 @@ function kv_object_title($title, $sep) {
 	$soubory = (int) get_query_var('soubory');
 	$catalog = (int) get_query_var('prehled');	
 	$pridat = (int) get_query_var('pridat');
+	$bezautora = (int) get_query_var('bezautora');
 	$category_id = (int) get_query_var('kategorie');
 	
 	if ($object_id > 0) {
@@ -335,6 +340,9 @@ function kv_object_title($title, $sep) {
 		$cat = $cc->getObjectById($id);
 		if ($cat == null) {
 			return "Kategorie nebyla nalezena"." ".$sep." ".$title;
+		}
+		if ($bezautora > 0) {
+			return "Kategorie děl"." ".$cat->nazev." (díla bez autora) ".$sep." ".$title;
 		}
 		
 		return "Kategorie děl"." ".$cat->nazev." ".$sep." ".$title;
