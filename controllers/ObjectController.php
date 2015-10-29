@@ -1076,6 +1076,14 @@ class ObjectController extends JPController {
 		return $str;
 	}
 	
+	public function getIsZobrazeniList() {
+		if (isset($_GET["zobrazeni"]) && $_GET["zobrazeni"] == "list") {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }
 
 ?>

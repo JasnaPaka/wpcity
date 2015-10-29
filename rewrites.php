@@ -16,6 +16,7 @@ function rules() {
 	
 	add_rewrite_rule('^katalog/dilo/([^/]*)/?','index.php?objekt=$matches[1]','top');
 	add_rewrite_tag('%objekt%','([^/]*)');
+	add_rewrite_tag('%zobrazeni%','([^/]*)');
 	
 	add_rewrite_rule('^katalog/autor/([^/]*)/?','index.php?autor=$matches[1]','top');
 	add_rewrite_tag('%autor%','([^/]*)');
