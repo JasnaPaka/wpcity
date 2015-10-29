@@ -296,6 +296,10 @@ function kv_object_pages_count() {
 		return 0;	
 	}
 	
+	if ($oc->getIShowedBezAutora()) {
+		return 0;	
+	}
+	
 	$count = $oc->getCount();
 	$pages = round ($count / 9, 0, PHP_ROUND_HALF_UP);
 	

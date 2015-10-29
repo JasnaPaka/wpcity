@@ -264,6 +264,22 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results($sql);
 	}
 	
+	public function getCatalogPageWithoutAuthor($category) {
+		global $wpdb;
+		
+		$sql = "SELECT DISTINCT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie FROM ".$this->tableName." obj 
+			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+			LEFT JOIN ".$this->dbPrefix."objekt2autor o2a ON obj.id = o2a.objekt
+			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
+			WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 
+			AND o2a.deleted IS NULL 
+			AND kat.id = %d ORDER BY obj.nazev";
+			
+		$sql = $wpdb->prepare($sql, $category->id);
+		return $wpdb->get_results($sql);
+	}
+		
+	
 	
 	public function getCountKeSchvaleni() {
 		global $wpdb;

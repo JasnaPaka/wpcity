@@ -990,9 +990,12 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCatalogPage($page, $search) {
-	
 		
-		$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag(), $this->getCurrentCategory());
+		if ($this->getIShowedBezAutora()) {
+			$objects = $this->db->getCatalogPageWithoutAuthor($this->getCurrentCategory());
+		} else {
+			$objects = $this->db->getCatalogPage($page, $search, $this->getCurrentTag(), $this->getCurrentCategory());
+		}
 		
 		foreach($objects as $object) {
 			if ($object->skryta == 1) {

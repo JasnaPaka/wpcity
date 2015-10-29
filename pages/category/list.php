@@ -21,6 +21,7 @@
 			<th class="r">Pořadí</th>
 			<th>URL</th>
 			<th>Ikona</th>
+			<th>Výpisy</th>
 			<th>Akce</th>
 		</tr>
 	</thead>
@@ -41,24 +42,29 @@
 				$barva = true;
 				foreach ($rows as $row) {
 					if ($barva) {
-						echo '<tr class="alternate">';
+						printf('<tr class="alternate">');
 						$barva = false;
 					} else {
-						echo '<tr>';
+						printf('<tr>');
 						$barva = true;
 					}
 					
-					echo '<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>';
-					echo '<td>'.$controller->getCountObjectsInCategory($row->id).'</td>';
-					echo '<td>'.$row->poradi.'</td>';
-					echo '<td>'.$row->url.'</td>';
-					echo '<td>'.$row->ikona.'</td>';
+					printf('<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>');
+					printf('<td>'.$controller->getCountObjectsInCategory($row->id).'</td>');
+					printf('<td>'.$row->poradi.'</td>');
+					printf('<td>'.$row->url.'</td>');
+					printf('<td>'.$row->ikona.'</td>');
+					
+					printf('<td>');
+					printf('<a href="/katalog/kategorie/'.$row->id.'/bez-autora/" title="Seznam děl bez autora">Bez autora</a>');
+					printf('</td>');
+					
 					if (!$row->systemova) {
-						echo '<td><a href="admin.php?page=category&amp;action=update&amp;id='.$row->id.'" title="Upraví kategorii">Upravit</a>';
-						echo ' &middot; <a href="admin.php?page=category&amp;action=delete&amp;id='.$row->id.'" title="Smaže kategorii">Smazat</a>';
-						echo '</td>';
+						printf('<td><a href="admin.php?page=category&amp;action=update&amp;id=%d" title="Upraví kategorii">Upravit</a>', $row->id);
+						printf(' &middot; <a href="admin.php?page=category&amp;action=delete&amp;id=%d" title="Smaže kategorii">Smazat</a>', $row->id);
+						printf('</td>');
 					}
-					echo '</tr>';
+					printf('</tr>');
 				}
 			} 
 		?>
