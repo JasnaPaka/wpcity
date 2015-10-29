@@ -106,11 +106,19 @@
 	</tr>
 <?php } ?>
 
-
-
 <tr>
 	<th><strong>Zpracován text</strong></th>
 	<td><?php echo ($row->zpracovano? "Ano" : "Ne") ?></td>
+</tr>
+
+<tr>
+	<th><strong>Umístěno na <abbr title="OpenStreetMap">OSM</abbr></strong></th>
+	<td><?php echo ($row->pridano_osm? "Ano" : "Ne") ?></td>
+</tr>
+
+<tr>
+	<th><strong>Umístěno na <abbr title="Vetřelci a volavky">VV</abbr></strong></th>
+	<td><?php echo ($row->pridano_vv? "Ano" : "Ne") ?></td>
 </tr>
 	
 </tbody>

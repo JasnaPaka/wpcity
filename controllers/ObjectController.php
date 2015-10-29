@@ -859,6 +859,12 @@ class ObjectController extends JPController {
 		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
 		$row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);
 		
+		$row->pridano_osm = filter_input (INPUT_POST, "pridano_osm", FILTER_SANITIZE_STRING);
+		$row->pridano_osm = ($row->pridano_osm === "on" ? 1 : 0);
+		
+		$row->pridano_vv = filter_input (INPUT_POST, "pridano_vv", FILTER_SANITIZE_STRING);
+		$row->pridano_vv = ($row->pridano_vv === "on" ? 1 : 0);	
+		
 		return $row;
 	}
 	

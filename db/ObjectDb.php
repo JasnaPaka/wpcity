@@ -91,7 +91,9 @@ class ObjectDb extends JPDb {
 			"upravil_autor" => $data->upravil_autor,
 			"upravil_datum" => $data->upravil_datum,
 			"zruseno" => ($data->zruseno ? 1 : 0),
-			"zpracovano" => ($data->zpracovano ? 1 : 0)
+			"zpracovano" => ($data->zpracovano ? 1 : 0),
+			"pridano_osm" => ($data->pridano_osm ? 1 : 0),
+			"pridano_vv" => ($data->pridano_vv ? 1 : 0)
 		);
 		
 		$types = array (
@@ -109,6 +111,8 @@ class ObjectDb extends JPDb {
 			'%s',
 			'%s',
 			'%s',
+			'%d',
+			'%d',
 			'%d',
 			'%d',
 			'%d'

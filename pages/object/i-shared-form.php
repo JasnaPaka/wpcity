@@ -147,6 +147,23 @@
 		<p class="description">Zaškrtněte, pokud již objekt neexistuje (odstraněn, zcizen).</p>
 	</td>
 </tr>
+
+<tr>
+	<th scope="row"><label for="pridano_osm">Přidáno na OSM</label></th>
+	<td>
+		<input name="pridano_osm" id="pridano_osm" type="checkbox" <?php if ($row->pridano_osm == 1 || $row->pridano_osm) echo 'checked="checked"' ?>/>
+		<p class="description">Zda bylo dílo přidáno na OpenStreetMap či se tam již nachází.</p>
+	</td>
+</tr>
+
+<tr>
+	<th scope="row"><label for="pridano_vv">Přidáno na VV</label></th>
+	<td>
+		<input name="pridano_vv" id="pridano_vv" type="checkbox" <?php if ($row->pridano_vv == 1 || $row->pridano_vv) echo 'checked="checked"' ?>/>
+		<p class="description">Zda bylo dílo přidáno na web Vetřelci a volavky či se tam již nachází.</p>
+	</td>
+</tr>
+
 </tbody>
 </table>
 
