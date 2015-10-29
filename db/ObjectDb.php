@@ -12,10 +12,15 @@ class ObjectDb extends JPDb {
 		return "nazev";
 	}
 	
-	public function getCountObjectsInCategory($idCategory) {
+	public function getCountObjectsInCategory($idCategory, $withoutRemoved = true) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT count(*) FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND zruseno = 0 AND schvaleno = 1", $idCategory); 	
+		$sql = "SELECT count(*) FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1";
+		if ($withoutRemoved) {
+			$sql = $sql." AND zruseno = 0";	
+		}
+		
+		$sql = $wpdb->prepare($sql, $idCategory); 	
 		return $wpdb->get_var ($sql);
 	}
 	

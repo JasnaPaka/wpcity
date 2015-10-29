@@ -69,10 +69,15 @@ class ObjectController extends JPController {
 	}
 	
 	public function getCount() {
+		
+		if ($this->getIsShowedCategory()) {
+			return $this->db->getCountObjectsInCategory($this->getCurrentCategory()->id, false);
+		}		
+		
 		if (!$this->getSearchValueValid()) {
 			return parent::getCount();	
 		}
-		
+				
 		return $this->db->getCountByNazev($this->getSearchValue()); 
 	}
 	
