@@ -210,8 +210,10 @@ class ObjectDb extends JPDb {
 	
 	public function getCatalogPage($page, $search, $tag, $category) {
 		global $wpdb;
-
-		$startObject = $page * 9;
+		
+		if ($page >= 0) {
+			$startObject = $page * 9;
+		}
 		
 		if ($search != null) {
 			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie FROM ".$this->tableName." obj 
@@ -243,7 +245,10 @@ class ObjectDb extends JPDb {
 			$sql = $sql."AND kat.id = %d "; 	
 		}			
 		
-		$sql = $sql."ORDER BY obj.nazev LIMIT 9 OFFSET ".$startObject; 		
+		$sql = $sql."ORDER BY obj.nazev ";
+		if ($page >= 0) {
+			$sql = $sql."LIMIT 9 OFFSET ".$startObject;
+		}
 			
 		if ($category != null) {
 			$sql = $wpdb->prepare($sql, $category->id);
