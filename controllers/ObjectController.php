@@ -594,6 +594,7 @@ class ObjectController extends JPController {
 		$author = filter_input (INPUT_POST, "autor".$photo->id, FILTER_SANITIZE_STRING);
 		$description = filter_input (INPUT_POST, "popis".$photo->id, FILTER_SANITIZE_STRING);
 		$url = filter_input (INPUT_POST, "url".$photo->id, FILTER_SANITIZE_STRING);
+		$rok = filter_input (INPUT_POST, "rok".$photo->id, FILTER_SANITIZE_STRING);
 		
 		$id = "primarni".$photo->id;
 		if (isset($_POST[$id])) {
@@ -614,7 +615,8 @@ class ObjectController extends JPController {
 			$skryta = 1;	
 		} else {
 			$skryta = 0;	
-		}		
+		}	
+				
 		
 		$photo->autor = $author;
 		$photo->popis = $description;
@@ -622,6 +624,7 @@ class ObjectController extends JPController {
 		$photo->soukroma = $soukroma;
 		$photo->skryta = $skryta;
 		$photo->url = $url;
+		$photo->rok = $rok;
 		
 		return $photo;
 	}

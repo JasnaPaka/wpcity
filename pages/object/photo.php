@@ -31,7 +31,8 @@
 	$uploadDir = wp_upload_dir(); ?>
 	
 	<tr>
-		<td valign="top"><span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
+		<td valign="top"><span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?>
+			<?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
 		<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt="" /></a></span></td>
 		
 		<td>
@@ -41,7 +42,8 @@
 					<label for="autor<?php echo $photo->id ?>">Autor</label>
 				</td>
 				<td>
-					<input name="autor<?php echo $photo->id ?>" id="autor<?php echo $photo->id ?>" class="regular-text" type="text" value="<?php echo $photo->autor ?>" maxlength="250" />
+					<input name="autor<?php echo $photo->id ?>" id="autor<?php echo $photo->id ?>" 
+						class="regular-text" type="text" value="<?php echo $photo->autor ?>" maxlength="250" />
 				</td>
 			</tr>
 			<tr>
@@ -49,7 +51,20 @@
 					<label for="popis<?php echo $photo->id ?>">Popis</label>
 				</td>
 				<td>
-					<textarea name="popis<?php echo $photo->id ?>" id="popis<?php echo $photo->id ?>" rows="4" cols="40"><?php echo $photo->popis ?></textarea>
+					<textarea name="popis<?php echo $photo->id ?>" id="popis<?php echo $photo->id ?>" 
+						rows="4" cols="40"><?php echo $photo->popis ?></textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<td valign="top">
+					<label for="rok<?php echo $photo->id ?>">Rok</label>
+				</td>
+				<td>
+					<input name="rok<?php echo $photo->id ?>" id="rok<?php echo $photo->id ?>" class="regular-text" 
+						type="text" value="<?php echo $photo->rok ?>" maxlength="250" />
+						<a onclick="document.getElementById('rok<?php echo $photo->id ?>').value='<?php echo date("Y");?>'" 
+							class="button">Aktuální rok</a>
 				</td>
 			</tr>
 
@@ -58,10 +73,10 @@
 					<label for="url<?php echo $photo->id ?>">URL</label>
 				</td>
 				<td>
-					<input name="url<?php echo $photo->id ?>" id="url<?php echo $photo->id ?>" class="regular-text" type="text" value="<?php echo $photo->url ?>" maxlength="250" />
+					<input name="url<?php echo $photo->id ?>" id="url<?php echo $photo->id ?>" class="regular-text" 
+						type="text" value="<?php echo $photo->url ?>" maxlength="250" />
 				</td>
-			</tr>			
-			
+			</tr>
 			
 			<tr>
 				<td valign="top">

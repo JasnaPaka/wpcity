@@ -44,6 +44,7 @@ class PhotoDb extends JPDb {
 			"autor" => $data->autor,
 			"url" => $data->url,
 			"popis" => $data->popis,
+			"rok" => $data->rok
 		);
 		
 		$types = array (
@@ -59,6 +60,7 @@ class PhotoDb extends JPDb {
 			'%d',
 			'%d',
 			'%s',			
+			'%s',
 			'%s',
 			'%s'
 		);
