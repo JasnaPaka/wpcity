@@ -41,7 +41,8 @@
 	<thead>
 		<tr>
 			<th>Název</th>
-			<th>Souřadnice</th>
+			<th>Autoři</th>
+			<th>Rok vzniku</th>
 			<th>Kategorie</th>
 			<th>Štítky</th>
 			<th>Akce</th>
@@ -72,8 +73,23 @@
 					}
 					
 					echo '<td><a href="admin.php?page=object&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->nazev.'</strong></a></td>';
-					echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
-						$row->latitude.', '.$row->longitude.'</a></td>';
+					print ('<td>');
+					
+					$isFirst = true;
+					foreach ($controller->getAuthorsByObject($row->id) as $author) {
+						if (!$isFirst) {
+							printf(", ");
+						}
+						
+						printf ('<a href="admin.php?page=author&amp;action=view&amp;id=%d">%s</a>', $author->id, $author->prijmeni.' '.$author->jmeno);
+						
+						$isFirst = false;
+					}
+					
+					print ('</td>');
+					printf ('<td>%s</td>', $row->rok_vzniku);
+					//echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
+					//	$row->latitude.', '.$row->longitude.'</a></td>';
 					echo '<td>'.$controller->getCategoryNameForObject($row->kategorie).'</td>';
 					echo '<td>'.$controller->getTagsForObjectStr($row->id).'</td>';
 					echo '<td><a href="admin.php?page=object&amp;action=update&amp;id='.$row->id.'" title="Upraví objekt">Upravit</a> 
