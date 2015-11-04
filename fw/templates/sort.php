@@ -10,7 +10,8 @@
 			if ((strlen($currentOrder) == 0 && $prvni) || $order->url === $currentOrder) {
 				echo '<li class="all">'.($prvni? "": "&nbsp;|&nbsp;").''.$order->nazev.'</li>';
 			} else {
-				echo '<li class="publish">'.($prvni? "": "&nbsp;|&nbsp;").'<a href="admin.php?page='.$controller->getStringId().'&amp;action=list&amp;order='.$order->url.'">'.$order->nazev.'</a></li>';
+				echo '<li class="publish">'.($prvni? "": "&nbsp;|&nbsp;").
+				'<a href="admin.php?page='.$controller->getStringId().'&amp;action=list&amp;order='.$order->url.$controller->getAdminUrlParams().'">'.$order->nazev.'</a></li>';
 			}
 			$prvni = false;
 		}

@@ -10,7 +10,13 @@
 <div class="wrap">
 
 <h2>
-	Objekty <a href="admin.php?page=object&amp;action=create" class="add-new-h2">Přidat nový</a>
+	<?php if ($controller->getIsShowedCategory()) { ?>
+		Objekty v kategorii '<?php print($controller->getCurrentCategory()->nazev) ?>'
+	<?php } else { ?>
+		Objekty 
+	<?php }  ?>
+	
+	<a href="admin.php?page=object&amp;action=create" class="add-new-h2">Přidat nový</a>
 	
 	<?php if (strlen($controller->getSearchValue()) > 0) { ?>
 		<span class="subtitle">Výsledky vyhledávání pro "<?php echo $controller->getSearchValue() ?>"</span>
@@ -18,7 +24,9 @@
 		<a href="admin.php?page=object&amp;action=list" class="add-new-h2">Zrušit vyhledávání</a>
 	<?php } ?>
 	
-	
+	<?php if ($controller->getIsShowedCategory()) { ?>
+		<a href="admin.php?page=object&amp;action=list" class="add-new-h2">Zrušit filtr</a>
+	<?php } ?>
 </h2>
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>

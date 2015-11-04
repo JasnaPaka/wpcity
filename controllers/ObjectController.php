@@ -51,6 +51,12 @@ class ObjectController extends JPController {
 	}
 	
 	public function getList() {
+		
+		// výpis děl dle autora v administraci
+		if ($this->getIsShowedCategory()) {
+			return $this->db->getPageByCategory($this->getPageCurrent(), $this->getCurrentCategory()->id, $this->getCurrentOrder());	
+		}
+			
 		if (!$this->getSearchValueValid()) {
 			if ($this->getSearchValue() != null) {
 				array_push($this->messages, new JPErrorMessage("Hledaný výraz musí mít alespoň tři znaky."));
@@ -1057,7 +1063,17 @@ class ObjectController extends JPController {
 	public function getIsShowedCategory() {
 		global $wp_query;
 		
-		$id = (int) $wp_query->query_vars['kategorie'];
+		// v administraci máme "category", na webu "kategorie" :)
+		if (isset($_GET["category"])) {
+			$id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);	
+		} else {
+			$id = (int) $wp_query->query_vars['kategorie'];	
+		}
+		
+		if ($id == 0) {
+			return null;	
+		} 
+				
 		return $this->dbCategory->getById($id) != null;
 	}
 	
@@ -1071,7 +1087,17 @@ class ObjectController extends JPController {
 	public function getCurrentCategory() {
 		global $wp_query;
 		
-		$id = (int) $wp_query->query_vars['kategorie'];
+		// v administraci máme "category", na webu "kategorie" :)
+		if (isset($_GET["category"])) {
+			$id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);	
+		} else {
+			$id = (int) $wp_query->query_vars['kategorie'];	
+		}
+		
+		if ($id == 0) {
+			return null;	
+		} 
+		
 		return $this->dbCategory->getById($id);
 	}
 	
@@ -1124,6 +1150,21 @@ class ObjectController extends JPController {
 		}
 		
 		return $param;		
+	}
+	
+	public function getAdminUrlParams() {
+		$action = filter_input (INPUT_POST, "action", FILTER_SANITIZE_STRING);
+		if (strlen($action) == 0) {
+			$action = parent::URL_LIST;	
+		}
+		
+		if (($action == parent::URL_LIST) && isset($_GET["category"])) {
+			$idCategory = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);
+			
+			return "&amp;category=".$idCategory;
+		}
+		
+		return "";
 	}
 	
 }

@@ -50,7 +50,7 @@
 					}
 					
 					printf('<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>');
-					printf('<td>'.$controller->getCountObjectsInCategory($row->id).'</td>');
+					printf('<td><a href="admin.php?page=object&amp;category=%d">%d</a></td>', $row->id, $controller->getCountObjectsInCategory($row->id));
 					printf('<td>'.$row->poradi.'</td>');
 					printf('<td>'.$row->url.'</td>');
 					printf('<td>'.$row->ikona.'</td>');

@@ -218,6 +218,10 @@ abstract class JPController {
 		return new stdClass();
 	}
 	
+	public function getAdminUrlParams() {
+		return "";	
+	}
+	
 	abstract public function getStringId();
 	
 }
