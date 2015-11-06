@@ -71,7 +71,7 @@ class ObjectDb extends JPDb {
 		$page--;
 		$offset = $page * JPDb::MAX_ITEMS_ON_PAGE;
 		
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 AND zruseno = 0
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1
 						ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset, $idCategory);
 		return $wpdb->get_results ($sql); 
 	}

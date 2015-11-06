@@ -346,7 +346,7 @@ class ObjectController extends JPController {
 					$photo->img_512 = $photos[4];
 					$photo->img_100 = $photos[5];
 					$photo->objekt = $idObject;
-					$photo->autor = $current_user->display_name;;
+					$photo->autor = $current_user->display_name;
 					$photo->primarni = 0;
 					$photo->datum_nahrani = date('Y-m-d');
 					
