@@ -1,33 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 4.3.11
--- http://www.phpmyadmin.net
 --
--- Počítač: 127.0.0.1
--- Vytvořeno: Čtv 29. říj 2015, 13:34
--- Verze serveru: 5.6.24
--- Verze PHP: 5.6.8
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Databáze: `vpp`
+-- Struktura tabulky `{{PREFIX}}autor`
 --
 
--- --------------------------------------------------------
-
---
--- Struktura tabulky `kv_autor`
---
-
-CREATE TABLE IF NOT EXISTS `kv_autor` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}autor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `jmeno` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `prijmeni` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `titul_pred` varchar(255) COLLATE utf8_czech_ci NOT NULL,
@@ -37,17 +13,18 @@ CREATE TABLE IF NOT EXISTS `kv_autor` (
   `obsah` text COLLATE utf8_czech_ci NOT NULL,
   `web` varchar(255) COLLATE utf8_czech_ci NOT NULL DEFAULT '',
   `zpracovano` tinyint(4) NOT NULL DEFAULT '0',
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_fotografie`
+-- Struktura tabulky `{{PREFIX}}fotografie`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_fotografie` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}fotografie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `img_original` varchar(1024) COLLATE utf8_czech_ci NOT NULL,
   `img_thumbnail` varchar(1024) COLLATE utf8_czech_ci NOT NULL,
   `img_medium` varchar(1024) COLLATE utf8_czech_ci NOT NULL,
@@ -62,17 +39,20 @@ CREATE TABLE IF NOT EXISTS `kv_fotografie` (
   `datum_nahrani` datetime DEFAULT NULL,
   `popis` text COLLATE utf8_czech_ci NOT NULL,
   `skryta` tinyint(4) NOT NULL DEFAULT '0',
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=1710 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `rok` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `objekt` (`objekt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_kategorie`
+-- Struktura tabulky `{{PREFIX}}kategorie`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_kategorie` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}kategorie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `popis` text COLLATE utf8_czech_ci NOT NULL,
   `url` varchar(255) COLLATE utf8_czech_ci NOT NULL,
@@ -82,17 +62,19 @@ CREATE TABLE IF NOT EXISTS `kv_kategorie` (
   `zoom` int(11) NOT NULL DEFAULT '1',
   `systemova` int(11) NOT NULL DEFAULT '0',
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  `poradi` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `poradi` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_objekt`
+-- Struktura tabulky `{{PREFIX}}objekt`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_objekt` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
@@ -112,57 +94,73 @@ CREATE TABLE IF NOT EXISTS `kv_objekt` (
   `pridal_datum` datetime NOT NULL,
   `upravil_autor` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `upravil_datum` datetime NOT NULL,
-  `interni` text COLLATE utf8_czech_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1288 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `interni` text COLLATE utf8_czech_ci NOT NULL,
+  `pridano_osm` tinyint(4) NOT NULL DEFAULT '0',
+  `pridano_vv` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `kategorie` (`kategorie`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_objekt2autor`
+-- Struktura tabulky `{{PREFIX}}objekt2autor`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_objekt2autor` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2autor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `objekt` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
   `spoluprace` varchar(255) COLLATE utf8_czech_ci NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=570 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `objekt` (`objekt`),
+  KEY `autor` (`autor`),
+  KEY `objekt_2` (`objekt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_objekt2soubor`
+-- Struktura tabulky `{{PREFIX}}objekt2soubor`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_objekt2soubor` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2soubor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `objekt` int(11) NOT NULL,
   `soubor` int(11) NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `objekt` (`objekt`),
+  KEY `soubor` (`soubor`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_objekt2stitek`
+-- Struktura tabulky `{{PREFIX}}objekt2stitek`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_objekt2stitek` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2stitek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `objekt` int(11) NOT NULL,
   `stitek` int(11) NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `stitek` (`stitek`),
+  KEY `objekt` (`objekt`),
+  KEY `objekt_2` (`objekt`),
+  KEY `stitek_2` (`stitek`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_soubor`
+-- Struktura tabulky `{{PREFIX}}soubor`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_soubor` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}soubor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci DEFAULT '',
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
@@ -175,201 +173,86 @@ CREATE TABLE IF NOT EXISTS `kv_soubor` (
   `pridal_autor` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `pridal_datum` datetime NOT NULL,
   `upravil_autor` varchar(255) COLLATE utf8_czech_ci NOT NULL,
-  `upravil_datum` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `upravil_datum` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_stitek`
+-- Struktura tabulky `{{PREFIX}}stitek`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_stitek` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}stitek` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL DEFAULT '',
   `popis` text COLLATE utf8_czech_ci NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci  ;
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `kv_zdroj`
+-- Struktura tabulky `{{PREFIX}}zdroj`
 --
 
-CREATE TABLE IF NOT EXISTS `kv_zdroj` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `{{PREFIX}}zdroj` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL,
   `url` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
   `isbn` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
   `cerpano` int(11) NOT NULL DEFAULT '0',
   `deleted` int(11) NOT NULL DEFAULT '0',
   `objekt` int(11) DEFAULT NULL,
-  `autor` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+  `autor` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `objekt` (`objekt`),
+  KEY `autor` (`autor`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
---
--- Klíče pro exportované tabulky
---
-
---
--- Klíče pro tabulku `kv_autor`
---
-ALTER TABLE `kv_autor`
-  ADD PRIMARY KEY (`id`);
-
---
--- Klíče pro tabulku `kv_fotografie`
---
-ALTER TABLE `kv_fotografie`
-  ADD PRIMARY KEY (`id`), ADD KEY `objekt` (`objekt`);
-
---
--- Klíče pro tabulku `kv_kategorie`
---
-ALTER TABLE `kv_kategorie`
-  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `url` (`url`);
-
---
--- Klíče pro tabulku `kv_objekt`
---
-ALTER TABLE `kv_objekt`
-  ADD PRIMARY KEY (`id`), ADD KEY `kategorie` (`kategorie`);
-
---
--- Klíče pro tabulku `kv_objekt2autor`
---
-ALTER TABLE `kv_objekt2autor`
-  ADD PRIMARY KEY (`id`), ADD KEY `objekt` (`objekt`), ADD KEY `autor` (`autor`), ADD KEY `objekt_2` (`objekt`);
-
---
--- Klíče pro tabulku `kv_objekt2soubor`
---
-ALTER TABLE `kv_objekt2soubor`
-  ADD PRIMARY KEY (`id`), ADD KEY `objekt` (`objekt`), ADD KEY `soubor` (`soubor`);
-
---
--- Klíče pro tabulku `kv_objekt2stitek`
---
-ALTER TABLE `kv_objekt2stitek`
-  ADD PRIMARY KEY (`id`), ADD KEY `stitek` (`stitek`), ADD KEY `objekt` (`objekt`), ADD KEY `objekt_2` (`objekt`), ADD KEY `stitek_2` (`stitek`);
-
---
--- Klíče pro tabulku `kv_soubor`
---
-ALTER TABLE `kv_soubor`
-  ADD PRIMARY KEY (`id`);
-
---
--- Klíče pro tabulku `kv_stitek`
---
-ALTER TABLE `kv_stitek`
-  ADD PRIMARY KEY (`id`);
-
---
--- Klíče pro tabulku `kv_zdroj`
---
-ALTER TABLE `kv_zdroj`
-  ADD PRIMARY KEY (`id`), ADD KEY `objekt` (`objekt`), ADD KEY `autor` (`autor`);
-
---
--- AUTO_INCREMENT pro tabulky
---
-
---
--- AUTO_INCREMENT pro tabulku `kv_autor`
---
-ALTER TABLE `kv_autor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=160;
---
--- AUTO_INCREMENT pro tabulku `kv_fotografie`
---
-ALTER TABLE `kv_fotografie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1710;
---
--- AUTO_INCREMENT pro tabulku `kv_kategorie`
---
-ALTER TABLE `kv_kategorie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
---
--- AUTO_INCREMENT pro tabulku `kv_objekt`
---
-ALTER TABLE `kv_objekt`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1288;
---
--- AUTO_INCREMENT pro tabulku `kv_objekt2autor`
---
-ALTER TABLE `kv_objekt2autor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=570;
---
--- AUTO_INCREMENT pro tabulku `kv_objekt2soubor`
---
-ALTER TABLE `kv_objekt2soubor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=105;
---
--- AUTO_INCREMENT pro tabulku `kv_objekt2stitek`
---
-ALTER TABLE `kv_objekt2stitek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=149;
---
--- AUTO_INCREMENT pro tabulku `kv_soubor`
---
-ALTER TABLE `kv_soubor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
---
--- AUTO_INCREMENT pro tabulku `kv_stitek`
---
-ALTER TABLE `kv_stitek`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
---
--- AUTO_INCREMENT pro tabulku `kv_zdroj`
---
-ALTER TABLE `kv_zdroj`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=107;
 --
 -- Omezení pro exportované tabulky
 --
 
 --
--- Omezení pro tabulku `kv_fotografie`
+-- Omezení pro tabulku `{{PREFIX}}fotografie`
 --
-ALTER TABLE `kv_fotografie`
-ADD CONSTRAINT `kv_fotografie_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `kv_objekt` (`id`);
+ALTER TABLE `{{PREFIX}}fotografie`
+  ADD CONSTRAINT `{{PREFIX}}fotografie_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`);
 
 --
--- Omezení pro tabulku `kv_objekt`
+-- Omezení pro tabulku `{{PREFIX}}objekt`
 --
-ALTER TABLE `kv_objekt`
-ADD CONSTRAINT `kv_objekt_ibfk_1` FOREIGN KEY (`kategorie`) REFERENCES `kv_kategorie` (`id`);
+ALTER TABLE `{{PREFIX}}objekt`
+  ADD CONSTRAINT `{{PREFIX}}objekt_ibfk_1` FOREIGN KEY (`kategorie`) REFERENCES `{{PREFIX}}kategorie` (`id`);
 
 --
--- Omezení pro tabulku `kv_objekt2autor`
+-- Omezení pro tabulku `{{PREFIX}}objekt2autor`
 --
-ALTER TABLE `kv_objekt2autor`
-ADD CONSTRAINT `kv_objekt2autor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `kv_objekt` (`id`),
-ADD CONSTRAINT `kv_objekt2autor_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `kv_autor` (`id`);
+ALTER TABLE `{{PREFIX}}objekt2autor`
+  ADD CONSTRAINT `{{PREFIX}}objekt2autor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
+  ADD CONSTRAINT `{{PREFIX}}objekt2autor_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `{{PREFIX}}autor` (`id`);
 
 --
--- Omezení pro tabulku `kv_objekt2soubor`
+-- Omezení pro tabulku `{{PREFIX}}objekt2soubor`
 --
-ALTER TABLE `kv_objekt2soubor`
-ADD CONSTRAINT `kv_objekt2soubor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `kv_objekt` (`id`),
-ADD CONSTRAINT `kv_objekt2soubor_ibfk_2` FOREIGN KEY (`soubor`) REFERENCES `kv_soubor` (`id`);
+ALTER TABLE `{{PREFIX}}objekt2soubor`
+  ADD CONSTRAINT `{{PREFIX}}objekt2soubor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
+  ADD CONSTRAINT `{{PREFIX}}objekt2soubor_ibfk_2` FOREIGN KEY (`soubor`) REFERENCES `{{PREFIX}}soubor` (`id`);
 
 --
--- Omezení pro tabulku `kv_objekt2stitek`
+-- Omezení pro tabulku `{{PREFIX}}objekt2stitek`
 --
-ALTER TABLE `kv_objekt2stitek`
-ADD CONSTRAINT `kv_objekt2stitek_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `kv_objekt` (`id`),
-ADD CONSTRAINT `kv_objekt2stitek_ibfk_2` FOREIGN KEY (`stitek`) REFERENCES `kv_stitek` (`id`);
+ALTER TABLE `{{PREFIX}}objekt2stitek`
+  ADD CONSTRAINT `{{PREFIX}}objekt2stitek_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
+  ADD CONSTRAINT `{{PREFIX}}objekt2stitek_ibfk_2` FOREIGN KEY (`stitek`) REFERENCES `{{PREFIX}}stitek` (`id`);
 
 --
--- Omezení pro tabulku `kv_zdroj`
+-- Omezení pro tabulku `{{PREFIX}}zdroj`
 --
-ALTER TABLE `kv_zdroj`
-ADD CONSTRAINT `kv_zdroj_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `kv_objekt` (`id`),
-ADD CONSTRAINT `kv_zdroj_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `kv_autor` (`id`);
+ALTER TABLE `{{PREFIX}}zdroj`
+  ADD CONSTRAINT `{{PREFIX}}zdroj_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
+  ADD CONSTRAINT `{{PREFIX}}zdroj_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `{{PREFIX}}autor` (`id`);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

@@ -12,6 +12,7 @@
  /** Akce prováděné ještě před zobrazením stránky */
 require_once ("controllers/ExportController.php");
 require_once ("controllers/ObjectController.php");
+require_once ("DatabaseSchemeUpdater.php");
 require_once ("config.php");
 
 if (WP_DEBUG && WP_DEBUG_DISPLAY) 
@@ -256,6 +257,19 @@ function getKvDbPrefix() {
 	}
 	
 	return "kv_";
+}
+
+add_action( 'admin_init', 'initDatabase' );
+
+function initDatabase() {
+    global $wpdb;
+    
+    $prefix = "kv_";
+    if (is_multisite()) {
+            $prefix = "kv_".$wpdb->blogid."_";
+    }
+    
+    new DatabaseSchemeUpdater($prefix);
 }
 
 
