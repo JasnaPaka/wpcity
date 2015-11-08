@@ -18,7 +18,7 @@ class DatabaseSchemeUpdater {
     private function updateScheme() {
         if (!$this->getIsDbSchemaTableExists()) {
             $this->createDbVersionSchemeTable();
-            //$this->createScheme();
+            $this->createScheme();
         }
     }
     
@@ -45,13 +45,28 @@ class DatabaseSchemeUpdater {
     
     private function createScheme() {
         $filename = $this->getSQLScriptsDirectory()."scheme.sql";
-        $content = file_get_contents($filename);
-        if (!$content) {
+        
+        $handle = fopen($filename, "r");
+        if ($handle) {
+            $sql = "";
+            while (($line = fgets($handle)) !== false) {
+                $line = trim($line);
+                
+                $lastChar = mb_substr($line, mb_strlen($line) - 1, 1);
+                
+                $sql .= " ".$line;
+                if ($lastChar == ";") {
+                    $sql = $this->replacePrefix($sql);
+                    if (!$this->wpdb->query($sql)) {
+                        die("Database scheme was not created.");
+                    }
+                    $sql = "";
+                }
+            }
+            fclose($handle);
+        } else {
             die("Cannot load scheme.sql.");
         }
-        
-        $sql = $this->replacePrefix($content);
-        return $this->wpdb->query($sql);
     }
     
     private function replacePrefix($sql) {
