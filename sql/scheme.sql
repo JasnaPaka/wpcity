@@ -1,7 +1,3 @@
---
--- Struktura tabulky `{{PREFIX}}autor`
---
-
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}autor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jmeno` varchar(255) COLLATE utf8_czech_ci NOT NULL,
@@ -16,12 +12,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}autor` (
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}fotografie`
---
 
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}fotografie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -45,12 +35,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}fotografie` (
   KEY `objekt` (`objekt`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}kategorie`
---
-
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}kategorie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL,
@@ -66,12 +50,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}kategorie` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}objekt`
---
 
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -101,12 +79,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt` (
   KEY `kategorie` (`kategorie`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}objekt2autor`
---
-
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2autor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `objekt` int(11) NOT NULL,
@@ -119,12 +91,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2autor` (
   KEY `objekt_2` (`objekt`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}objekt2soubor`
---
-
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2soubor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `objekt` int(11) NOT NULL,
@@ -134,12 +100,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2soubor` (
   KEY `objekt` (`objekt`),
   KEY `soubor` (`soubor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}objekt2stitek`
---
 
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2stitek` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -152,12 +112,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}objekt2stitek` (
   KEY `objekt_2` (`objekt`),
   KEY `stitek_2` (`stitek`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}soubor`
---
 
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}soubor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -177,12 +131,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}soubor` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}stitek`
---
-
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}stitek` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nazev` varchar(255) COLLATE utf8_czech_ci NOT NULL DEFAULT '',
@@ -190,12 +138,6 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}stitek` (
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci  ;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `{{PREFIX}}zdroj`
---
 
 CREATE TABLE IF NOT EXISTS `{{PREFIX}}zdroj` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -211,46 +153,24 @@ CREATE TABLE IF NOT EXISTS `{{PREFIX}}zdroj` (
   KEY `autor` (`autor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ;
 
---
--- Omezení pro exportované tabulky
---
-
---
--- Omezení pro tabulku `{{PREFIX}}fotografie`
---
 ALTER TABLE `{{PREFIX}}fotografie`
   ADD CONSTRAINT `{{PREFIX}}fotografie_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`);
 
---
--- Omezení pro tabulku `{{PREFIX}}objekt`
---
 ALTER TABLE `{{PREFIX}}objekt`
   ADD CONSTRAINT `{{PREFIX}}objekt_ibfk_1` FOREIGN KEY (`kategorie`) REFERENCES `{{PREFIX}}kategorie` (`id`);
 
---
--- Omezení pro tabulku `{{PREFIX}}objekt2autor`
---
 ALTER TABLE `{{PREFIX}}objekt2autor`
   ADD CONSTRAINT `{{PREFIX}}objekt2autor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
   ADD CONSTRAINT `{{PREFIX}}objekt2autor_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `{{PREFIX}}autor` (`id`);
 
---
--- Omezení pro tabulku `{{PREFIX}}objekt2soubor`
---
 ALTER TABLE `{{PREFIX}}objekt2soubor`
   ADD CONSTRAINT `{{PREFIX}}objekt2soubor_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
   ADD CONSTRAINT `{{PREFIX}}objekt2soubor_ibfk_2` FOREIGN KEY (`soubor`) REFERENCES `{{PREFIX}}soubor` (`id`);
 
---
--- Omezení pro tabulku `{{PREFIX}}objekt2stitek`
---
 ALTER TABLE `{{PREFIX}}objekt2stitek`
   ADD CONSTRAINT `{{PREFIX}}objekt2stitek_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
   ADD CONSTRAINT `{{PREFIX}}objekt2stitek_ibfk_2` FOREIGN KEY (`stitek`) REFERENCES `{{PREFIX}}stitek` (`id`);
 
---
--- Omezení pro tabulku `{{PREFIX}}zdroj`
---
 ALTER TABLE `{{PREFIX}}zdroj`
   ADD CONSTRAINT `{{PREFIX}}zdroj_ibfk_1` FOREIGN KEY (`objekt`) REFERENCES `{{PREFIX}}objekt` (`id`),
   ADD CONSTRAINT `{{PREFIX}}zdroj_ibfk_2` FOREIGN KEY (`autor`) REFERENCES `{{PREFIX}}autor` (`id`);
