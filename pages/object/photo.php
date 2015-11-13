@@ -83,32 +83,32 @@
 					&nbsp;
 				</td>
 				<td>
-					<table>
-						<tr>
-							<td>
-								<input type="checkbox" name="primarni<?php echo $photo->id ?>" 
-									id="primarni<?php echo $photo->id ?>" <?php if ($photo->primarni) echo 'checked="checked"' ?> 
-									onclick="zmenaPrimarni('primarni<?php echo $photo->id ?>')" />
-									<label for="primarni<?php echo $photo->id ?>">Hlavní fotografie</label>
-							</td>
-							<td>
-								<input type="checkbox" name="soukroma<?php echo $photo->id ?>" 
-									id="soukroma<?php echo $photo->id ?>" <?php if ($photo->soukroma) echo 'checked="checked"' ?> />
-									<label for="soukroma<?php echo $photo->id ?>">Soukromá fotografie</label>
-							</td>
-							<td>
-								<input type="checkbox" name="skryta<?php echo $photo->id ?>" 
-									id="skryta<?php echo $photo->id ?>" <?php if ($photo->skryta) echo 'checked="checked"' ?> />
-									<label for="skryta<?php echo $photo->id ?>">Skryta na webu</label>
-							</td>
-							<td>
-								<input type="checkbox" name="delete<?php echo $photo->id ?>" 
-									id="delete<?php echo $photo->id ?>"
-									onclick="deletePhoto('delete<?php echo $photo->id ?>')" />
-									<label for="delete<?php echo $photo->id ?>">Smazat fotografii?</label>
-							</td>
-						</tr>
-					</table>
+                                    <table>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" name="primarni<?php echo $photo->id ?>" 
+                                                            id="primarni<?php echo $photo->id ?>" <?php if ($photo->primarni) { print('checked="checked"'); } ?> 
+                                                            onclick="zmenaPrimarni('primarni<?php echo $photo->id ?>')" />
+                                                            <label for="primarni<?php echo $photo->id ?>">Hlavní fotografie</label>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="soukroma<?php echo $photo->id ?>" 
+                                                            id="soukroma<?php echo $photo->id ?>" <?php if ($photo->soukroma) { print('checked="checked"'); } ?> />
+                                                            <label for="soukroma<?php echo $photo->id ?>">Soukromá fotografie</label>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="skryta<?php echo $photo->id ?>" 
+                                                            id="skryta<?php echo $photo->id ?>" <?php if ($photo->skryta) { print('checked="checked"'); } ?> />
+                                                            <label for="skryta<?php echo $photo->id ?>">Skryta na webu</label>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" name="delete<?php echo $photo->id ?>" 
+                                                            id="delete<?php echo $photo->id ?>"
+                                                            onclick="deletePhoto('delete<?php echo $photo->id ?>')" />
+                                                            <label for="delete<?php echo $photo->id ?>">Smazat fotografii?</label>
+                                                </td>
+                                            </tr>
+                                    </table>
 				</td>
 			</tr>
 			</table>
@@ -123,12 +123,12 @@
 <tr>
 	<th scope="row">Nové fotografie</th>
 	<td>
-		<input type="file" id="photo1" name="photo1" /><br />
-		<input type="file" id="photo2" name="photo2" /><br />
-		<input type="file" id="photo3" name="photo3" />
-		<?php if (count($photos) === 0) { ?>
-			<p class="description">První fotografie bude označena jako hlavní a bude se zobrazovat jako výchozí u bodů v mapě.</p>
-		<?php } ?>
+            <input type="file" id="photo" name="photo[]" multiple="multiple" /><br />
+            <?php if (count($photos) === 0) { ?>
+                <p class="description">První vybraná fotografie bude označena jako hlavní a bude se zobrazovat jako výchozí u bodů v mapě.</p>
+            <?php } else { ?>
+                <p class="description">Tip: Pomocí klávesy CTRL můžete vybrat pro nahrání více fotografií.</p>
+            <?php } ?>
 	</td>
 </tr>
 </tbody>

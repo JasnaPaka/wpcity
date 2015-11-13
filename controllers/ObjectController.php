@@ -270,7 +270,7 @@ class ObjectController extends JPController {
 		global $_wp_additional_image_sizes;
 		global $current_user;
 		
-     	$sizes = array();
+                $sizes = array();
 		
 		if (!function_exists('wp_handle_upload')) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -278,15 +278,21 @@ class ObjectController extends JPController {
 		
 		$upload_overrides = array('test_form' => false);
 		$uploadFiles = array ();
-		if (isset($_FILES['photo1']) && $_FILES['photo1']['name'] != null) {
-			array_push($uploadFiles, $_FILES['photo1']);
-		}
-		if (isset($_FILES['photo2']) && $_FILES['photo2']['name'] != null) {
-			array_push($uploadFiles, $_FILES['photo2']);
-		}
-		if (isset($_FILES['photo3']) && $_FILES['photo3']['name'] != null) {
-			array_push($uploadFiles, $_FILES['photo3']);
-		}
+                
+                // Zpracování multiupload
+                $files = $_FILES['photo'];
+                foreach ($files['name'] as $key => $value) {
+                  if ($files['name'][$key]) {
+                    $file = array(
+                      'name'     => $files['name'][$key],
+                      'type'     => $files['type'][$key],
+                      'tmp_name' => $files['tmp_name'][$key],
+                      'error'    => $files['error'][$key],
+                      'size'     => $files['size'][$key]
+                    );                    
+                    array_push($uploadFiles, $file);
+                  }
+                }
 		
 		$photos = array();
 		$newPhotos = array();
