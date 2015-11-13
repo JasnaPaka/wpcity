@@ -679,7 +679,7 @@ class ObjectController extends JPController {
 		}
 		
 		return $newPhotos;
-	}
+	}       
 	
 	public function delete() {
 		$row = $this->getFormValues();
@@ -1172,6 +1172,3 @@ class ObjectController extends JPController {
 	}
 	
 }
-
-?>
-

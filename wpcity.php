@@ -29,10 +29,9 @@ function wpCitySendHeadersCallback() {
 	if (is_admin()) {
 
 		if (isset($_GET["page"]) && ($_GET["page"]) === "export" && isset($_GET["action"])) {
-			$controller = new ExportController();
-			$controller->export();
-		}
-
+                    $controller = new ExportController();
+                    $controller->export();
+                }
 	}
 }
 

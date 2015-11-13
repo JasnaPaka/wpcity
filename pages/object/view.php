@@ -124,7 +124,21 @@
 </tbody>
 </table>
 
-<br />
+<form method="post">
+<p class="submit">
+    <a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+    <?php if ($row->schvaleno == 0) { ?>
+            <input name="approve" id="approve" class="button" value="Schválit" type="submit">
+    <?php } ?>
+    <a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
+    <a href="admin.php?page=object&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
+    <a href="admin.php?page=object&amp;action=collection&amp;id=<?php echo $row->id ?>" class="button">Správa souborů děl</a>
+    <a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
+</p>
+</form>    
+    
+<h3>Umístění v mapě</h3>
+
 <?php echo $controller->getGoogleMapPointContent($row->latitude, $row->longitude); ?>
 
 <?php if (strlen($row->popis) > 0) { ?>
@@ -151,6 +165,10 @@
 
 <p>K objektu nejsou prozatím nahrány žádné fotografie.</p>
 
+<p class="submit">
+    <a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat fotografie</a>
+</p>
+
 <?php } else { 
 
 	foreach($photos as $photo) {
@@ -161,10 +179,13 @@
 	<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt="" />
 </a></span>
 
-<?php 
-		}	
-	} 
-?>
+<?php }	?>
+
+<p class="submit">
+    <a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat či upravit fotografie</a>
+</p>
+
+<?php } ?>
 
 <?php if (strlen($row->interni) > 1) { ?>
 
@@ -175,6 +196,8 @@
 </div>
 
 <?php } ?>
+
+<h3>Historie</h3>
 
 <table class="widefat" style="max-width: 500px; margin-top: 10px">
 <tbody>
@@ -195,15 +218,6 @@
 
 <form method="post">
 <p class="submit">
-	<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
-	<?php if ($row->schvaleno == 0) { ?>
-		<input name="approve" id="approve" class="button" value="Schválit" type="submit">
-	<?php } ?>
-	<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Správa fotografií</a>
-	<a href="admin.php?page=object&amp;action=author&amp;id=<?php echo $row->id ?>" class="button">Správa autorů</a>
-	<a href="admin.php?page=object&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
-	<a href="admin.php?page=object&amp;action=collection&amp;id=<?php echo $row->id ?>" class="button">Správa souborů děl</a>
-	<a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=object" class="button">Zpět na výpis</a>
 </p>
 </form>
