@@ -941,12 +941,16 @@ class ObjectController extends JPController {
 	}
 	
 	public function getGoogleMapPointContent($lat, $lng) {
-		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);
+                global $KV_SETTINGS;
+            
+		$map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
 		return $map->getOutput();
 	}
 	
 	public function getGoogleMapPointEditContent($lat, $lng) {
-		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);
+                global $KV_SETTINGS;
+            
+		$map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
 		return $map->getOutputEdit();
 	}
 	

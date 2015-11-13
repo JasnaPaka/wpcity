@@ -4,8 +4,8 @@
 	var marker;
 	
 	var mapOptions = {
-          center: new google.maps.LatLng(49.748398, 13.377652),
-          zoom: 13,
+          center: new google.maps.LatLng(LAT_REPLACEMENT, LNG_REPLACEMENT),
+          zoom: ZOOM_REPLACEMENT,
           mapTypeId: google.maps.MapTypeId.SATELLITE
     };
     
