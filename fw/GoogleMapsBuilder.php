@@ -19,7 +19,10 @@ class GoogleMapsBuilder {
 		$content = str_replace("LAT_REPLACEMENT", $this->KV_SETTINGS["gm_lat"], $content);
                 $content = str_replace("ZOOM_REPLACEMENT", $this->KV_SETTINGS["gm_zoom"], $content);
 		
-		return $content;
+                $content = str_replace("LNG_POI_REPLACEMENT", isset($this->lng) ? $this->lng : 0, $content);
+		$content = str_replace("LAT_POI_REPLACEMENT", isset($this->lat) ? $this->lat : 0, $content);
+		
+                return $content;
 	}
 	
 	public function getOutputEdit() {

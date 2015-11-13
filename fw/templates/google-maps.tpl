@@ -30,7 +30,7 @@
       	// Zakáže "ptačí pohled"
       	map.setTilt(0);
       	
-      	var myLatlng = new google.maps.LatLng(LAT_REPLACEMENT, LNG_REPLACEMENT);
+      	var myLatlng = new google.maps.LatLng(LAT_POI_REPLACEMENT, LNG_POI_REPLACEMENT);
       	var marker = new google.maps.Marker({
       		map: map,
 		    position: myLatlng
