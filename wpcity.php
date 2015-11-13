@@ -14,8 +14,7 @@ require_once ("controllers/ExportController.php");
 require_once ("controllers/ObjectController.php");
 require_once ("DatabaseSchemeUpdater.php");
 
-require_once ("config-default.php");
-require_once ("config.php");
+include ("config.php");
 
 if (WP_DEBUG && WP_DEBUG_DISPLAY) 
 {
