@@ -124,7 +124,7 @@ class AuthorDb extends JPDb {
 		global $wpdb;
 		
 		$sql = $wpdb->prepare("SELECT fot.img_512 FROM ".$this->dbPrefix."objekt2autor o2a INNER JOIN ".$this->dbPrefix."objekt obj ON obj.id = o2a.objekt
-			INNER JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = obj.id WHERE o2a.deleted = 0 AND obj.deleted = 0 AND fot.deleted = 0 
+			INNER JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = obj.id WHERE o2a.deleted = 0 AND obj.deleted = 0 AND fot.deleted = 0 AND fot.skryta = 0 
 			AND fot.primarni = 1 AND o2a.autor = %d
 			ORDER BY fot.id LIMIT 1", $authorId);
 			
