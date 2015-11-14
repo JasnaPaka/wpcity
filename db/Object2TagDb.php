@@ -22,7 +22,7 @@ class Object2TagDb extends JPDb {
 	public function getTagsForObject($idObject) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT o2s.id, o2s.objekt, o2s.stitek, s.nazev as nazev 
+		$sql = $wpdb->prepare("SELECT s.id, o2s.objekt, o2s.stitek, s.nazev as nazev 
 			FROM ".$this->tableName." o2s INNER JOIN ".$this->dbPrefix."stitek s ON o2s.stitek = s.id WHERE objekt = %d AND o2s.deleted = 0", $idObject);
 
 		return $wpdb->get_results ($sql);	
