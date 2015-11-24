@@ -76,5 +76,8 @@ function kv_ObjektPocet() {
 	return $wpdb->get_var("SELECT count(*) FROM ".getKvDbPrefix()."objekt WHERE deleted = 0 AND schvaleno = 1");
 }
 
-
-?>
+function kv_category_count() {
+    global $wpdb;
+    
+    return $wpdb->get_var("SELECT count(*) FROM ".getKvDbPrefix()."kategorie WHERE deleted = 0");
+}
