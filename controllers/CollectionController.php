@@ -33,13 +33,17 @@ class CollectionController extends JPController {
 	}
 	
 	public function getGoogleMapPointContent($lat, $lng) {
-		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);
-		return $map->getOutput();
+            global $KV_SETTINGS;
+            
+            $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+            return $map->getOutput();
 	}	
 	
 	public function getGoogleMapPointEditContent($lat, $lng) {
-		$map = new GoogleMapsBuilder($KV_SETTINGS["gm_key"], $lat, $lng);
-		return $map->getOutputEdit();
+            global $KV_SETTINGS;
+            
+            $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+            return $map->getOutputEdit();
 	}
 	
 	
