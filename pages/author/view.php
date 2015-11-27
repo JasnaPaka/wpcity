@@ -40,7 +40,9 @@
 
 <h3>Obsah</h3>
 
-<?php echo stripslashes($row->obsah) ?>
+<div class="content-width">
+    <?php echo stripslashes($row->obsah) ?>
+</div>
 
 <?php } ?>
 
