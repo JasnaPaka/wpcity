@@ -86,5 +86,3 @@ abstract class JPDb {
 	abstract public function getDefaultOrder();
 
 }
-
-?>

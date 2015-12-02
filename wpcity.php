@@ -96,6 +96,7 @@ function wpCityObjectPageCallback(){
 	}
 	
 	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
+        
 	switch ($action) {
 		case 'create':
 			require_once("pages/object/create.php");
@@ -124,6 +125,18 @@ function wpCityObjectPageCallback(){
 		case 'collection':
 			require_once("pages/object/collection.php");
 			break;
+		case 'poi-list':
+			require_once("pages/object/poi-list.php");
+			break;                    
+		case 'poi-create':
+			require_once("pages/object/poi-create.php");
+			break; 
+		case 'poi-update':
+			require_once("pages/object/poi-update.php");
+			break; 
+		case 'poi-delete':
+			require_once("pages/object/poi-delete.php");
+			break;                     
 		default:
 			require_once("pages/object/list.php");
 			break;

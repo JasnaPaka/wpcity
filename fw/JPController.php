@@ -95,7 +95,7 @@ abstract class JPController {
 		}
 		
 		return $this->db->getById($id);
-	}
+	}       
 	
 	public function getShowAll() {
 		if ($this->getSearchValueValid()) {

@@ -17,6 +17,7 @@ include_once $ROOT."db/CollectionDb.php";
 include_once $ROOT."db/TagDb.php";
 include_once $ROOT."db/Object2AuthorDb.php";
 include_once $ROOT."db/Object2TagDb.php";
+include_once $ROOT."db/PoiDb.php";
 include_once $ROOT."db/Object2CollectionDb.php";
 
 include_once $ROOT."config.php";
@@ -33,6 +34,7 @@ class ObjectController extends JPController {
 	private $dbObject2Tag;
 	private $dbObject2Collection;
 	private $dbCollection;
+        private $dbPoi;
 	
 	private $categories;
 	private $cacheTagSelected;
@@ -47,6 +49,7 @@ class ObjectController extends JPController {
 		$this->dbObject2Author = new Object2AuthorDb();
 		$this->dbObject2Tag = new Object2TagDb();
 		$this->dbCollection = new CollectionDb();
+                $this->dbPoi = new PoiDb();
 		$this->dbObject2Collection = new Object2CollectionDb(); 
 	}
 	
@@ -129,6 +132,25 @@ class ObjectController extends JPController {
 		
 		return count($this->messages) === 0; 
 	}
+        
+        private function validatePoi($poi) {
+            // název
+            if (strlen($poi->nazev) < 3 || strlen($poi->nazev) > 250) {
+                array_push($this->messages, new JPErrorMessage("Název bodu musí mít min. 3 a nejvíce 250 znaků."));
+            }
+
+            // latitude
+            if (!GPSUtils::getIsValidLatitude($poi->latitude)) {
+                array_push($this->messages, new JPErrorMessage("Neplatná latitude u GPS souřadnice."));
+            }
+
+            // longitude
+            if (!GPSUtils::getIsValidLongitude($poi->longitude)) {
+                array_push($this->messages, new JPErrorMessage("Neplatná longitude u GPS souřadnice."));
+            }
+            
+            return count($this->messages) === 0; 
+        }
 	
 	private function getCurrentDateStr() {
 		$dt = new DateTime();
@@ -265,6 +287,29 @@ class ObjectController extends JPController {
 		
 		return $row;
 	}
+        
+        public function addPoi() {
+            $poi = $this->getFormPoiValues();
+            $result = $this->validatePoi($poi);
+            if ($result) {
+                $row = $this->getObjectFromUrl();
+                if (!$row) {
+                    return;
+                }
+                
+                $poi->objekt = $row->id;
+                $result = $this->dbPoi->create($poi);
+                
+                if (!$result) {
+                    array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nový bod."));
+		} else {
+                    array_push($this->messages, new JPInfoMessage('Bod byl úspěšně přidán. 
+			<a href="'.$this->getUrl("poi-list", $poi->objekt).'">Zobrazit seznam</a>'));
+                    
+                    return new stdClass();
+                }
+            }
+        }
 	
 	private function addPhotos($idObject, $existPhotos) {
 		global $_wp_additional_image_sizes;
@@ -535,6 +580,29 @@ class ObjectController extends JPController {
 		
 		return $row;
 	}
+        
+        public function updatePoi() {
+            $poi = $this->getFormPoiValues();
+            if ($poi == null) {
+                return null;
+            }
+            
+            $result = $this->validatePoi($poi);
+            if ($result) { 
+                $poi->objekt = $this->getObjectFromUrl()->id;
+                
+                $result = $this->dbPoi->update($poi, $this->getPoiFromUrl()->id);
+                
+                if (!$result) {
+                    array_push($this->messages, new JPErrorMessage("Nepodařilo se aktualizovat bod."));
+		} else {
+                    array_push($this->messages, new JPInfoMessage('Bod byl úspěšně aktualizován. 
+			<a href="'.$this->getUrl("poi-list", $poi->objekt).'">Zobrazit seznam</a>'));
+                }
+            }
+            
+            return $poi;
+        }
 	
 	public function approve() {
 		$object = $this->getObjectById($this->getObjectFromUrl()->id);
@@ -707,6 +775,27 @@ class ObjectController extends JPController {
 			$this->dbPhoto->deletePhotosByObject($id);
 		}
 	}
+        
+	public function deletePoi() {
+            $row = $this->getFormPoiValues();
+            if ($row == null) {
+                return null;
+            }
+
+            $id = $this->getPoiFromUrl()->id;
+            if ($id == null) {
+                return null;
+            }
+
+            $result = $this->dbPoi->delete($id);
+            if (!$result) {
+                    array_push($this->messages, new JPErrorMessage("Bod se nepodařilo smazat."));
+            } else {
+                    array_push($this->messages, new JPInfoMessage('Bod byl úspěšně smazán. 
+                            <a href="'.$this->getUrl("poi-list").'">Zpět na seznam bodů</a>'));
+                    $this->dbPhoto->deletePhotosByObject($id);
+            }
+	}
 	
 	public function getPhotosForObject() {
 		if ($this->getObjectId() == null) {
@@ -854,63 +943,73 @@ class ObjectController extends JPController {
 	}
 	
 	private function getFormValues() {
-		$row = new stdClass();
-		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
-		$row->latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
-		$row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
-		$row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
-		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
-		$row->obsah = $_POST["editor"]; // TODO: sanitize 
-		$row->interni = $_POST["interni"]; // TODO: sanitize
-		$row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
-		$row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);
-		$row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);
-		$row->pamatkova_ochrana = filter_input (INPUT_POST, "pamatkova_ochrana", FILTER_SANITIZE_STRING);
-		$row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
-		
-		$row->zruseno = filter_input (INPUT_POST, "zruseno", FILTER_SANITIZE_STRING);
-		$row->zruseno = ($row->zruseno === "on" ? 1 : 0);
+            $row = new stdClass();
+            $row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
+            $row->latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
+            $row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
+            $row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
+            $row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
+            $row->obsah = $_POST["editor"]; // TODO: sanitize 
+            $row->interni = $_POST["interni"]; // TODO: sanitize
+            $row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
+            $row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);
+            $row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);
+            $row->pamatkova_ochrana = filter_input (INPUT_POST, "pamatkova_ochrana", FILTER_SANITIZE_STRING);
+            $row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
 
-		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
-		$row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);
-		
-		$row->pridano_osm = filter_input (INPUT_POST, "pridano_osm", FILTER_SANITIZE_STRING);
-		$row->pridano_osm = ($row->pridano_osm === "on" ? 1 : 0);
-		
-		$row->pridano_vv = filter_input (INPUT_POST, "pridano_vv", FILTER_SANITIZE_STRING);
-		$row->pridano_vv = ($row->pridano_vv === "on" ? 1 : 0);	
-		
-		return $row;
+            $row->zruseno = filter_input (INPUT_POST, "zruseno", FILTER_SANITIZE_STRING);
+            $row->zruseno = ($row->zruseno === "on" ? 1 : 0);
+
+            $row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
+            $row->zpracovano = ($row->zpracovano === "on" ? 1 : 0);
+
+            $row->pridano_osm = filter_input (INPUT_POST, "pridano_osm", FILTER_SANITIZE_STRING);
+            $row->pridano_osm = ($row->pridano_osm === "on" ? 1 : 0);
+
+            $row->pridano_vv = filter_input (INPUT_POST, "pridano_vv", FILTER_SANITIZE_STRING);
+            $row->pridano_vv = ($row->pridano_vv === "on" ? 1 : 0);	
+
+            return $row;
 	}
+        
+        private function getFormPoiValues() {
+            $poi = new stdClass();
+            $poi->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
+            $poi->latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
+            $poi->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
+            $poi->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
+
+            return $poi;
+        }
 	
 	private function getFormAuthorsValues() {
-		$authors = array ();
-		
-		array_push($authors, (int) filter_input (INPUT_POST, "autor1", FILTER_SANITIZE_STRING));
-		array_push($authors, (int) filter_input (INPUT_POST, "autor2", FILTER_SANITIZE_STRING));
-		array_push($authors, (int) filter_input (INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
-		
-		return $authors;
+            $authors = array ();
+
+            array_push($authors, (int) filter_input (INPUT_POST, "autor1", FILTER_SANITIZE_STRING));
+            array_push($authors, (int) filter_input (INPUT_POST, "autor2", FILTER_SANITIZE_STRING));
+            array_push($authors, (int) filter_input (INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
+
+            return $authors;
 	}
 	
 	private function getFormCooperationsValues() {
-		$cooperations = array ();
-		
-		array_push($cooperations, filter_input (INPUT_POST, "spoluprace1", FILTER_SANITIZE_STRING));
-		array_push($cooperations, filter_input (INPUT_POST, "spoluprace2", FILTER_SANITIZE_STRING));
-		array_push($cooperations, filter_input (INPUT_POST, "spoluprace3", FILTER_SANITIZE_STRING));
-		
-		return $cooperations;
+            $cooperations = array ();
+
+            array_push($cooperations, filter_input (INPUT_POST, "spoluprace1", FILTER_SANITIZE_STRING));
+            array_push($cooperations, filter_input (INPUT_POST, "spoluprace2", FILTER_SANITIZE_STRING));
+            array_push($cooperations, filter_input (INPUT_POST, "spoluprace3", FILTER_SANITIZE_STRING));
+
+            return $cooperations;
 	}
 	
 	private function getFormCollectionsValues() {
-		$collections = array ();
-		
-		array_push($collections, (int) filter_input (INPUT_POST, "collection1", FILTER_SANITIZE_STRING));
-		array_push($collections, (int) filter_input (INPUT_POST, "collection2", FILTER_SANITIZE_STRING));
-		array_push($collections, (int) filter_input (INPUT_POST, "collection3", FILTER_SANITIZE_STRING));
-		
-		return $collections;
+            $collections = array ();
+
+            array_push($collections, (int) filter_input (INPUT_POST, "collection1", FILTER_SANITIZE_STRING));
+            array_push($collections, (int) filter_input (INPUT_POST, "collection2", FILTER_SANITIZE_STRING));
+            array_push($collections, (int) filter_input (INPUT_POST, "collection3", FILTER_SANITIZE_STRING));
+
+            return $collections;
 	}		
 	
 	private function getFormSourcesValues() {
@@ -1175,6 +1274,23 @@ class ObjectController extends JPController {
 		}
 		
 		return "";
+	}
+        
+        public function getPoisForObject() {
+            if ($this->getObjectFromUrl() == null) {
+                    return null;
+            }
+
+            return $this->dbPoi->getPoisForObject($this->getObjectFromUrl()->id);            
+        }
+        
+        public function getPoiFromUrl() {
+            $id = (int) filter_input (INPUT_GET, "poi", FILTER_SANITIZE_STRING);
+            if ($id == null) {
+                    return null;	
+            }
+
+            return $this->dbPoi->getById($id);
 	}
 	
 }
