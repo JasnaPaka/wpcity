@@ -93,7 +93,8 @@
 <?php } ?>
 
 
-<?php if (count($controller->getSelectedCollections()) > 0) { ?>
+<?php 
+if (count($controller->getCollectionsForObject()) > 0) { ?>
 	<tr>
 		<th valign="top"><strong>Soubory děl</strong></th>
 		<td>

@@ -6,15 +6,24 @@
 </tr>
 <tr>
 	<th scope="row"><label for="url">URL</label></th>
-	<td><input name="url" id="url" class="regular-text" type="text" value="<?php echo $row->url ?>" maxlength="250" /></td>
+	<td>
+            <input name="url" id="url" class="regular-text" type="text" value="<?php echo $row->url ?>" maxlength="250" />
+            <p class="description">Název kategorie ve formátu pro URL (malá písmena, bez mezer a diakritiky).</p>
+        </td>        
 </tr>
 <tr>
 	<th scope="row"><label for="ikona">Ikona</label></th>
-	<td><input name="ikona" id="ikona" class="regular-text" type="text" value="<?php echo $row->ikona ?>" maxlength="250" /></td>
+	<td>
+            <input name="ikona" id="ikona" class="regular-text" type="text" value="<?php echo $row->ikona ?>" maxlength="250" />
+            <p class="description">Absolutní URL k ikoně, která bude pro kategorii použita v mapě.</p>
+        </td>
 </tr>
 <tr>
 	<th scope="row"><label for="barva">Barva ikony</label></th>
-	<td><input name="barva" id="barva" class="regular-text" type="text" value="<?php echo $row->barva ?>" maxlength="250" /></td>
+	<td>
+            <input name="barva" id="barva" class="regular-text" type="text" value="<?php echo $row->barva ?>" maxlength="250" />
+            <p class="description">HTML vyjádření barvy ikony.</p>
+        </td>
 </tr>
 <tr>
 	<th scope="row" valign="top"><label for="popis">Popis</label></th>

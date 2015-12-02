@@ -101,11 +101,9 @@
 	<tr>
 		<th scope="row" valign="top">Fotky</th>
 		<td>
-			<input type="file" id="photo1" name="photo1" /><br />
-			<input type="file" id="photo2" name="photo2" /><br />
-			<input type="file" id="photo3" name="photo3" />
+			<input type="file" id="photo" name="photo[]" multiple="multiple" />
 			<?php if (!$publicForm) { ?>
-				<p class="description">První fotografie bude označena jako hlavní a bude se zobrazovat jako výchozí u bodů v mapě.</p>
+				<p class="description">Tip: Pomocí klávesy CTRL můžete vybrat pro nahrání více fotografií.</p>
 			<?php } else { ?>
 				<p class="description">Nahrávané fotografie zpřístupňujete pod licencí <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
 			<?php } ?>
