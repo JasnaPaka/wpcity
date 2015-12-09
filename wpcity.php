@@ -50,7 +50,7 @@ add_action('admin_enqueue_scripts', 'pageScripts');
 add_action('admin_menu', 'wpCityMenu');
 
 function wpCityMenu(){
-   add_menu_page('Správa objektů', getNeschvalenoTitle('Správa objektů'), 'manage_options', 'wpcity', 'wpCityMenuPageCallback', 'dashicons-location', 90); 
+   add_menu_page('Správa objektů', getNeschvalenoTitle('Správa objektů'), 'delete_posts', 'wpcity', 'wpCityMenuPageCallback', 'dashicons-location', 90); 
 }
 
 function wpCityMenuPageCallback(){
@@ -91,56 +91,59 @@ function wpCityCategoryMenu() {
 
 
 function wpCityObjectPageCallback(){
-	if (!isset($_GET["action"])) {
-		require_once("pages/object/list.php");	
-	}
-	
-	$action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
-        
-	switch ($action) {
-		case 'create':
-			require_once("pages/object/create.php");
-			break;
-		case 'update':
-			require_once("pages/object/update.php");
-			break;
-		case 'delete':
-			require_once("pages/object/delete.php");
-			break;
-		case 'list':
-			require_once("pages/object/list.php");
-			break;
-		case 'view':
-			require_once("pages/object/view.php");
-			break;
-		case 'photo':
-			require_once("pages/object/photo.php");
-			break;
-		case 'author':
-			require_once("pages/object/author.php");
-			break;
-		case 'source':
-			require_once("pages/object/source.php");
-			break;
-		case 'collection':
-			require_once("pages/object/collection.php");
-			break;
-		case 'poi-list':
-			require_once("pages/object/poi-list.php");
-			break;                    
-		case 'poi-create':
-			require_once("pages/object/poi-create.php");
-			break; 
-		case 'poi-update':
-			require_once("pages/object/poi-update.php");
-			break; 
-		case 'poi-delete':
-			require_once("pages/object/poi-delete.php");
-			break;                     
-		default:
-			require_once("pages/object/list.php");
-			break;
-	}
+    if (!isset($_GET["action"])) {
+            require_once("pages/object/list.php");	
+    }
+
+    $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
+
+    switch ($action) {
+            case 'create':
+                    require_once("pages/object/create.php");
+                    break;
+            case 'update':
+                    require_once("pages/object/update.php");
+                    break;
+            case 'delete':
+                    require_once("pages/object/delete.php");
+                    break;
+            case 'list':
+                    require_once("pages/object/list.php");
+                    break;
+            case 'view':
+                    require_once("pages/object/view.php");
+                    break;
+            case 'photo':
+                    require_once("pages/object/photo.php");
+                    break;
+            case 'author':
+                    require_once("pages/object/author.php");
+                    break;
+            case 'source':
+                    require_once("pages/object/source.php");
+                    break;
+            case 'collection':
+                    require_once("pages/object/collection.php");
+                    break;
+            case 'history':
+                    require_once("pages/object/history.php");
+                    break;
+            case 'poi-list':
+                    require_once("pages/object/poi-list.php");
+                    break;                    
+            case 'poi-create':
+                    require_once("pages/object/poi-create.php");
+                    break; 
+            case 'poi-update':
+                    require_once("pages/object/poi-update.php");
+                    break; 
+            case 'poi-delete':
+                    require_once("pages/object/poi-delete.php");
+                    break;                     
+            default:
+                    require_once("pages/object/list.php");
+                    break;
+    }
 }
 
 

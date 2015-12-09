@@ -19,6 +19,7 @@ include_once $ROOT."db/Object2AuthorDb.php";
 include_once $ROOT."db/Object2TagDb.php";
 include_once $ROOT."db/PoiDb.php";
 include_once $ROOT."db/Object2CollectionDb.php";
+include_once $ROOT."db/HistoryDb.php";
 
 include_once $ROOT."config.php";
 
@@ -35,8 +36,8 @@ class ObjectController extends JPController {
 	private $dbObject2Collection;
 	private $dbCollection;
         private $dbPoi;
+        private $dbHistory;
 	
-	private $categories;
 	private $cacheTagSelected;
 	
 	function __construct() {
@@ -51,6 +52,7 @@ class ObjectController extends JPController {
 		$this->dbCollection = new CollectionDb();
                 $this->dbPoi = new PoiDb();
 		$this->dbObject2Collection = new Object2CollectionDb(); 
+                $this->dbHistory = new HistoryDb();
 	}
 	
 	public function getList() {
@@ -216,6 +218,9 @@ class ObjectController extends JPController {
 		}
 		
 		$kategorie = $this->dbCategory->getCategoryByUrl('ostatni');
+                if ($kategorie == null) {
+                    $kategorie = $this->dbCategory->getCategoryByUrl('sipky');
+                }
 		
 		// Uložení
 		$objekt = new stdClass();
@@ -564,6 +569,9 @@ class ObjectController extends JPController {
 		$result = $this->validate($row);
 		if ($result) {
 			$row = $this->setAuthors($row);
+                        
+                        //$this->historyRecord($this->getObjectFromUrl(), $row);
+                        
 			$result = $this->db->update($row, $this->getObjectFromUrl()->id);
 			
 			if (!$result) {
@@ -1292,5 +1300,37 @@ class ObjectController extends JPController {
 
             return $this->dbPoi->getById($id);
 	}
-	
+        
+        public function getHistoryForObject() {
+            return $this->dbHistory->getHistoryForObject($this->getObjectFromUrl()->id);
+        }
+        
+        private function historyRecord($puvodni, $novy) {
+            
+            // TODO:
+            $popis = "";
+            
+            if ($puvodni->rok_vzniku !== $novy->rok_vzniku) {
+                $this->createHistory($puvodni->rok_vzniku, $novy->rok_vzniku, $popis);
+            }
+        }
+        
+        private function createHistory($oldValue, $newValue, $popis) {
+            global $current_user;
+            get_currentuserinfo();
+            
+            $dt = new DateTime();
+            $dtStr = $dt->format('Y-m-d H:i:s'); 
+            $row = new stdClass();
+            
+            $row->objekt = $this->getObjectFromUrl()->id;
+            $row->datum = $dtStr;
+            $row->kdo = $current_user->display_name;
+            $row->pred = $oldValue;
+            $row->po = $newValue;
+            $row->popis = $popis;
+            
+            $this->dbHistory->create($row);
+        }
+        
 }

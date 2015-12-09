@@ -8,7 +8,6 @@
 	<th scope="row"><label for="nazev">Název</label></th>
 	<td><input name="nazev" id="nazev" class="regular-text" type="text" value="<?php echo $row->nazev ?>" maxlength="250" /></td>
 </tr>
-<?php if (!$publicForm) { ?>
 <tr>
 	<th scope="row" valign="top"><label for="popis">Popis</label></th>
 	<td>
@@ -16,7 +15,6 @@
 		<p class="description">Krátký popis díla, který se zobrazuje u bodu v mapě spolu s fotkou.</p>
 	</td>
 </tr>
-<?php } ?>
 <tr>
 	<td colspan="2">
 		<div id="map-canvas"></div>
@@ -60,7 +58,7 @@
 </tr>
 <?php } ?>
 
-<?php if (!$controller->getIsEdit() && !$publicForm && !$KV_SETTINGS["simple"]) { ?>
+<?php if (!$controller->getIsEdit()) { ?>
 <tr>
 	<th scope="row"><label for="autor">Autor</label></th>
 	<td>
@@ -110,7 +108,6 @@
 		</td>
 	</tr>
 <?php } ?>
-<?php if (!$publicForm && !$KV_SETTINGS["simple"]) { ?>
 <tr>
 	<th scope="row"><label for="rok_vzniku">Rok vzniku</label></th>
 	<td><input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" /></td>
@@ -137,7 +134,6 @@
 		<p class="description">Veřejné, neveřejné, částečně veřejné</p>
 	</td>
 </tr>
-<?php } ?>
 <tr>
 	<th scope="row"><label for="zruseno">Objekt již neexistuje</label></th>
 	<td>
