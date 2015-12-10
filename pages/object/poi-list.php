@@ -63,6 +63,12 @@
 </tbody>
 </table>
     
+<?php if (sizeof ($pois) > 0) { ?>
+    <h3>Body v mapě</h3>
+    <?php print ($controller->getGoogleMapPoisContent()) ?>
+    
+<?php } ?>    
+    
 <p class="submit">
     <a href="admin.php?page=object&amp;id=<?php print ($row->id) ?>&amp;action=view" class="button">Zpět na detail objektu</a>
 </p>
