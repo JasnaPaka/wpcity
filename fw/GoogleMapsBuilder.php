@@ -26,6 +26,8 @@ class GoogleMapsBuilder {
 
         $content = str_replace("LNG_POI_REPLACEMENT", isset($this->lng) ? $this->lng : 0, $content);
         $content = str_replace("LAT_POI_REPLACEMENT", isset($this->lat) ? $this->lat : 0, $content);
+        
+        $content = str_replace("MARKERS_REPLACEMENT", $this->getJsPois(), $content);
 
         return $content;
     }
@@ -51,23 +53,28 @@ class GoogleMapsBuilder {
         $content = str_replace("LNG_REPLACEMENT", $this->KV_SETTINGS["gm_lng"], $content);
         $content = str_replace("LAT_REPLACEMENT", $this->KV_SETTINGS["gm_lat"], $content);
         $content = str_replace("ZOOM_REPLACEMENT", $this->KV_SETTINGS["gm_zoom"], $content);
-
-        $jsPois = "";        
-        foreach ($this->pois as $poi) {
-            if (strlen($jsPois)> 0) {
-                $jsPois = $jsPois.",";
-            }
-            
-            $jsPois = $jsPois."[".$poi->latitude.",".$poi->longitude.",'".$poi->nazev."']";
-        }
         
-        if (strlen($jsPois) > 0) {
-            $jsPois = "[".$jsPois."]";
-        }
-        
-        $content = str_replace("MARKERS_REPLACEMENT", $jsPois, $content);
+        $content = str_replace("MARKERS_REPLACEMENT", $this->getJsPois(), $content);
         
         return $content;
     }	
+    
+    private function getJsPois() {
+        $jsPois = "";        
+        
+        if ($this->pois != NULL) {
+            foreach ($this->pois as $poi) {
+                if (strlen($jsPois)> 0) {
+                    $jsPois = $jsPois.",";
+                }
+
+                $jsPois = $jsPois."[".$poi->latitude.",".$poi->longitude.",'".$poi->nazev."']";
+            }
+        }
+        
+        $jsPois = "[".$jsPois."]";
+        
+        return $jsPois;
+    }
 }
 

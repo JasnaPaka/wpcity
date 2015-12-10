@@ -1055,8 +1055,9 @@ class ObjectController extends JPController {
 	
 	public function getGoogleMapPointContent($lat, $lng) {
                 global $KV_SETTINGS;
-            
+                
 		$map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+                $map->addPois($this->getPoisForObject());
 		return $map->getOutput();
 	}
 	
@@ -1294,11 +1295,22 @@ class ObjectController extends JPController {
 	}
         
         public function getPoisForObject() {
-            if ($this->getObjectFromUrl() == null) {
+            
+            $object = $this->getObjectFromUrl();
+            if ($object == null) {
+                $id = $this->getObjectId();
+                if ($id == null) {
                     return null;
+                }
+                
+                $object = $this->getObjectById($id);
+            }
+            
+            if ($object == null) {
+                return null;
             }
 
-            return $this->dbPoi->getPoisForObject($this->getObjectFromUrl()->id);            
+            return $this->dbPoi->getPoisForObject($object->id);            
         }
         
         public function getPoiFromUrl() {

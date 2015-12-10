@@ -38,15 +38,21 @@
                 var marker = new google.maps.Marker({
                         map: map,
                         position: myLatlng,
-                        title: markers[i][2]
+                        title: markers[i][2],
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png'
                 });
                 bounds.extend(marker.position);
             }
-            
+         
+            google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+                if (this.getZoom() > 15) {
+                    this.setZoom(15);
+                }
+            });
+    
             map.fitBounds(bounds);
         }
         
-	
 	google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
