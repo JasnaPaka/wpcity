@@ -959,6 +959,7 @@ class ObjectController extends JPController {
             $row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
             $row->obsah = $_POST["editor"]; // TODO: sanitize 
             $row->interni = $_POST["interni"]; // TODO: sanitize
+            $row->rok_realizace = filter_input (INPUT_POST, "rok_realizace", FILTER_SANITIZE_STRING);
             $row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
             $row->prezdivka = filter_input (INPUT_POST, "prezdivka", FILTER_SANITIZE_STRING);
             $row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);

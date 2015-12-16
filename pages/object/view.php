@@ -46,10 +46,15 @@
 		<td><?php echo $controller->getTagsForObjectStr($row->id)?></td>
 	</tr>
 <?php } ?>	
-	
+<?php if (strlen($row->rok_realizace) > 0) { ?>
+	<tr>
+		<th><strong>Rok realizace</strong></th>
+		<td><?php echo $row->rok_realizace ?></td>
+	</tr>
+<?php } ?>	
 <?php if (strlen($row->rok_vzniku) > 0) { ?>
 	<tr>
-		<th><strong>Rok vzniku</strong></th>
+		<th><strong>Rok odhaleni</strong></th>
 		<td><?php echo $row->rok_vzniku ?></td>
 	</tr>
 <?php } ?>	

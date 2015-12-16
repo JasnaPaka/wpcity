@@ -109,8 +109,18 @@
 	</tr>
 <?php } ?>
 <tr>
-	<th scope="row"><label for="rok_vzniku">Rok vzniku</label></th>
-	<td><input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" /></td>
+	<th scope="row"><label for="rok_realizace">Rok realizace</label></th>
+	<td>
+            <input name="rok_realizace" id="rok_realizace" class="regular-text" type="text" value="<?php echo $row->rok_realizace ?>" maxlength="250" />
+            <p class="description">Rok či roky, kdy bylo dílo realizováno ("vyráběno").</p>
+        </td>
+</tr>
+<tr>
+	<th scope="row"><label for="rok_vzniku">Rok odhalení</label></th>
+	<td>
+            <input name="rok_vzniku" id="rok_vzniku" class="regular-text" type="text" value="<?php echo $row->rok_vzniku ?>" maxlength="250" />
+            <p class="description">Rok, kdy bylo dílo osazeno/odhaleno.</p>
+        </td>
 </tr>
 <tr>
 	<th scope="row"><label for="prezdivka">Přezdívka</label></th>
