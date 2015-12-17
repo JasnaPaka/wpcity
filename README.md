@@ -5,8 +5,11 @@ Plugin pro WordPress vyvinutý pro projekt [Křížky a vetřelci](http://krizky
 
 Instalace
 ----------
-* Nakopírujte plugin do vámi vytvořeného adresáře *wp-content/plugins/wpcity*.
-* Zkopírujte soubor *config-default.php" do souboru "config.php" a přepište hodnoty, které potřebujete. Zadejte zejména API klíč ke Google Maps.
+Poslední vydaná verze pluginu WPCity je **1.0**, kterou získáte na stránce [Releases](https://github.com/JasnaPaka/wpcity/releases). 
+
+Po stažení postupujte následovně:
+* Nakopírujte plugin do vámi vytvořeného adresáře WordPressu *wp-content/plugins/wpcity*.
+* Zkopírujte soubor *config-default.php* do souboru *config.php* a přepište hodnoty, které potřebujete. Zadejte zejména API klíč ke Google Maps.
 
 Front-end
 ----------
