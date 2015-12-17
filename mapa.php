@@ -11,6 +11,7 @@ function kv_MapCategories() {
 		$category = new stdClass();
 		$category->id = $row->id;
 		$category->nazev = $row->nazev;
+                $category->popis = $row->popis;
 		$category->ikona = $row->ikona;
 		$category->barva = strlen($row->barva) > 0 ? $row->barva : "white";
 		$category->pocet = $count;
