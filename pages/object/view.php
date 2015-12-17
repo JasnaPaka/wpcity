@@ -90,8 +90,11 @@
         <td>
             <?php foreach($controller->getAuthorsForObject() as $author) { ?>
                 <a href="admin.php?page=author&action=view&id=<?php echo $author->id ?>">
-                        <?php echo trim($author->titul_pred." ".$author->jmeno." ".$author->prijmeni." ".$author->titul_za) ?></a>
-                        <br />
+                <?php echo trim($author->titul_pred." ".$author->jmeno." ".$author->prijmeni." ".$author->titul_za) ?></a>
+                <?php if (strlen ($author->spoluprace) > 2) {
+                    printf ("(%s)", $author->spoluprace);
+                } ?>
+                <br />
             <?php } ?>
         </td>
     </tr>
@@ -105,8 +108,8 @@ if (count($controller->getCollectionsForObject()) > 0) { ?>
         <td>
             <?php foreach($controller->getCollectionsForObject() as $collection) { ?>
                     <a href="admin.php?page=collection&action=view&id=<?php echo $collection->id ?>">
-                            <?php printf($collection->nazev) ?></a>
-                            <br />
+                    <?php printf($collection->nazev) ?></a>
+                    <br />
             <?php } ?>
         </td>
     </tr>

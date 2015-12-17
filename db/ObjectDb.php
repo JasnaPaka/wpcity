@@ -137,7 +137,7 @@ class ObjectDb extends JPDb {
 	public function getAuthorsForObject($idObject) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT aut.* FROM ".$this->dbPrefix."autor aut INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON aut.id = o2a.autor 
+		$sql = $wpdb->prepare("SELECT aut.*, o2a.spoluprace FROM ".$this->dbPrefix."autor aut INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON aut.id = o2a.autor 
 			WHERE o2a.objekt = %d AND aut.deleted = 0 AND o2a.deleted = 0 ORDER BY o2a.id", $idObject);
 			
 		return $wpdb->get_results ($sql); 
