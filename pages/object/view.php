@@ -143,7 +143,6 @@ if (count($controller->getCollectionsForObject()) > 0) { ?>
     <a href="admin.php?page=object&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
     <a href="admin.php?page=object&amp;action=collection&amp;id=<?php echo $row->id ?>" class="button">Správa souborů děl</a>
     <a href="admin.php?page=object&amp;action=poi-list&amp;id=<?php echo $row->id ?>" class="button">Správa bodů</a>
-    <a href="admin.php?page=object&amp;action=history&amp;id=<?php echo $row->id ?>" class="button">Historie</a>
     <a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 </p>
 </form>    
