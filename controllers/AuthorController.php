@@ -7,6 +7,7 @@ include_once $ROOT."fw/JPController.php";
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/SourceDb.php";
+include_once $ROOT."db/CategoryDb.php";
 
 /**
  * Správa autorů
@@ -15,12 +16,16 @@ class AuthorController extends JPController {
 		
 	protected $db;
 	protected $dbObject;
+        protected $dbCategory;
+        private $dbObject2Tag;
 	private $dbSource;
 	
 	function __construct() {
-		$this->db = new AuthorDb();
-		$this->dbObject = new ObjectDb();
-		$this->dbSource = new SourceDb();
+            $this->db = new AuthorDb();
+            $this->dbObject = new ObjectDb();
+            $this->dbSource = new SourceDb();
+            $this->dbCategory = new CategoryDb();
+            $this->dbObject2Tag = new Object2TagDb();
 	}
 	
 	public function getList() {
@@ -417,6 +422,32 @@ class AuthorController extends JPController {
 		return filter_input (INPUT_GET, "znak", FILTER_SANITIZE_STRING);
 	}
 		
-}
+    public function getCategoryNameForObject($id) {
+        $categories = $this->dbCategory->getAll();	
 
-?>
+        foreach ($categories as $category) { 
+            if ($category->id === $id) {
+                return $category->nazev;	
+            }
+        }
+
+        return "Neznámá";
+    }
+    
+    public function getTagsForObjectStr($idObject) {
+        $str = "";
+
+        $tags = $this->dbObject2Tag->getTagsForObject($idObject);
+        foreach ($tags as $tag) {
+
+            if (strlen($str) > 0) {
+                $str = $str.", ";	
+            }	
+
+            $str = $str.$tag->nazev;
+        }
+
+        return $str;
+    }    
+        
+}

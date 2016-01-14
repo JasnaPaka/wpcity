@@ -48,18 +48,48 @@
 
 <h3>Díla</h3>
 
-<?php if (count($controller->getListByAuthor()) == 0) { ?>
-	<p>Pro autora nejsou evidována žádná díla.</p>
-<?php } else { ?>
+<table class="wp-list-table widefat fixed posts">
+<thead>
+    <tr>
+        <th>Název</th>
+        <th>Rok osazení</th>
+        <th>Kategorie</th>
+        <th>Štítky</th>
+    </tr>
+</thead>
+<tbody>
+    <?php
+        $objects = $controller->getListByAuthor();
+        if (sizeof ($objects) == 0) {
+    ?>
 
+    <tr class="no-items">
+        <td class="colspanchange" colspan="3">
+            Pro autora nejsou evidována žádná díla.
+        </td>
+    </tr>
 
-<ul>
-<?php foreach ($controller->getListByAuthor() as $object) { ?>
-	<li><a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $object->id ?>"><?php echo $object->nazev ?></a></li>
-<?php } ?>
-</ul>
-	
-<?php } ?>
+    <?php    
+        } else {
+            $barva = true;
+            foreach ($objects as $object) {                
+                if ($barva) {
+                    print ('<tr class="alternate">');
+                    $barva = false;
+                } else {
+                    print ('<tr>');
+                    $barva = true;
+                }
+                
+                print ('<td><a href="admin.php?page=object&amp;action=view&amp;id='.$object->id.'"><strong>'.$object->nazev.'</strong></a></td>');
+                printf ('<td>%s</td>', $object->rok_vzniku);
+                print ('<td>'.$controller->getCategoryNameForObject($object->kategorie).'</td>');
+                print ('<td>'.$controller->getTagsForObjectStr($object->id).'</td>');
+            }
+        }
+    ?>
+</tbody>
+</table>
 
 <p class="submit">
 	<a href="admin.php?page=author&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
