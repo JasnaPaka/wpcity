@@ -85,7 +85,7 @@ class ExportController extends JPController {
         fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
         foreach($this->dbObject->getObjectsWithNoPhotos() as $obj) {
-            $str = $obj->nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+            $str = $this->printString($obj->nazev).$separator.$obj->latitude.$separator.$obj->longitude."\n";
             fwrite($file, $str);
         }
 
@@ -110,7 +110,7 @@ class ExportController extends JPController {
         fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
         foreach($this->dbObject->getObjectsWithoutAuthors($id) as $obj) {
-            $str = $obj->nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+            $str = $this->printString($obj->nazev).$separator.$obj->latitude.$separator.$obj->longitude."\n";
             fwrite($file, $str);
         }
 
@@ -139,10 +139,7 @@ class ExportController extends JPController {
         fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
         foreach($this->dbObject->getListByCategory($categoryId, "", $withCanceled) as $obj) {
-            // čárky používáme jako oddělovač, v názvu tak dělají neplechu
-            $nazev = str_replace(",", "", $obj->nazev);
-
-            $str = $nazev.$separator.$obj->latitude.$separator.$obj->longitude."\n";
+            $str = $this->printString($obj->nazev).$separator.$obj->latitude.$separator.$obj->longitude."\n";
             fwrite($file, $str);
         }
 
@@ -227,5 +224,20 @@ class ExportController extends JPController {
 
     public function getCategories() {
         return $this->dbCategory->getAll();		
-    }       
+    }
+    
+    /**
+     * Provede ošetření řetězce při sestavování CSV. Ošetřuje hlavně čárku, která
+     * je používána jako oddělovač jednotlivých sloupců CSV.
+     * 
+     * @param type $str
+     */
+    private function printString($str) {
+        if (strpos($str, ",") === FALSE) {
+            return $str;
+        } else {
+            return "\"".$str."\"";
+        }
+    }
+    
 }
