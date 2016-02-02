@@ -22,7 +22,7 @@ class Object2CollectionDb extends JPDb {
 	public function getObjectsInCollection($idCollection) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT DISTINCT obj.*, img_512 FROM ".$this->tableName." o2c INNER JOIN ".$this->dbPrefix."objekt obj ON o2c.objekt = obj.id
+		$sql = $wpdb->prepare("SELECT DISTINCT obj.*, img_512, skryta FROM ".$this->tableName." o2c INNER JOIN ".$this->dbPrefix."objekt obj ON o2c.objekt = obj.id
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = obj.id
 			  WHERE o2c.soubor = %d AND o2c.deleted = 0 AND obj.deleted = 0
 			   AND obj.schvaleno = 1 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND (fot.primarni = 1 OR fot.primarni IS NULL)
@@ -49,9 +49,9 @@ class Object2CollectionDb extends JPDb {
 	public function getImgForCollection($idCollection) {
 		global $wpdb;
 		
-		$sql = $wpdb->prepare("SELECT fot.img_512 FROM ".$this->tableName." o2c INNER JOIN ".$this->dbPrefix."objekt obj ON o2c.objekt = obj.id
+		$sql = $wpdb->prepare("SELECT fot.img_512, fot.skryta FROM ".$this->tableName." o2c INNER JOIN ".$this->dbPrefix."objekt obj ON o2c.objekt = obj.id
 			INNER JOIN ".$this->dbPrefix."fotografie fot ON fot.objekt = obj.id
-			  WHERE o2c.soubor = %d AND o2c.deleted = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND (fot.primarni = 1 OR fot.primarni IS NULL) 
+			  WHERE o2c.soubor = %d AND o2c.deleted = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND (fot.skryta = 0 OR fot.skryta IS NULL) AND (fot.primarni = 1 OR fot.primarni IS NULL) 
 			   ORDER BY obj.nazev"." LIMIT 1", $idCollection);
 
 		return $wpdb->get_var($sql);
