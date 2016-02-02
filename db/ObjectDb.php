@@ -161,7 +161,8 @@ class ObjectDb extends JPDb {
 		return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj 
 			LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
 			INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id 
-			WHERE (fot.id is null OR fot.skryta = 1) AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+			WHERE (fot.id is null OR (fot.skryta = 1 AND (SELECT count(*) FROM ".$this->dbPrefix."fotografie WHERE objekt = obj.id AND skryta = 0) = 0)) 
+                        AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
 	}
 	
 	/**
