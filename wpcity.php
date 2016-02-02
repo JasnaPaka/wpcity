@@ -3,7 +3,7 @@
  * Plugin Name: WPCity
  * Plugin URI: http://www.jasnapaka.com/
  * Description: Plugin pro WordPress, který umožňuje spravovat objekty ve veřejném prostoru města.
- * Version: 0.1
+ * Version: 1.1
  * Author: Pavel Cvrcek
  * Author URI: http://www.jasnapaka.com/
  * License: Mozilla Public License 2
