@@ -225,6 +225,3 @@ abstract class JPController {
 	abstract public function getStringId();
 	
 }
-
-?>
-	
