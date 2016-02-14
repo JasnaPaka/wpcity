@@ -144,7 +144,3 @@ class AuthorDb extends JPDb {
 	}
 		
 }
-
-
-?>
-	

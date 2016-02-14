@@ -210,6 +210,3 @@ class CollectionController extends JPController {
 	}
 		
 }
-
-?>
-	

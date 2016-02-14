@@ -39,5 +39,3 @@ class Object2TagDb extends JPDb {
 	}
 		
 }
-		
-?>	

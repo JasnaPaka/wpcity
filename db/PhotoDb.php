@@ -84,7 +84,3 @@ class PhotoDb extends JPDb {
 	}		
 	
 }
-
-
-?>
-	
