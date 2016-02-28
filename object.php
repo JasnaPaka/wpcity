@@ -11,6 +11,6 @@ function kv_last_object() {
 }
 
 function kv_settings() {
-    global $KV_SETTINGS;   
-    return $KV_SETTINGS;
+    $oc = new ObjectController();
+    return $oc->getGoogleMapSettings();
 }

@@ -1,9 +1,6 @@
 <?php
     $ROOT = plugin_dir_path( __FILE__ )."../../";
 
-    include_once $ROOT."config.php";
-    global $KV_SETTINGS;
-
     include_once $ROOT."controllers/ObjectController.php";
     $controller = new ObjectController();
 

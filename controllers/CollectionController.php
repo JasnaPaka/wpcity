@@ -6,6 +6,9 @@ include_once $ROOT."fw/JPController.php";
 
 include_once $ROOT."db/CollectionDb.php";
 include_once $ROOT."db/Object2CollectionDb.php";
+include_once $ROOT."db/SettingDb.php";
+
+include_once $ROOT."controllers/SettingController.php";
 
 /**
  * Správa souborů děl
@@ -14,10 +17,13 @@ class CollectionController extends JPController {
 
 	protected $db;
 	protected $dbObject2Collection;
+        private $dbSetting;
+
 	
 	function __construct() {
 		$this->db = new CollectionDb();
 		$this->dbObject2Collection = new Object2CollectionDb();
+                $this->dbSetting = new SettingDb();
 	}
 	
 	public function getStringId() {
@@ -31,18 +37,23 @@ class CollectionController extends JPController {
 	public function getObjectsInCollection($idCollection) {
 		return $this->dbObject2Collection->getObjectsInCollection($idCollection);
 	}
+        
+    private function getGoogleMapSettings() {
+         $setting["gm_key"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_KEY)->hodnota;
+         $setting["gm_lat"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LAT)->hodnota;
+         $setting["gm_lng"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LON)->hodnota;
+         $setting["gm_zoom"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_ZOOM)->hodnota;
+         
+         return $setting;
+    }
 	
 	public function getGoogleMapPointContent($lat, $lng) {
-            global $KV_SETTINGS;
-            
-            $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+            $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), $lat, $lng);
             return $map->getOutput();
 	}	
 	
 	public function getGoogleMapPointEditContent($lat, $lng) {
-            global $KV_SETTINGS;
-            
-            $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+            $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), $lat, $lng);
             return $map->getOutputEdit();
 	}
 	

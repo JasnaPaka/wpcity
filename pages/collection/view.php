@@ -1,13 +1,9 @@
 <?php
-	$ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT = plugin_dir_path( __FILE__ )."../../";
+    include_once $ROOT."controllers/CollectionController.php";
+    $controller = new CollectionController();
 
-	include_once $ROOT."config.php";
-	global $KV_SETTINGS;
-
-	include_once $ROOT."controllers/CollectionController.php";
-	$controller = new CollectionController();
-	
-	$row = $controller->getObjectFromUrl();
+    $row = $controller->getObjectFromUrl();
 ?>
 
 

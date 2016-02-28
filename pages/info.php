@@ -1,13 +1,9 @@
 <?php
-	$ROOT = plugin_dir_path( __FILE__ )."../";
+    $ROOT = plugin_dir_path( __FILE__ )."../";
+    include_once $ROOT."controllers/GeneralController.php";
 
-	include_once $ROOT."config.php";
-	global $KV_SETTINGS;
-
-	include_once $ROOT."controllers/GeneralController.php";
-	
-	$controller = new GeneralController();
-	$rows = $controller->getNeschvaleneList();
+    $controller = new GeneralController();
+    $rows = $controller->getNeschvaleneList();
 ?>
 
 <h2>Nástěnka pro správu objektů</h2>

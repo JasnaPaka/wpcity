@@ -1,15 +1,15 @@
 <?php
-	$ROOT = plugin_dir_path( __FILE__ )."../../";
-	$ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
+    $ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
-	include_once $ROOT."controllers/ObjectController.php";
-	$controller = new ObjectController();
-	
-	if (isset($_POST["submit"])) {
-		$row = $controller->update();
-	} else {
-		$row = $controller->getObjectFromUrl();
-	}
+    include_once $ROOT."controllers/ObjectController.php";
+    $controller = new ObjectController();
+
+    if (isset($_POST["submit"])) {
+        $row = $controller->update();
+    } else {
+        $row = $controller->getObjectFromUrl();
+    }
 ?>
 
 <div class="wrap">
@@ -37,8 +37,8 @@
 <?php include_once $ROOT."/pages/object/i-shared-form.php" ?>
 
 <p class="submit">
-	<input name="submit" id="submit" class="button button-primary" value="Upravit" type="submit">
-	<a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
+    <input name="submit" id="submit" class="button button-primary" value="Upravit" type="submit">
+    <a href="admin.php?page=object&amp;action=view&amp;id=<?php echo $controller->getObjectFromUrl()->id ?>" class="button">Zpět na detail</a>
 </p>
 
 </form>

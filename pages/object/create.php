@@ -1,16 +1,13 @@
 <?php
-	$ROOT = plugin_dir_path( __FILE__ )."../../";
-	$ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
+    $ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
-	include_once $ROOT."config.php";
-	global $KV_SETTINGS;
-	
-	include_once $ROOT."controllers/ObjectController.php";
-	$controller = new ObjectController();
-		
-	if (isset($_POST["submit"])) {
-		$row = $controller->add();
-	}
+    include_once $ROOT."controllers/ObjectController.php";
+    $controller = new ObjectController();
+
+    if (isset($_POST["submit"])) {
+        $row = $controller->add();
+    }
 ?>
 
 <div class="wrap">

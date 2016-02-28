@@ -20,8 +20,9 @@ include_once $ROOT."db/Object2TagDb.php";
 include_once $ROOT."db/PoiDb.php";
 include_once $ROOT."db/Object2CollectionDb.php";
 include_once $ROOT."db/HistoryDb.php";
+include_once $ROOT."db/SettingDb.php";
 
-include_once $ROOT."config.php";
+include_once $ROOT."controllers/SettingController.php";
 
 class ObjectController extends JPController {
 	
@@ -37,6 +38,7 @@ class ObjectController extends JPController {
     private $dbCollection;
     private $dbPoi;
     private $dbHistory;
+    private $dbSetting;
 
     private $cacheTagSelected;
 
@@ -53,6 +55,7 @@ class ObjectController extends JPController {
         $this->dbPoi = new PoiDb();
         $this->dbObject2Collection = new Object2CollectionDb(); 
         $this->dbHistory = new HistoryDb();
+        $this->dbSetting = new SettingDb();
     }
 
     public function getList() {
@@ -1048,26 +1051,29 @@ class ObjectController extends JPController {
 
         return $sources;
     }
+    
+    public function getGoogleMapSettings() {
+         $setting["gm_key"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_KEY)->hodnota;
+         $setting["gm_lat"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LAT)->hodnota;
+         $setting["gm_lng"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LON)->hodnota;
+         $setting["gm_zoom"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_ZOOM)->hodnota;
+         
+         return $setting;
+    } 
 
     public function getGoogleMapPointContent($lat, $lng) {
-        global $KV_SETTINGS;
-
-        $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+        $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), $lat, $lng);
         $map->addPois($this->getPoisForObject());
         return $map->getOutput();
     }
 
     public function getGoogleMapPointEditContent($lat, $lng) {
-        global $KV_SETTINGS;
-
-        $map = new GoogleMapsBuilder($KV_SETTINGS, $lat, $lng);
+        $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), $lat, $lng);
         return $map->getOutputEdit();
     }
 
     public function getGoogleMapPoisContent() {
-        global $KV_SETTINGS;
-
-        $map = new GoogleMapsBuilder($KV_SETTINGS, NULL, NULL);
+        $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), NULL, NULL);
         $map->addPois($this->getPoisForObject());
 
         return $map->getOutputPois();

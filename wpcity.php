@@ -14,13 +14,10 @@ require_once ("controllers/ExportController.php");
 require_once ("controllers/ObjectController.php");
 require_once ("DatabaseSchemeUpdater.php");
 
-include ("config.php");
-
 if (WP_DEBUG && WP_DEBUG_DISPLAY) 
 {
    ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED);
 }
-
 
 add_action('plugins_loaded', 'wpCitySendHeadersCallback');
 
@@ -263,7 +260,7 @@ function wpCityExportPageCallback() {
 }	
 
 function wpCitySettingPageCallback() {	
-    require_once("pages/setting/view.php");
+    require_once("pages/setting/update.php");
 }
 
 function getKvDbPrefix() {
