@@ -28,4 +28,9 @@ class SettingDb extends JPDb {
 	return $wpdb->query($sql);
     }
     
+    public function getAll($order = "") {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM ".$this->tableName." ORDER BY ".$this->getOrderSQL($order));	
+    }    
 }

@@ -1359,10 +1359,10 @@ class ObjectController extends JPController {
     public function getAllSettings() {
         $settings = array();
         
-        foreach ($this->dbSetting->getAll() as $key => $value) {
-            $settings[$key] = $value;
+        foreach ($this->dbSetting->getAll() as $property) {
+            $settings[$property->nazev] = $property->hodnota;
         }
-
+        
         return $settings;
     }
 }

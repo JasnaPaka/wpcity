@@ -35,8 +35,7 @@
     <td>
         <input name="obrazekProjektu" id="obrazekProjektu" class="regular-text" type="text" 
                value="<?php print($row->obrazekProjektu) ?>" maxlength="250" />
-        <p class="description">Cesta k náhledovému obrázku na titulní stránce webu. 
-            Cesta je absolutní či relativní k adresáři s tématem webu.</p>
+        <p class="description">Absolutní cesta k náhledovému obrázku na titulní stránce webu.</p>
     </td>
 </tr>
 
