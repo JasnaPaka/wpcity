@@ -1355,4 +1355,14 @@ class ObjectController extends JPController {
 
         $this->dbHistory->create($row);
     }        
+    
+    public function getAllSettings() {
+        $settings = array();
+        
+        foreach ($this->dbSetting->getAll as $key => $value) {
+            $settings[$key] = $value;
+        }
+
+        return $settings;
+    }
 }

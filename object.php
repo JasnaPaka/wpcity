@@ -14,3 +14,8 @@ function kv_settings() {
     $oc = new ObjectController();
     return $oc->getGoogleMapSettings();
 }
+
+function kv_settings2() {
+    $oc = new ObjectController();
+    return $oc->getAllSettings();
+}
