@@ -16,6 +16,8 @@ class SettingController extends JPController {
     public static $SETTING_GM_LAT = "gmLat";
     public static $SETTING_GM_LON = "gmLon";
     public static $SETTING_GM_ZOOM = "gmZoom";
+    public static $SETTING_MAP_IMAGE = "obrazekMapy";
+    public static $SETTING_GOOGLE_SEACH = "vyhledavaniGoogleKlic";
     
     private $dbSetting;
     
@@ -58,6 +60,8 @@ class SettingController extends JPController {
         $row->gmLat = filter_input (INPUT_POST, SettingController::$SETTING_GM_LAT, FILTER_SANITIZE_STRING);
         $row->gmLon = filter_input (INPUT_POST, SettingController::$SETTING_GM_LON, FILTER_SANITIZE_STRING);
         $row->gmZoom = (int) filter_input (INPUT_POST, SettingController::$SETTING_GM_ZOOM, FILTER_SANITIZE_STRING);
+        $row->obrazekMapy = filter_input (INPUT_POST, SettingController::$SETTING_MAP_IMAGE, FILTER_SANITIZE_STRING);
+        $row->vyhledavaniGoogleKlic = filter_input (INPUT_POST, SettingController::$SETTING_GOOGLE_SEACH, FILTER_SANITIZE_STRING);
         
         return $row;
     }
@@ -90,6 +94,8 @@ class SettingController extends JPController {
             $this->nastaveni->gmLat = $this->getSettingGMLat();
             $this->nastaveni->gmLon = $this->getSettingGMLon();
             $this->nastaveni->gmZoom = $this->getSettingGMZoom();
+            $this->nastaveni->obrazekMapy = $this->getSettingValue(SettingController::$SETTING_MAP_IMAGE);
+            $this->nastaveni->vyhledavaniGoogleKlic = $this->getSettingValue(SettingController::$SETTING_GOOGLE_SEACH);
         }
         
         return $this->nastaveni;
@@ -121,6 +127,10 @@ class SettingController extends JPController {
     
     private function getSettingGMZoom() {
         return $this->dbSetting->getSetting(SettingController::$SETTING_GM_ZOOM)->hodnota;
+    }
+    
+    private function getSettingValue($key) {
+        return $this->dbSetting->getSetting($key)->hodnota;
     }
 }
 

@@ -24,8 +24,23 @@ class SettingDb extends JPDb {
     public function setSetting($key, $value) {
         global $wpdb;
         
-        $sql = $wpdb->prepare("UPDATE ".$this->tableName." SET hodnota = %s WHERE nazev = %s", $value, $key);
-	return $wpdb->query($sql);
+        $setting = $this->getSetting($key);
+        if ($setting) {        
+            $sql = $wpdb->prepare("UPDATE ".$this->tableName." SET hodnota = %s WHERE nazev = %s", $value, $key);
+            return $wpdb->query($sql);
+        } else {
+            $wpdb->insert( 
+                $this->tableName, 
+                array( 
+                    'nazev' => $key, 
+                    'hodnota' => $value 
+                ), 
+                array( 
+                    '%s', 
+                    '%s' 
+                ) 
+            );
+        }
     }
     
     public function getAll($order = "") {

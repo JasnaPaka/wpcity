@@ -31,11 +31,19 @@
 </tr>
 
 <tr>
-    <th scope="row"><label for="obrazekProjektu">Obrázek</label></th>
+    <th scope="row"><label for="obrazekProjektu">Obrázek vedle textu na titulce</label></th>
     <td>
         <input name="obrazekProjektu" id="obrazekProjektu" class="regular-text" type="text" 
                value="<?php print($row->obrazekProjektu) ?>" maxlength="250" />
         <p class="description">Absolutní cesta k náhledovému obrázku na titulní stránce webu.</p>
+    </td>
+</tr>
+
+<tr>
+    <th scope="row"><label for="obrazekMapy">Obrázek mapy na titulce</label></th>
+    <td>
+        <input name="obrazekMapy" id="obrazekMapy" class="regular-text" type="text" 
+               value="<?php print($row->obrazekMapy) ?>" maxlength="250" />
     </td>
 </tr>
 
@@ -81,6 +89,19 @@
     <td>
         <input name="gmZoom" id="gmZoom" class="regular-text" type="text" 
                value="<?php print($row->gmZoom) ?>" maxlength="250" />
+    </td>
+</tr>
+
+<tr>
+    <th scope="row"><label for="vyhledavaniGoogleKlic">Klíč k vyhledávání Google Search</label></th>
+    <td>
+        <input name="vyhledavaniGoogleKlic" id="vyhledavaniGoogleKlic" class="regular-text" type="text" 
+               value="<?php print($row->vyhledavaniGoogleKlic) ?>" maxlength="250" />
+        <p class="description">
+            Klíč k vyhledávání <a href="https://cse.google.com/cse/all">lze
+                získat zde</a>. Po vytvoření vlastního vyhledávání na webu je k dispozici
+                pod tlačítkem <em>ID vyhledávače</em>.
+        </p>
     </td>
 </tr>
 
