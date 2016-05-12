@@ -53,6 +53,10 @@ function wpCityMenuPageCallback(){
     require_once("pages/info.php");
 }
 
+function wpCityChangesPageCallback() {
+    require_once("pages/changes.php");
+}
+
 /** Přidáme podnabídku */
 function getNeschvalenoTitle($title) {
 		
@@ -81,6 +85,8 @@ function wpCityCategoryMenu() {
     add_submenu_page('wpcity', 'Správa štítků', 'Štítky', 'delete_posts', 'tag', 'wpCityTagPageCallback');
     add_submenu_page('wpcity', 'Export', 'Export', 'delete_posts', 'export', 'wpCityExportPageCallback');
     add_submenu_page('wpcity', 'Nastavení', 'Nastavení', 'delete_posts', 'setting', 'wpCitySettingPageCallback');
+    add_submenu_page('wpcity', 'Změny', 'Změny', 'delete_posts', 'changes', 'wpCityChangesPageCallback');
+
 }
 
 
