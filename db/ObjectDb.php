@@ -331,6 +331,32 @@ class ObjectDb extends JPDb {
         return $wpdb->get_var ($sql);
     }
     
+    public function getObjectsInCategoryNoMaterial($idCategory, $withoutRemoved = true) {
+        global $wpdb;
+
+        $sql = "SELECT * FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 AND length(material) = 0";
+        if ($withoutRemoved) {
+                $sql = $sql." AND zruseno = 0";	
+        }
+        
+        $sql = $sql." ORDER BY nazev";
+
+        $sql = $wpdb->prepare($sql, $idCategory); 	
+        return $wpdb->get_results ($sql);
+    }
+
+    public function getCountObjectsInCategoryNoMaterial($idCategory, $withoutRemoved = true) {
+        global $wpdb;
+
+        $sql = "SELECT count(*) FROM ".$this->tableName." WHERE kategorie = %d AND deleted = 0 AND schvaleno = 1 AND length(material) = 0";
+        if ($withoutRemoved) {
+                $sql = $sql." AND zruseno = 0";	
+        }
+
+        $sql = $wpdb->prepare($sql, $idCategory); 	
+        return $wpdb->get_var ($sql);
+    }
+    
     public function getObjectsInCategoryNoAccessibility($idCategory, $withoutRemoved = true) {
         global $wpdb;
 
@@ -343,6 +369,5 @@ class ObjectDb extends JPDb {
 
         $sql = $wpdb->prepare($sql, $idCategory); 	
         return $wpdb->get_results ($sql);
-    }
-		
+    }    
 }

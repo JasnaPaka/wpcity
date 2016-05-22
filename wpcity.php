@@ -273,6 +273,9 @@ function wpCityCheckPageCallback() {
         case "accessibility":
             require_once ("pages/check/accessibility.php");
             break;
+        case "material":
+            require_once ("pages/check/material.php");
+        break;
         default:
             require_once("pages/check/list.php");
             break;

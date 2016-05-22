@@ -39,6 +39,13 @@ class CheckController extends JPController {
     public function getObjectsNoAccessibility() {
         return $this->dbObjects->getObjectsInCategoryNoAccessibility($this->getCategoryId());
     }
+
+    public function getCountObjectsNoMaterial() {
+        return $this->dbObjects->getCountObjectsInCategoryNoMaterial($this->getCategoryId());
+    }
     
+    public function getObjectsNoMaterial() {
+        return $this->dbObjects->getObjectsInCategoryNoMaterial($this->getCategoryId());
+    }    
 }
 

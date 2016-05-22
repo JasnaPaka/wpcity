@@ -48,7 +48,8 @@
 					printf('<td><strong>'.$row->nazev.'</strong> '.($row->systemova ? '<em>(systémová)</em>' : '').'</td>');
 					printf('<td>');
 					printf('<a href="admin.php?page=check&amp;action=accessibility&amp;category='.$row->id.'" title="Seznam děl bez vyplněné přístupnosti">Bez přístupnosti</a>');
-					printf('</td>');
+					printf(' &middot; <a href="admin.php?page=check&amp;action=material&amp;category='.$row->id.'" title="Seznam děl bez vyplněného materiálu">Bez materiálu</a>');
+                                        printf('</td>');
 					
 					printf('</tr>');
 				}
