@@ -31,5 +31,3 @@ abstract class BasicEnum {
         return in_array($value, $values, $strict = true);
     }
 }
-
-?>

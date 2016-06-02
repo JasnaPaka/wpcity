@@ -112,6 +112,3 @@ function yoast_change_opengraph_url($url) {
 	return "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 }
 add_filter('wpseo_opengraph_url', 'yoast_change_opengraph_url', 10, 1 );
-
-
-?>

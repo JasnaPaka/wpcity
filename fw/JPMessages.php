@@ -32,4 +32,3 @@
 			parent::__construct(JPMessage::INFO, $message);
 		}
 	}
-?>

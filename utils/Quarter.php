@@ -8,5 +8,3 @@ class Quarter extends BasicEnum {
 	
 
 }
-
-?>

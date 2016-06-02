@@ -29,6 +29,3 @@ class GeneralController extends JPController {
 	}
 
 }
-
-
-?>
