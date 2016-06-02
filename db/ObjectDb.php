@@ -370,4 +370,17 @@ class ObjectDb extends JPDb {
         $sql = $wpdb->prepare($sql, $idCategory); 	
         return $wpdb->get_results ($sql);
     }    
+    
+    /**
+     * Vrátí všechna díla, která jsou veřejné zobrazitelná (nesmazaná a schválená). 
+     * 
+     * @global type $wpdb
+     * @param type $order
+     * @return type
+     */
+    public function getAllPublic($order = "") {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM ".$this->tableName." WHERE deleted = 0 AND schvaleno = 1 ORDER BY ".$this->getOrderSQL($order));	
+    }
 }
