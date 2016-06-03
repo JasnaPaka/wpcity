@@ -50,7 +50,7 @@
     <tr>
         <th>Název</th>
         <th>Autoři</th>
-        <th>Rok osazení</th>
+        <th>Realizace či osazení</th>
         <th>Kategorie</th>
         <th>Štítky</th>
         <th>Akce</th>
@@ -95,7 +95,7 @@
                 }
 
                 print ('</td>');
-                printf ('<td>%s</td>', $row->rok_vzniku);
+                printf ('<td>%s</td>', strlen($row->rok_vzniku) > 0 ? $row->rok_vzniku : $row->rok_realizace);
                 //echo '<td><a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
                 //	$row->latitude.', '.$row->longitude.'</a></td>';
                 echo '<td>'.$controller->getCategoryNameForObject($row->kategorie).'</td>';
