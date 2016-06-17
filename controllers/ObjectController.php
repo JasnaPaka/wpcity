@@ -9,7 +9,7 @@ include_once $ROOT."fw/ImgUtils.php";
 include_once $ROOT."fw/GoogleMapsBuilder.php";
 
 include_once $ROOT."db/CategoryDb.php";
-include_once $ROOT."db/ObjectDb.php"; 
+include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/PhotoDb.php";
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/SourceDb.php";
@@ -25,7 +25,7 @@ include_once $ROOT."db/SettingDb.php";
 include_once $ROOT."controllers/SettingController.php";
 
 class ObjectController extends JPController {
-	
+
     protected $db;
     private $dbCategory;
     private $dbPhoto;
@@ -53,7 +53,7 @@ class ObjectController extends JPController {
         $this->dbObject2Tag = new Object2TagDb();
         $this->dbCollection = new CollectionDb();
         $this->dbPoi = new PoiDb();
-        $this->dbObject2Collection = new Object2CollectionDb(); 
+        $this->dbObject2Collection = new Object2CollectionDb();
         $this->dbHistory = new HistoryDb();
         $this->dbSetting = new SettingDb();
     }
@@ -61,7 +61,7 @@ class ObjectController extends JPController {
     public function getList() {
         // výpis děl dle autora v administraci
         if ($this->getIsShowedCategory()) {
-                return $this->db->getPageByCategory($this->getPageCurrent(), $this->getCurrentCategory()->id, $this->getCurrentOrder());	
+                return $this->db->getPageByCategory($this->getPageCurrent(), $this->getCurrentCategory()->id, $this->getCurrentOrder());
         }
 
         if (!$this->getSearchValueValid()) {
@@ -69,13 +69,13 @@ class ObjectController extends JPController {
                         array_push($this->messages, new JPErrorMessage("Hledaný výraz musí mít alespoň tři znaky."));
                 }
 
-                return parent::getList();	
+                return parent::getList();
         }
 
         if ($this->getShowAll()) {
                 return $this->db->getListByNazev($this->getSearchValue(), $this->getCurrentOrder(), true, true);
         } else {
-                return $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());	
+                return $this->db->getPageByNazev($this->getPageCurrent(), $this->getSearchValue());
         }
 
         return $this->db->getListByNazev($this->getSearchValue());
@@ -84,23 +84,23 @@ class ObjectController extends JPController {
     public function getCount() {
         if ($this->getIsShowedCategory()) {
                 return $this->db->getCountObjectsInCategory($this->getCurrentCategory()->id, false);
-        }		
-
-        if (!$this->getSearchValueValid()) {
-                return parent::getCount();	
         }
 
-        return $this->db->getCountByNazev($this->getSearchValue()); 
+        if (!$this->getSearchValueValid()) {
+                return parent::getCount();
+        }
+
+        return $this->db->getCountByNazev($this->getSearchValue());
     }
 
     public function getCategoryNameForObject($id) {
         if ($categories == null) {
-                $categories = $this->dbCategory->getAll();	
+                $categories = $this->dbCategory->getAll();
         }
 
-        foreach ($categories as $category) { 
+        foreach ($categories as $category) {
                 if ($category->id === $id) {
-                        return $category->nazev;	
+                        return $category->nazev;
                 }
         }
 
@@ -108,7 +108,7 @@ class ObjectController extends JPController {
     }
 
     public function getAllCategories() {
-        return $this->dbCategory->getAll();	
+        return $this->dbCategory->getAll();
     }
 
     private function validate($row) {
@@ -132,7 +132,7 @@ class ObjectController extends JPController {
                 array_push($this->messages, new JPErrorMessage("Nebyla zvolena kategorie."));
         }
 
-        return count($this->messages) === 0; 
+        return count($this->messages) === 0;
     }
 
     private function validatePoi($poi) {
@@ -151,7 +151,7 @@ class ObjectController extends JPController {
             array_push($this->messages, new JPErrorMessage("Neplatná longitude u GPS souřadnice."));
         }
 
-        return count($this->messages) === 0; 
+        return count($this->messages) === 0;
     }
 
     private function getCurrentDateStr() {
@@ -163,7 +163,7 @@ class ObjectController extends JPController {
         global $current_user;
 
         $dt = new DateTime();
-        $dtStr = $dt->format('Y-m-d H:i:s'); 
+        $dtStr = $dt->format('Y-m-d H:i:s');
         get_currentuserinfo();
 
         if (!$this->getIsEdit()) {
@@ -178,11 +178,11 @@ class ObjectController extends JPController {
     }
 
     public function addPublic() {
-        // Získání dat z formuláře		
+        // Získání dat z formuláře
         $nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
         if (strlen (trim($nazev)) == 0) {
                 $nazev = "Bez názvu";
-        }			
+        }
 
         $info = filter_input (INPUT_POST, "info", FILTER_SANITIZE_STRING);
         if (!is_user_logged_in()) {
@@ -194,11 +194,11 @@ class ObjectController extends JPController {
         $author = trim ($author);
 
         if (strlen($author) == 0) {
-                $author = "Neuveden";	
+                $author = "Neuveden";
         }
 
         $latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
-        $longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);		
+        $longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
 
 
         // Validace
@@ -207,14 +207,14 @@ class ObjectController extends JPController {
         }
 
         if ($latitude == 0 || $longitude == 0) {
-                array_push($this->messages, new JPErrorMessage('Nebylo zvoleno umístění bodu v mapě.'));
+            array_push($this->messages, new JPErrorMessage('Nebylo zvoleno umístění bodu v mapě.'));
 
-                $objekt = new stdClass();
-                $objekt->info = $info;
-                $objekt->latitude = $latitude;
-                $objekt->longitude = $longitude;
+            $objekt = new stdClass();
+            $objekt->info = $info;
+            $objekt->latitude = $latitude;
+            $objekt->longitude = $longitude;
 
-                return $objekt;	
+            return $objekt;
         }
 
         $kategorie = $this->dbCategory->getCategoryByUrl('ostatni');
@@ -271,10 +271,10 @@ class ObjectController extends JPController {
                         $idObject = $this->db->getLastId();
 
                         if (!$public) {
-                                array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán. 
+                                array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán.
                                         <a href="'.$this->getUrl(JPController::URL_VIEW, $idObject).'">Zobrazit detail</a>'));
                         } else {
-                                array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán a čeká na schválení administrátorem. Děkujeme za přidání!'));					
+                                array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně přidán a čeká na schválení administrátorem. Děkujeme za přidání!'));
                         }
 
                         // Záznam přidán, nyní přidáme fotky (když selže, tak to jen uživateli oznámíme)
@@ -308,7 +308,7 @@ class ObjectController extends JPController {
             if (!$result) {
                 array_push($this->messages, new JPErrorMessage("Nepodařilo se uložit nový bod."));
             } else {
-                array_push($this->messages, new JPInfoMessage('Bod byl úspěšně přidán. 
+                array_push($this->messages, new JPInfoMessage('Bod byl úspěšně přidán.
                     <a href="'.$this->getUrl("poi-list", $poi->objekt).'">Zobrazit seznam</a>'));
 
                 return new stdClass();
@@ -339,7 +339,7 @@ class ObjectController extends JPController {
               'tmp_name' => $files['tmp_name'][$key],
               'error'    => $files['error'][$key],
               'size'     => $files['size'][$key]
-            );                    
+            );
             array_push($uploadFiles, $file);
           }
         }
@@ -352,7 +352,7 @@ class ObjectController extends JPController {
             $result = wp_handle_upload($uploadFile, $upload_overrides);
 
             if ($result["error"] != null) {
-                array_push($this->messages, new JPErrorMessage("Při nahrávání fotky '".$uploadFile["name"]."' nastala chyba, 
+                array_push($this->messages, new JPErrorMessage("Při nahrávání fotky '".$uploadFile["name"]."' nastala chyba,
                         díky které fotka nebyla k objektu nahrána. Chyba: ".$result["error"]));
             } else {
                 $photos[0] = $this->getRelativePathToImg($result["file"]);
@@ -379,7 +379,7 @@ class ObjectController extends JPController {
                                     $imgSize["height"] = $size[1];
                             }
 
-                            $image->resize($imgSize["width"], $imgSize["height"], true);						
+                            $image->resize($imgSize["width"], $imgSize["height"], true);
                             $filename = $image->generate_filename($size[0]);
                             $output = $image->save($filename);
 
@@ -387,9 +387,9 @@ class ObjectController extends JPController {
                             $path = $this->getRelativePathToImg($output["path"]);
                             $photos[$i] = $path;
                     } else {
-                            array_push($this->messages, new JPErrorMessage("Pro fotografii '".$uploadFile['name']." se nepodařilo 
+                            array_push($this->messages, new JPErrorMessage("Pro fotografii '".$uploadFile['name']." se nepodařilo
                                     vygenerovat náhled: ".$size[0].'x'.$size[1]." Chyba: ".$image->error));
-                    } 
+                    }
                 }
 
                 // všechny náhledy vygenerovány?
@@ -408,14 +408,14 @@ class ObjectController extends JPController {
 
                     if ($isFirst && !$existPhotos) {
                         $photo->primarni = 1;
-                        $isFirst = false;	
+                        $isFirst = false;
                     }
 
                     $result = $this->dbPhoto->create($photo);
                     if (!$result) {
                         array_push($this->messages, new JPErrorMessage("Fotografii '".$uploadFile['name']." se nepodařilo uložit."));
                     } else {
-                        array_push($newPhotos, $this->dbPhoto->getById($this->dbPhoto->getLastId()));							
+                        array_push($newPhotos, $this->dbPhoto->getById($this->dbPhoto->getLastId()));
                     }
                 }
             }
@@ -428,7 +428,7 @@ class ObjectController extends JPController {
     private function addAuthor($idObject) {
         $author = $this->getAuthorFromAddForm();
         if ($author == null) {
-                return null;	
+                return null;
         }
 
         $row = new stdClass();
@@ -445,7 +445,7 @@ class ObjectController extends JPController {
 
         foreach ($this->getAllTags() as $tag) {
             $tagName = "tag".$tag->id;
-            $value = filter_input (INPUT_POST, $tagName, FILTER_SANITIZE_STRING); 
+            $value = filter_input (INPUT_POST, $tagName, FILTER_SANITIZE_STRING);
             if ($value == "on") {
 
                     $row = new stdClass();
@@ -456,12 +456,12 @@ class ObjectController extends JPController {
 
                     $this->cacheTagSelected = null;
             }
-        }	
+        }
     }
 
     private function getRelativePathToImg($path) {
         $upload_dir = wp_upload_dir();
-        $baseDir = $upload_dir['basedir']; 
+        $baseDir = $upload_dir['basedir'];
         return str_replace($baseDir, "", $path);
     }
 
@@ -494,7 +494,7 @@ class ObjectController extends JPController {
             $i++;
         }
 
-        array_push($this->messages, new JPInfoMessage('Autoři byli úspěšně nastaveni. 
+        array_push($this->messages, new JPInfoMessage('Autoři byli úspěšně nastaveni.
                 <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
     }
 
@@ -507,7 +507,7 @@ class ObjectController extends JPController {
                 array_push($this->messages, new JPErrorMessage("Jeden ze svolených souborů děl nebyl nalezen. Patrně byl před chvílí smazán."));
                 return;
             }
-        }		
+        }
 
         // Smazání starých vazeb a vytvoření nových
         $this->dbObject2Collection->deleteOldRelationsForObject($this->getObjectId());
@@ -525,23 +525,23 @@ class ObjectController extends JPController {
             $i++;
         }
 
-        array_push($this->messages, new JPInfoMessage('Soubory děl byly úspěšně nastaveny. 
-                <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));		
+        array_push($this->messages, new JPInfoMessage('Soubory děl byly úspěšně nastaveny.
+                <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 
-    }	
+    }
 
 
     public function manageSources() {
         $sources = $this->getFormSourcesValues();
         if (count($sources) == 0) {
-                return $this.getSelectedSources();	
+                return $this.getSelectedSources();
         }
 
         $result = $this->validateSources($sources);
         if ($result) {
             foreach ($sources as $source) {
                 if (strlen($source->nazev) == 0) {
-                        continue;	
+                        continue;
                 }
 
                 if (isset($source->id)) {
@@ -551,7 +551,7 @@ class ObjectController extends JPController {
                 }
             }
 
-            array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány. 
+            array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány.
                     <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
 
             return $this->getSelectedSources();
@@ -577,7 +577,7 @@ class ObjectController extends JPController {
             if (!$result) {
                     array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo aktualizovat."));
             } else {
-                    array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně aktualizován. 
+                    array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně aktualizován.
                     <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail</a>'));
             }
 
@@ -596,7 +596,7 @@ class ObjectController extends JPController {
         }
 
         $result = $this->validatePoi($poi);
-        if ($result) { 
+        if ($result) {
             $poi->objekt = $this->getObjectFromUrl()->id;
 
             $result = $this->dbPoi->update($poi, $this->getPoiFromUrl()->id);
@@ -604,7 +604,7 @@ class ObjectController extends JPController {
             if (!$result) {
                 array_push($this->messages, new JPErrorMessage("Nepodařilo se aktualizovat bod."));
             } else {
-                array_push($this->messages, new JPInfoMessage('Bod byl úspěšně aktualizován. 
+                array_push($this->messages, new JPInfoMessage('Bod byl úspěšně aktualizován.
                     <a href="'.$this->getUrl("poi-list", $poi->objekt).'">Zobrazit seznam</a>'));
             }
         }
@@ -615,8 +615,8 @@ class ObjectController extends JPController {
     public function approve() {
         $object = $this->getObjectById($this->getObjectFromUrl()->id);
         if ($object == null) {
-                return null;	
-        }		
+                return null;
+        }
 
         $this->db->approveObject($this->getObjectFromUrl()->id);
         $object->schvaleno = 1;
@@ -637,7 +637,7 @@ class ObjectController extends JPController {
         }
 
         return count($this->messages) === 0;
-    } 
+    }
 
     private function validatePhotos() {
         // právě jedna fotka musí být hlavní (primární)
@@ -650,9 +650,9 @@ class ObjectController extends JPController {
 
             if (isset($_POST[$id])) {
                 if (!$foundPrimary) {
-                    $foundPrimary = true;	
+                    $foundPrimary = true;
                 } else {
-                    $duplicate = true;			
+                    $duplicate = true;
                 }
             }
 
@@ -672,7 +672,7 @@ class ObjectController extends JPController {
         }
         if ($duplicatePrimary) {
             array_push($this->messages, new JPErrorMessage("Jako hlavní fotografie smí být zvolena pouze jediná."));
-        }	
+        }
 
         return count($this->messages) === 0;
     }
@@ -685,24 +685,24 @@ class ObjectController extends JPController {
 
         $id = "primarni".$photo->id;
         if (isset($_POST[$id])) {
-            $primary = 1;	
+            $primary = 1;
         } else {
-            $primary = 0;	
+            $primary = 0;
         }
 
         $id = "soukroma".$photo->id;
         if (isset($_POST[$id])) {
-            $soukroma = 1;	
+            $soukroma = 1;
         } else {
-            $soukroma = 0;	
+            $soukroma = 0;
         }
 
         $id = "skryta".$photo->id;
         if (isset($_POST[$id])) {
-            $skryta = 1;	
+            $skryta = 1;
         } else {
-            $skryta = 0;	
-        }	
+            $skryta = 0;
+        }
 
 
         $photo->autor = $author;
@@ -729,10 +729,10 @@ class ObjectController extends JPController {
             if ($this->validatePhotos()) {
                 foreach ($photos as $photo) {
 
-                    $idDelete = "delete".$photo->id; 
+                    $idDelete = "delete".$photo->id;
                     if (isset($_POST[$idDelete])) {
-                        $this->dbPhoto->delete($photo->id);	
-                    } else {						 
+                        $this->dbPhoto->delete($photo->id);
+                    } else {
                         $photo = $this->refreshPhoto($photo);
                         array_push ($newPhotos, $photo);
                         $result = $this->dbPhoto->update($photo, $photo->id);
@@ -751,16 +751,16 @@ class ObjectController extends JPController {
         if ($photos != null && count($photos) > 0) {
             foreach($photos as $photo) {
                 array_push($newPhotos, $photo);
-            }	
+            }
         }
 
         if (count($this->messages) == 0) {
-            array_push($this->messages, new JPInfoMessage('Úprava fotografií byla dokončena. 
+            array_push($this->messages, new JPInfoMessage('Úprava fotografií byla dokončena.
             <a href="'.$this->getUrl(JPController::URL_VIEW).'">Zobrazit detail objektu</a>'));
         }
 
         return $newPhotos;
-    }       
+    }
 
     public function delete() {
         $row = $this->getFormValues();
@@ -777,7 +777,7 @@ class ObjectController extends JPController {
         if (!$result) {
             array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo smazat."));
         } else {
-            array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně smazán. 
+            array_push($this->messages, new JPInfoMessage('Objekt byl úspěšně smazán.
                     <a href="'.$this->getUrl(JPController::URL_LIST).'">Zpět na seznam</a>'));
             $this->dbPhoto->deletePhotosByObject($id);
         }
@@ -798,7 +798,7 @@ class ObjectController extends JPController {
         if (!$result) {
             array_push($this->messages, new JPErrorMessage("Bod se nepodařilo smazat."));
         } else {
-            array_push($this->messages, new JPInfoMessage('Bod byl úspěšně smazán. 
+            array_push($this->messages, new JPInfoMessage('Bod byl úspěšně smazán.
                     <a href="'.$this->getUrl("poi-list").'">Zpět na seznam bodů</a>'));
             $this->dbPhoto->deletePhotosByObject($id);
         }
@@ -817,7 +817,7 @@ class ObjectController extends JPController {
 
         foreach($photos as $photo) {
             if ($photo->primarni && !$photo->skryta) {
-                return $photo;	
+                return $photo;
             }
         }
 
@@ -830,7 +830,7 @@ class ObjectController extends JPController {
 
         foreach($photos as $photo) {
             if (!$photo->primarni && !$photo->skryta) {
-                array_push($newPhotos, $photo);	
+                array_push($newPhotos, $photo);
             }
         }
 
@@ -843,14 +843,14 @@ class ObjectController extends JPController {
 
     public function getAllCollections() {
         return $this->dbCollection->getAll();
-    }	
+    }
 
     public function getAuthorsForObject() {
         if ($this->getObjectId() == null) {
             return null;
         }
 
-        return $this->db->getAuthorsForObject($this->getObjectId());	
+        return $this->db->getAuthorsForObject($this->getObjectId());
     }
 
     public function getCollectionsForObject() {
@@ -858,11 +858,11 @@ class ObjectController extends JPController {
             return null;
         }
 
-        return $this->dbObject2Collection->getCollectionsForObject($this->getObjectId());	
-    }	
+        return $this->dbObject2Collection->getCollectionsForObject($this->getObjectId());
+    }
 
     public function getAuthorsByObject($idObject) {
-        return $this->db->getAuthorsForObject($idObject);	
+        return $this->db->getAuthorsForObject($idObject);
     }
 
 
@@ -871,7 +871,7 @@ class ObjectController extends JPController {
             return null;
         }
 
-        return $this->db->getCooperationsForObject($this->getObjectId());	
+        return $this->db->getCooperationsForObject($this->getObjectId());
     }
 
     public function getSourcesForObject() {
@@ -879,7 +879,7 @@ class ObjectController extends JPController {
             return null;
         }
 
-        return $this->dbSource->getSourcesForObject($this->getObjectId());	
+        return $this->dbSource->getSourcesForObject($this->getObjectId());
     }
 
     public function getSelectedAuthors() {
@@ -901,15 +901,15 @@ class ObjectController extends JPController {
 
         foreach($this->getCollectionsForObject() as $collection) {
             array_push($collections, $collection->id);
-        }	
+        }
 
         // doplníme ty nevyplněné (prázdné)
         for ($i = count($collections); $i < 3; $i++) {
             array_push($collections, 0);
-        }		
+        }
 
         return $collections;
-    }	
+    }
 
     public function getCooperations() {
         $cooperations = array ();
@@ -926,7 +926,7 @@ class ObjectController extends JPController {
     }
 
     public function getSelectedSources() {
-        $sources = array ();		
+        $sources = array ();
         foreach($this->getSourcesForObject() as $source) {
             array_push($sources, $source);
         }
@@ -942,7 +942,7 @@ class ObjectController extends JPController {
     private function getAuthorFromAddForm() {
         $idAuthor = (int) filter_input (INPUT_POST, "autor", FILTER_SANITIZE_STRING);
         if ($idAuthor <= 0) {
-            return null;	
+            return null;
         }
 
         return $this->dbAuthor->getById($idAuthor);
@@ -955,7 +955,7 @@ class ObjectController extends JPController {
         $row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
         $row->kategorie = (int) filter_input (INPUT_POST, "kategorie", FILTER_SANITIZE_STRING);
         $row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
-        $row->obsah = $_POST["editor"]; // TODO: sanitize 
+        $row->obsah = $_POST["editor"]; // TODO: sanitize
         $row->interni = $_POST["interni"]; // TODO: sanitize
         $row->rok_realizace = filter_input (INPUT_POST, "rok_realizace", FILTER_SANITIZE_STRING);
         $row->rok_vzniku = filter_input (INPUT_POST, "rok_vzniku", FILTER_SANITIZE_STRING);
@@ -963,6 +963,10 @@ class ObjectController extends JPController {
         $row->material = filter_input (INPUT_POST, "material", FILTER_SANITIZE_STRING);
         $row->pamatkova_ochrana = filter_input (INPUT_POST, "pamatkova_ochrana", FILTER_SANITIZE_STRING);
         $row->pristupnost = filter_input (INPUT_POST, "pristupnost", FILTER_SANITIZE_STRING);
+
+		$row->mestska_cast = filter_input (INPUT_POST, "mestska_cast", FILTER_SANITIZE_STRING);
+		$row->oblast = filter_input (INPUT_POST, "oblast", FILTER_SANITIZE_STRING);
+		$row->adresa = filter_input (INPUT_POST, "adresa", FILTER_SANITIZE_STRING);
 
         $row->zruseno = filter_input (INPUT_POST, "zruseno", FILTER_SANITIZE_STRING);
         $row->zruseno = ($row->zruseno === "on" ? 1 : 0);
@@ -974,7 +978,7 @@ class ObjectController extends JPController {
         $row->pridano_osm = ($row->pridano_osm === "on" ? 1 : 0);
 
         $row->pridano_vv = filter_input (INPUT_POST, "pridano_vv", FILTER_SANITIZE_STRING);
-        $row->pridano_vv = ($row->pridano_vv === "on" ? 1 : 0);	
+        $row->pridano_vv = ($row->pridano_vv === "on" ? 1 : 0);
 
         return $row;
     }
@@ -1017,7 +1021,7 @@ class ObjectController extends JPController {
         array_push($collections, (int) filter_input (INPUT_POST, "collection3", FILTER_SANITIZE_STRING));
 
         return $collections;
-    }		
+    }
 
     private function getFormSourcesValues() {
         $sources = array ();
@@ -1030,7 +1034,7 @@ class ObjectController extends JPController {
                 $source = new stdClass();
                 $id = (int) filter_input (INPUT_POST, $key, FILTER_SANITIZE_STRING);
                 if ($id > 0) {
-                        $source->id = $id;	
+                        $source->id = $id;
                 }
 
                 $source->nazev = filter_input (INPUT_POST, "nazev".$value, FILTER_SANITIZE_STRING);
@@ -1051,15 +1055,15 @@ class ObjectController extends JPController {
 
         return $sources;
     }
-    
+
     public function getGoogleMapSettings() {
          $setting["gm_key"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_KEY)->hodnota;
          $setting["gm_lat"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LAT)->hodnota;
          $setting["gm_lng"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_LON)->hodnota;
          $setting["gm_zoom"] = $this->dbSetting->getSetting(SettingController::$SETTING_GM_ZOOM)->hodnota;
-         
+
          return $setting;
-    } 
+    }
 
     public function getGoogleMapPointContent($lat, $lng) {
         $map = new GoogleMapsBuilder($this->getGoogleMapSettings(), $lat, $lng);
@@ -1098,13 +1102,13 @@ class ObjectController extends JPController {
         $order = new stdClass();
         $order->nazev = "Data aktualizace";
         $order->url = "aktualizace";
-        array_push($orders, $order);		
+        array_push($orders, $order);
 
         return $orders;
     }
 
     public function getStringId() {
-        return "object";	
+        return "object";
     }
 
     public function getObjectId() {
@@ -1119,11 +1123,11 @@ class ObjectController extends JPController {
     }
 
     public function getObjectCategory($id) {
-        return $this->dbCategory->getById($id);	
+        return $this->dbCategory->getById($id);
     }
 
     public function getRandomObjectWithPhoto() {
-        $count = $this->db->getCountObjectsWithPhotos();		
+        $count = $this->db->getCountObjectsWithPhotos();
         $randNumber = rand(1, $count);
 
         return $this->db->getRandomObjectWithPhoto($randNumber);
@@ -1143,43 +1147,43 @@ class ObjectController extends JPController {
 
         foreach($objects as $object) {
             if ($object->skryta == 1) {
-                $object->img_512 = null;	
+                $object->img_512 = null;
             }
         }
 
-        return $objects;		
+        return $objects;
     }
 
     public function getAuthorFullname($obj) {
-        return trim($obj->titul_pred." ".$obj->jmeno." ".$obj->prijmeni." ".$obj->titul_za);	
-    }		
+        return trim($obj->titul_pred." ".$obj->jmeno." ".$obj->prijmeni." ".$obj->titul_za);
+    }
 
     public function getCountKeSchvaleni() {
-        return $this->db->getCountKeSchvaleni();	
+        return $this->db->getCountKeSchvaleni();
     }
 
     public function getAllTags() {
-        return $this->dbTag->getAll();	
+        return $this->dbTag->getAll();
     }
 
     public function getIsTagSelected($idTag) {
 
-        $idObject = $this->getObjectId(); 
+        $idObject = $this->getObjectId();
         if ($idObject == null) {
             return false;
         }
 
         if ($this->cacheTagSelected == null) {
-            $this->cacheTagSelected = $this->dbObject2Tag->getTagsForObject($idObject);	
+            $this->cacheTagSelected = $this->dbObject2Tag->getTagsForObject($idObject);
         }
 
         foreach($this->cacheTagSelected as $selectedTag) {
             if ($selectedTag->stitek == $idTag) {
-                return true;	
+                return true;
             }
         }
 
-        return false; 
+        return false;
     }
 
     public function getIsShowedTag() {
@@ -1194,14 +1198,14 @@ class ObjectController extends JPController {
 
         // v administraci máme "category", na webu "kategorie" :)
         if (isset($_GET["category"])) {
-            $id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);	
+            $id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);
         } else {
-            $id = (int) $wp_query->query_vars['kategorie'];	
+            $id = (int) $wp_query->query_vars['kategorie'];
         }
 
         if ($id == 0) {
-                return null;	
-        } 
+                return null;
+        }
 
         return $this->dbCategory->getById($id) != null;
     }
@@ -1218,14 +1222,14 @@ class ObjectController extends JPController {
 
         // v administraci máme "category", na webu "kategorie" :)
         if (isset($_GET["category"])) {
-            $id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);	
+            $id = (int) filter_input (INPUT_GET, "category", FILTER_SANITIZE_STRING);
         } else {
-            $id = (int) $wp_query->query_vars['kategorie'];	
+            $id = (int) $wp_query->query_vars['kategorie'];
         }
 
         if ($id == 0) {
-                return null;	
-        } 
+                return null;
+        }
 
         return $this->dbCategory->getById($id);
     }
@@ -1249,8 +1253,8 @@ class ObjectController extends JPController {
         foreach ($tags as $tag) {
 
             if (strlen($str) > 0) {
-                $str = $str.", ";	
-            }	
+                $str = $str.", ";
+            }
 
             $str = $str.$tag->nazev;
         }
@@ -1268,8 +1272,8 @@ class ObjectController extends JPController {
 
     public function getZobrazeniStr($containsPageNumber) {
         if (!isset($_GET["zobrazeni"])) {
-            return "";	
-        }	
+            return "";
+        }
 
         $param = $_GET["zobrazeni"] == "list" ? "zobrazeni=list" : "zobrazeni=grid";
         if ($containsPageNumber) {
@@ -1278,13 +1282,13 @@ class ObjectController extends JPController {
             $param = "?".$param;
         }
 
-        return $param;		
+        return $param;
     }
 
     public function getAdminUrlParams() {
         $action = filter_input (INPUT_POST, "action", FILTER_SANITIZE_STRING);
         if (strlen($action) == 0) {
-            $action = parent::URL_LIST;	
+            $action = parent::URL_LIST;
         }
 
         if (($action == parent::URL_LIST) && isset($_GET["category"])) {
@@ -1312,13 +1316,13 @@ class ObjectController extends JPController {
             return null;
         }
 
-        return $this->dbPoi->getPoisForObject($object->id);            
+        return $this->dbPoi->getPoisForObject($object->id);
     }
 
     public function getPoiFromUrl() {
         $id = (int) filter_input (INPUT_GET, "poi", FILTER_SANITIZE_STRING);
         if ($id == null) {
-                return null;	
+                return null;
         }
 
         return $this->dbPoi->getById($id);
@@ -1343,7 +1347,7 @@ class ObjectController extends JPController {
         get_currentuserinfo();
 
         $dt = new DateTime();
-        $dtStr = $dt->format('Y-m-d H:i:s'); 
+        $dtStr = $dt->format('Y-m-d H:i:s');
         $row = new stdClass();
 
         $row->objekt = $this->getObjectFromUrl()->id;
@@ -1354,15 +1358,15 @@ class ObjectController extends JPController {
         $row->popis = $popis;
 
         $this->dbHistory->create($row);
-    }        
-    
+    }
+
     public function getAllSettings() {
         $settings = array();
-        
+
         foreach ($this->dbSetting->getAll() as $property) {
             $settings[$property->nazev] = $property->hodnota;
         }
-        
+
         return $settings;
     }
 }

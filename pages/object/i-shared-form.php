@@ -31,6 +31,29 @@
     <th scope="row"><label for="longitude">Longitude</label></th>
     <td><input name="longitude" id="longitude" class="regular-text" type="text" value="<?php echo $row->longitude ?>" maxlength="20" /></td>
 </tr>
+
+<tr>
+    <th scope="row"><label for="mestska_cast">Městská část</label></th>
+    <td>
+        <input name="mestska_cast" id="mestska_cast" class="regular-text" type="text" value="<?php echo $row->mestska_cast ?>" maxlength="250" />
+        <p class="description">Městská část, kde se dílo nachází (např. Plzeň 3).</p>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><label for="oblast">Čtvrť (oblast)</label></th>
+    <td>
+        <input name="oblast" id="oblast" class="regular-text" type="text" value="<?php echo $row->oblast ?>" maxlength="250" />
+        <p class="description">Část městského obvodu, kde se dílo nachází (např. Skvrňany, Bory apod.)</p>
+    </td>
+</tr>
+<tr>
+    <th scope="row"><label for="adresa">Adresa</label></th>
+    <td>
+        <input name="adresa" id="adresa" class="regular-text" type="text" value="<?php echo $row->adresa ?>" maxlength="250" />
+        <p class="description">Konkrétní adresa místa, kde se dílo nachází.</p>
+    </td>
+</tr>
+
 <tr>
     <th scope="row"><label for="kategorie">Kategorie</label></th>
     <td>
@@ -46,7 +69,7 @@
     </td>
 </tr>
 
-<?php if (count($controller->getAllTags()) > 0) {  ?> 
+<?php if (count($controller->getAllTags()) > 0) {  ?>
 <tr>
     <th scope="row"><label for="stitky">Štítky</label></th>
     <td>
@@ -134,7 +157,7 @@
     <th scope="row"><label for="pamatkova_ochrana">Památková ochrana</label></th>
     <td>
         <input name="pamatkova_ochrana" id="pamatkova_ochrana" class="regular-text" type="text" value="<?php echo $row->pamatkova_ochrana ?>" maxlength="50" />
-        <p class="description">Identifikace v systému <a href="http://monumnet.npu.cz/monumnet.php">MonumNet</a> (např. 20936/4-225)</p>	
+        <p class="description">Identifikace v systému <a href="http://monumnet.npu.cz/monumnet.php">MonumNet</a> (např. 20936/4-225)</p>
     </td>
 </tr>
 <tr>
@@ -151,6 +174,13 @@
         <p class="description">Zaškrtněte, pokud již objekt neexistuje (odstraněn, zcizen).</p>
     </td>
 </tr>
+</tbody>
+</table>
+
+<h3>Evidence</h3>
+
+<table class="form-table">
+<tbody>
 
 <tr>
     <th scope="row"><label for="pridano_osm">Přidáno na OSM</label></th>
@@ -173,7 +203,7 @@
 
 <?php if ($controller->getIsEdit()) { ?>
 	<script type="text/javascript">
-		// U editace implicitně skrýváme změnu souřadnic
+		// U editace implicitně skrýváme změnu souřadnic a umístění
 		$('#map-canvas').hide();
 		$('#lat').hide();
 		$('#long').hide();
@@ -187,7 +217,7 @@
 		$('#show-map').hide();
 		$('#lat').show();
 		$('#long').show();
-		
+
 		google.maps.event.trigger(map, 'resize');
 		map.panTo(marker.position);
 	}

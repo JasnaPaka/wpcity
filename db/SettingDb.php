@@ -1,6 +1,19 @@
 <?php
 
+/**
+ * Přístup k nastavení pluginu.
+ */
 class SettingDb extends JPDb {
+    
+    const SETTING_DESCRIPTION = "popisProjektu";
+    const SETTING_IMAGE = "obrazekProjektu";
+    const SETTING_FACEBOOK_URL = "profilFacebook";
+    const SETTING_GM_KEY = "gmKey";
+    const SETTING_GM_LAT = "gmLat";
+    const SETTING_GM_LON = "gmLon";
+    const SETTING_GM_ZOOM = "gmZoom";
+    const SETTING_MAP_IMAGE = "obrazekMapy";
+    const SETTING_GOOGLE_SEACH = "vyhledavaniGoogleKlic";
 
     function __construct() {
         parent::__construct();
@@ -48,4 +61,8 @@ class SettingDb extends JPDb {
 
         return $wpdb->get_results("SELECT * FROM ".$this->tableName." ORDER BY ".$this->getOrderSQL($order));	
     }    
+    
+    public function getSettingGMApiKey() {
+        return $this->getSetting(self::SETTING_GM_KEY);
+    }
 }

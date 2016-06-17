@@ -6,7 +6,7 @@
 
     if (isset($_POST["approve"])) {
         $row = $controller->approve();
-    } else {	
+    } else {
         $row = $controller->getObjectFromUrl();
     }
     $photos = $controller->getPhotosForObject();
@@ -36,25 +36,44 @@
         <th><strong>Kategorie</strong></th>
         <td><?php echo $controller->getCategoryNameForObject($row->kategorie) ?></td>
     </tr>
-	
+
+    <?php if (strlen($row->mestska_cast) > 0) { ?>
+        <tr>
+            <th><strong>Městská část</strong></th>
+            <td><?php echo $row->mestska_cast ?></td>
+        </tr>
+    <?php } ?>
+    <?php if (strlen($row->oblast) > 0) { ?>
+        <tr>
+            <th><strong>Čtvrť (oblast)</strong></th>
+            <td><?php echo $row->oblast ?></td>
+        </tr>
+    <?php } ?>
+    <?php if (strlen($row->adresa) > 0) { ?>
+        <tr>
+            <th><strong>Adresa</strong></th>
+            <td><?php echo $row->adresa ?></td>
+        </tr>
+    <?php } ?>
+
 <?php if (strlen($controller->getTagsForObjectStr($row->id)) > 0) { ?>
     <tr>
         <th><strong>Štítky</strong></th>
         <td><?php echo $controller->getTagsForObjectStr($row->id)?></td>
     </tr>
-<?php } ?>	
+<?php } ?>
 <?php if (strlen($row->rok_realizace) > 0) { ?>
     <tr>
         <th><strong>Rok realizace</strong></th>
         <td><?php echo $row->rok_realizace ?></td>
     </tr>
-<?php } ?>	
+<?php } ?>
 <?php if (strlen($row->rok_vzniku) > 0) { ?>
     <tr>
         <th><strong>Rok odhaleni</strong></th>
         <td><?php echo $row->rok_vzniku ?></td>
     </tr>
-<?php } ?>	
+<?php } ?>
 <?php if (strlen($row->prezdivka) > 0) { ?>
     <tr>
         <th><strong>Přezdívka</strong></th>
@@ -98,7 +117,7 @@
 <?php } ?>
 
 
-<?php 
+<?php
 if (count($controller->getCollectionsForObject()) > 0) { ?>
     <tr>
         <th valign="top"><strong>Soubory děl</strong></th>
@@ -126,7 +145,7 @@ if (count($controller->getCollectionsForObject()) > 0) { ?>
     <th><strong>Umístěno na <abbr title="Vetřelci a volavky">VV</abbr></strong></th>
     <td><?php echo ($row->pridano_vv? "Ano" : "Ne") ?></td>
 </tr>
-	
+
 </tbody>
 </table>
 
@@ -142,8 +161,8 @@ if (count($controller->getCollectionsForObject()) > 0) { ?>
     <a href="admin.php?page=object&amp;action=poi-list&amp;id=<?php echo $row->id ?>" class="button">Správa bodů</a>
     <a href="admin.php?page=object&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 </p>
-</form>    
-    
+</form>
+
 <h3>Umístění v mapě</h3>
 
 <?php echo $controller->getGoogleMapPointContent($row->latitude, $row->longitude); ?>
@@ -176,7 +195,7 @@ if (count($controller->getCollectionsForObject()) > 0) { ?>
     <a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat fotografie</a>
 </p>
 
-<?php } else { 
+<?php } else {
 
     foreach($photos as $photo) {
             $uploadDir = wp_upload_dir();
