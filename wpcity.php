@@ -3,18 +3,18 @@
  * Plugin Name: WPCity
  * Plugin URI: http://www.jasnapaka.com/
  * Description: Plugin pro WordPress, který umožňuje spravovat objekty ve veřejném prostoru města.
- * Version: 1.1
+ * Version: 1.2
  * Author: Pavel Cvrcek
  * Author URI: http://www.jasnapaka.com/
  * License: Mozilla Public License 2
  */
- 
+
  /** Akce prováděné ještě před zobrazením stránky */
 require_once ("controllers/ExportController.php");
 require_once ("controllers/ObjectController.php");
 require_once ("DatabaseSchemeUpdater.php");
 
-if (WP_DEBUG && WP_DEBUG_DISPLAY) 
+if (WP_DEBUG && WP_DEBUG_DISPLAY)
 {
    ini_set('error_reporting', E_ALL & ~E_STRICT & ~E_DEPRECATED);
 }
@@ -22,7 +22,7 @@ if (WP_DEBUG && WP_DEBUG_DISPLAY)
 add_action('plugins_loaded', 'wpCitySendHeadersCallback');
 
 function wpCitySendHeadersCallback() {
-    $controller = new ExportController();		
+    $controller = new ExportController();
     if (is_admin()) {
         if (isset($_GET["page"]) && ($_GET["page"]) === "export" && isset($_GET["action"])) {
             $controller = new ExportController();
@@ -35,18 +35,18 @@ function pageScripts() {
     wp_enqueue_script('jQuery', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-1.10.2.js');
     wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__). '/content/js/jquery-ui/jquery-ui-1.10.4.custom.min.js');
 
-    wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');	
+    wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__). '/content/css/jquery-ui/jquery-ui-1.10.4.custom.min.css');
     wp_enqueue_style('WPCity CSS', plugin_dir_url(__FILE__). '/content/css/wpcity.css');
 }
 
 /** Přidání stylů do stránky */
 add_action('admin_enqueue_scripts', 'pageScripts');
- 
+
  /** Přidáme hlavní kategorii pro správu objektů */
 add_action('admin_menu', 'wpCityMenu');
 
 function wpCityMenu(){
-   add_menu_page('Správa objektů', getNeschvalenoTitle('Správa objektů'), 'delete_posts', 'wpcity', 'wpCityMenuPageCallback', 'dashicons-location', 90); 
+   add_menu_page('Správa objektů', getNeschvalenoTitle('Správa objektů'), 'delete_posts', 'wpcity', 'wpCityMenuPageCallback', 'dashicons-location', 90);
 }
 
 function wpCityMenuPageCallback(){
@@ -59,15 +59,15 @@ function wpCityChangesPageCallback() {
 
 /** Přidáme podnabídku */
 function getNeschvalenoTitle($title) {
-		
+
     $controller = new ObjectController();
     $neschvaleno = $controller->getCountKeSchvaleni();
 
     if ($neschvaleno > 0) {
-        $title = $title.' <span class="update-plugins count-1"><span class="update-count">'.$neschvaleno.'</span></span>';	
-    }	
+        $title = $title.' <span class="update-plugins count-1"><span class="update-count">'.$neschvaleno.'</span></span>';
+    }
 
-    return $title;	
+    return $title;
 }
 
 
@@ -81,7 +81,7 @@ function wpCityCategoryMenu() {
         add_submenu_page('wpcity', 'Správa autorů', 'Autoři', 'delete_posts', 'author', 'wpCityAuthorPageCallback');
     }
     add_submenu_page('wpcity', 'Správa souborů děl', 'Soubory děl', 'delete_posts', 'collection', 'wpCityCollectionPageCallback');
-    add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'delete_posts', 'category', 'wpCityCategoryPageCallback');	
+    add_submenu_page('wpcity', 'Správa kategorií', 'Kategorie', 'delete_posts', 'category', 'wpCityCategoryPageCallback');
     add_submenu_page('wpcity', 'Správa štítků', 'Štítky', 'delete_posts', 'tag', 'wpCityTagPageCallback');
     add_submenu_page('wpcity', 'Kontrola', 'Kontrola', 'delete_posts', 'check', 'wpCityCheckPageCallback');
     add_submenu_page('wpcity', 'Export', 'Export', 'delete_posts', 'export', 'wpCityExportPageCallback');
@@ -93,7 +93,7 @@ function wpCityCategoryMenu() {
 
 function wpCityObjectPageCallback(){
     if (!isset($_GET["action"])) {
-        require_once("pages/object/list.php");	
+        require_once("pages/object/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -131,16 +131,16 @@ function wpCityObjectPageCallback(){
             break;
         case 'poi-list':
             require_once("pages/object/poi-list.php");
-            break;                    
+            break;
         case 'poi-create':
             require_once("pages/object/poi-create.php");
-            break; 
+            break;
         case 'poi-update':
             require_once("pages/object/poi-update.php");
-            break; 
+            break;
         case 'poi-delete':
             require_once("pages/object/poi-delete.php");
-            break;                     
+            break;
         default:
             require_once("pages/object/list.php");
             break;
@@ -149,9 +149,9 @@ function wpCityObjectPageCallback(){
 
 
 function wpCityCategoryPageCallback() {
-	
+
     if (!isset($_GET["action"])) {
-        require_once("pages/category/list.php");	
+        require_once("pages/category/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -176,7 +176,7 @@ function wpCityCategoryPageCallback() {
 
 function wpCityCollectionPageCallback() {
     if (!isset($_GET["action"])) {
-            require_once("pages/collection/list.php");	
+            require_once("pages/collection/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -199,13 +199,13 @@ function wpCityCollectionPageCallback() {
         default:
             require_once("pages/collection/list.php");
             break;
-    }	
+    }
 }
 
 function wpCityTagPageCallback() {
-	
+
     if (!isset($_GET["action"])) {
-        require_once("pages/tag/list.php");	
+        require_once("pages/tag/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -231,9 +231,9 @@ function wpCityTagPageCallback() {
 
 
 function wpCityAuthorPageCallback() {
-	
+
     if (!isset($_GET["action"])) {
-            require_once("pages/author/list.php");	
+            require_once("pages/author/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -263,9 +263,9 @@ function wpCityAuthorPageCallback() {
 }
 
 function wpCityCheckPageCallback() {
-	
+
     if (!isset($_GET["action"])) {
-        require_once("pages/check/list.php");	
+        require_once("pages/check/list.php");
     }
 
     $action = filter_input (INPUT_GET, "action", FILTER_SANITIZE_STRING);
@@ -282,11 +282,11 @@ function wpCityCheckPageCallback() {
     }
 }
 
-function wpCityExportPageCallback() {	
+function wpCityExportPageCallback() {
     require_once("pages/export/view.php");
-}	
+}
 
-function wpCitySettingPageCallback() {	
+function wpCitySettingPageCallback() {
     require_once("pages/setting/update.php");
 }
 
@@ -304,12 +304,12 @@ add_action( 'admin_init', 'initDatabase' );
 
 function initDatabase() {
     global $wpdb;
-    
+
     $prefix = "kv_";
     if (is_multisite()) {
         $prefix = "kv_".$wpdb->blogid."_";
     }
-    
+
     new DatabaseSchemeUpdater($prefix);
 }
 
@@ -328,4 +328,3 @@ include "object.php";
 
 /** OpenGraph */
 include "opengraph.php";
-
