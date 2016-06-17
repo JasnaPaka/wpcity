@@ -3,7 +3,7 @@
 
 	include_once $ROOT."controllers/ExportController.php";
 	$controller = new ExportController();
-	
+
 	$categories = $controller->getCategories();
 ?>
 <div class="wrap">
@@ -19,7 +19,7 @@
 <h3>Export kategorií do CSV</h3>
 
 <?php
-	if (sizeof($categories) == 0) { 
+	if (sizeof($categories) == 0) {
 ?>
 
 <p>Dosud nebyla přidána žádná kategorie.</p>
@@ -38,19 +38,27 @@ mapa pomocí <a href="http://www.gpsvisualizer.com/map_input?form=google">GPSVis
 			foreach ($categories as $category) {
 				printf("<tr class=\"%s\">", $i % 2 == 0 ? "alternate" : "");
 				printf("<td>%s</td>", $category->nazev);
-				printf('<td><a href="admin.php?page=export&amp;action=category&amp;id=%d">Bez zaniklých</a> &middot; 
+				printf('<td><a href="admin.php?page=export&amp;action=category&amp;id=%d">Bez zaniklých</a> &middot;
 					<a href="admin.php?page=export&amp;action=categoryWithCanceled&amp;id=%d">Včetně zaniklých</a></td>', $category->id, $category->id);
 				printf('<td><a href="admin.php?page=export&amp;action=categoryNoAuthors&amp;id=%d">Bez vyplněného autora</a></td>', $category->id);
-				printf("<tr>");				
-				
+				printf("<tr>");
+
 				$i++;
 			}
-		?>		
-	</tbody>	
+		?>
+	</tbody>
 </table>
 
 <?php
 	}
 ?>
+
+<h3>Servisní akce</h3>
+
+<dt>
+	<dl><a href="admin.php?page=export&amp;action=importadres">Nastavení městských částí a čtvrtí</a></dl>
+	<dd>Provede nastavení městských částí a čtvrtí na základě údajů z Google Geocode, pokud nejsou údaje vyplněny.
+		Nastaví najednou max. 200 děl.</dd>
+</dt>
 
 </div>

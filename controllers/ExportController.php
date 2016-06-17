@@ -4,6 +4,7 @@ $ROOT = plugin_dir_path( __FILE__ )."../";
 
 include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
+include_once $ROOT."fw/GoogleGeocode.php";
 
 include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/PhotoDb.php";
@@ -13,15 +14,17 @@ include_once $ROOT."db/CategoryDb.php";
  * Nástroje na export
  */
 class ExportController extends JPController {
-	
+
     private $dbObject;
     private $dbPhoto;
     private $dbCategory;
+	private $dbSetting;
 
     function __construct() {
         $this->dbObject = new ObjectDb();
         $this->dbPhoto = new PhotoDb();
         $this->dbCategory = new CategoryDB();
+		$this->dbSetting = new SettingDB();
     }
 
     /**
@@ -46,10 +49,10 @@ class ExportController extends JPController {
             case "nophotos":
                 $this->exportNoPhotos();
                 break;
-            case "category":			
+            case "category":
                 $this->exportCategory($id, false);
                 break;
-            case "categoryWithCanceled": 
+            case "categoryWithCanceled":
                 $this->exportCategory($id, true);
                 break;
             case "categoryNoAuthors":
@@ -61,13 +64,16 @@ class ExportController extends JPController {
             case "img_100":
                 $this->rebuildImages100();
                 break;
+            case "importadres":
+                $this->importadres();
+                break;
             default:
                 if (strpos($this->getAction(), "category") == 0) {
                     $id = str_replace($this->getAction(), "category", "");
                 } else {
                     printf("Nedefinovana akce.");
-                    break;					
-                }				
+                    break;
+                }
         }
     }
 
@@ -75,7 +81,7 @@ class ExportController extends JPController {
      * Export objektů bez fotek do CSV.
      */
     private function exportNoPhotos() {
-        $separator = ",";	
+        $separator = ",";
 
         putenv('TMPDIR='.getenv('TMPDIR'));
         $tmpName = ini_get('upload_tmp_dir')."/objekty-bez-fotek";
@@ -96,7 +102,7 @@ class ExportController extends JPController {
 
     /**
      * Export bodů bez uvedeného autora do CSV.
-     * 
+     *
      * @param unknown $id
      */
     private function exportNoAuthors($id) {
@@ -123,7 +129,7 @@ class ExportController extends JPController {
      * Export objektů kategorie do CSV.
      */
     private function exportCategory($categoryId, $withCanceled) {
-        $separator = ",";	
+        $separator = ",";
 
         $category = $this->dbCategory->getById($categoryId);
         if ($category == null) {
@@ -146,13 +152,13 @@ class ExportController extends JPController {
         fclose($file);
 
         $nazev = "objekty-".str_replace(" ", "-", $category->nazev).".csv";
-        $this->download($tmpName, $nazev);	
+        $this->download($tmpName, $nazev);
     }
 
 
 
     /**
-     * Nabídnutí vygenerovaného souboru ke stažení. Parametrem je název vygenerovaného souboru na 
+     * Nabídnutí vygenerovaného souboru ke stažení. Parametrem je název vygenerovaného souboru na
      * disku a název souboru, jak se má na výstupu jmenovat.
      */
     private function download($tmpName, $filename) {
@@ -171,7 +177,7 @@ class ExportController extends JPController {
     }
 
     public function getStringId() {
-        return "export";	
+        return "export";
     }
 
     private function rebuildImages512() {
@@ -214,22 +220,52 @@ class ExportController extends JPController {
                 $this->dbPhoto->update($image, $image->id);
             }
         }
-    }	
+    }
+
+    /**
+    * Nastavení městských částí a čtvrtí u děl, kde tento údaj chybí na základě
+    * údajů z Google Geocode.
+    */
+    private function importadres() {
+        $apiKeyResult = $this->dbSetting->getSettingGMApiKey();
+        $objects = $this->dbObject->getObjectsWithoutLocation();
+
+        $i = 0;
+        foreach ($objects as $object) {
+            $i++;
+            
+            $gc = new GoogleGeocode($apiKeyResult->hodnota);
+            $parts = $gc->getLokalitaMestskaCast($object->latitude, $object->longitude);
+            print_r($parts);
+            if ($parts == null) {
+                continue;
+            }
+            
+            $object->oblast = $parts[0];
+            $object->mestska_cast = $parts[1];
+            
+            $this->dbObject->update($object, $object->id);
+            
+            if ($i == 200) {
+                break;
+            }
+        }
+    }
 
     private function getRelativePathToImg($path) {
         $upload_dir = wp_upload_dir();
-        $baseDir = $upload_dir['basedir']; 
+        $baseDir = $upload_dir['basedir'];
         return str_replace($baseDir, "", $path);
     }
 
     public function getCategories() {
-        return $this->dbCategory->getAll();		
+        return $this->dbCategory->getAll();
     }
-    
+
     /**
      * Provede ošetření řetězce při sestavování CSV. Ošetřuje hlavně čárku, která
      * je používána jako oddělovač jednotlivých sloupců CSV.
-     * 
+     *
      * @param type $str
      */
     private function printString($str) {
@@ -239,5 +275,5 @@ class ExportController extends JPController {
             return "\"".$str."\"";
         }
     }
-    
+
 }
