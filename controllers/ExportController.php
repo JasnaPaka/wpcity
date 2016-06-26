@@ -49,6 +49,9 @@ class ExportController extends JPController {
             case "nophotos":
                 $this->exportNoPhotos();
                 break;
+            case "nophotosPublic":
+                $this->exportNoPhotos(true);
+                break;
             case "category":
                 $this->exportCategory($id, false);
                 break;
@@ -79,8 +82,9 @@ class ExportController extends JPController {
 
     /**
      * Export objektů bez fotek do CSV.
+     * @param bool $public zda se mají exportovat pouze veřejné objekty
      */
-    private function exportNoPhotos() {
+    private function exportNoPhotos($public = false) {
         $separator = ",";
 
         putenv('TMPDIR='.getenv('TMPDIR'));
@@ -90,7 +94,7 @@ class ExportController extends JPController {
 
         fwrite($file, "name".$separator."latitude".$separator."longitude\n");
 
-        foreach($this->dbObject->getObjectsWithNoPhotos() as $obj) {
+        foreach($this->dbObject->getObjectsWithNoPhotos($public) as $obj) {
             $str = $this->printString($obj->nazev).$separator.$obj->latitude.$separator.$obj->longitude."\n";
             fwrite($file, $str);
         }
@@ -127,6 +131,8 @@ class ExportController extends JPController {
 
     /**
      * Export objektů kategorie do CSV.
+     * @param $categoryId
+     * @param $withCanceled
      */
     private function exportCategory($categoryId, $withCanceled) {
         $separator = ",";

@@ -42,6 +42,13 @@ class ObjectDb extends JPDb {
             return $wpdb->get_results ($sql);
     }
 
+    public function getList($order="", $withCanceled = false) {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE deleted = 0 AND schvaleno = 1 ".($withCanceled ? "" : "AND zruseno = 0")." ORDER BY ".$this->getOrderSQL($order));
+        return $wpdb->get_results ($sql);
+    }
+
     public function getListByAuthor($idAuthor, $iZrusene = false) {
             global $wpdb;
 
@@ -160,15 +167,23 @@ class ObjectDb extends JPDb {
 
     /**
      * Vrací seznam objektů, které u sebe nemají žádnou fotografii. Ignorují se systémové kategorie.
+     * @param bool $public zda se mají exportovat pouze veřejně umístěná díla.
+     * @return
      */
-    public function getObjectsWithNoPhotos() {
-            global $wpdb;
+    public function getObjectsWithNoPhotos($public = false) {
+        global $wpdb;
 
-            return $wpdb->get_results("SELECT DISTINCT obj.* FROM ".$this->tableName." obj
-                    LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
-                    INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id
-                    WHERE (fot.id is null OR (fot.skryta = 1 AND (SELECT count(*) FROM ".$this->dbPrefix."fotografie WHERE objekt = obj.id AND skryta = 0) = 0))
-                    AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+        $sql = "SELECT DISTINCT obj.* FROM ".$this->tableName." obj
+                LEFT JOIN ".$this->dbPrefix."fotografie fot ON obj.id = fot.objekt
+                INNER JOIN ".$this->dbPrefix."kategorie kat ON obj.kategorie = kat.id
+                WHERE (fot.id is null OR (fot.skryta = 1 AND (SELECT count(*) FROM ".$this->dbPrefix."fotografie WHERE objekt = obj.id AND skryta = 0) = 0))
+                AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ";
+
+        if ($public) {
+            $sql = $sql." AND obj.pristupnost like 'veřejn%'";
+        }
+
+        return $wpdb->get_results($sql);
     }
 
     /**
