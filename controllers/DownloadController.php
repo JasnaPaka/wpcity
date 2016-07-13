@@ -48,6 +48,9 @@ class DownloadController extends JPController
 			case "bezfotografie":
 				$objects = $this->dbObject->getObjectsWithNoPhotos();
 				break;
+			case "bezfotografieneexistujici":
+				$objects = $this->dbObject->getObjectsWithNoPhotos(false, true);
+				break;
 			case "bezfotografieverejne":
 				$objects = $this->dbObject->getObjectsWithNoPhotos(true);
 				break;
