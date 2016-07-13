@@ -91,6 +91,9 @@ class DownloadController extends JPController
 			case "bezfotografie":
 				return "krizky-a-vetrelci-bez-fotografie".$date.".gpx";
 				break;
+			case "bezfotografieneexistujici":
+				return "krizky-a-vetrelci-bez-fotografie-neexistujici".$date.".gpx";
+				break;
 			case "bezfotografieverejne":
 				return "krizky-a-vetrelci-bez-fotografie-verejne".$date.".gpx";
 				break;
