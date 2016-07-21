@@ -7,6 +7,7 @@ include_once $ROOT . "fw/JPController.php";
 include_once $ROOT . "fw/GPSUtils.php";
 include_once $ROOT . "fw/ImgUtils.php";
 include_once $ROOT . "fw/GoogleMapsBuilder.php";
+include_once $ROOT . "fw/CityService.php";
 
 include_once $ROOT . "db/CategoryDb.php";
 include_once $ROOT . "db/ObjectDb.php";
@@ -297,6 +298,11 @@ class ObjectController extends JPController
 
 				// Nastavíme štítky
 				$this->addTags($idObject);
+
+				// Nastavíme umístění (jen pokud jej uživatel nenastavil sám).
+				if (strlen($row->mestska_cast) == 0) {
+					$this->updateLocation($idObject);
+				}
 
 				return new stdClass();
 			}
@@ -634,10 +640,45 @@ class ObjectController extends JPController
 		return $poi;
 	}
 
+	public function updateLocation($id = null)
+	{
+		if ($id == null) {
+			$object = $this->getObjectById($this->getObjectFromUrl()->id);
+		} else {
+			$object = $this->getObjectById($id);
+		}
+
+		if ($object == null) {
+			array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo dohledat."));
+			return null;
+		}
+
+		$setting = $this->dbSetting->getSetting(SettingController::$SETTING_CITY_API_URL);
+		if ($setting == null || strlen(trim($setting->hodnota)) == 0) {
+			if ($id == null) {
+				array_push($this->messages, new JPErrorMessage("Webová služba pro získávání informací o městských částech není nastavena."));
+			}
+			return null;
+		}
+
+		$service = new CityService($setting->hodnota);
+		$output = $service->call($object->latitude, $object->longitude);
+
+		if ($service->getStatusCode() == CityService::HTTP_200) {
+			$object->mestska_cast = $output->umo;
+			$this->db->update($object, $object->id);
+		} else if ($service->getStatusCode() == CityService::HTTP_404 && $id == null) {
+			array_push($this->messages, new JPErrorMessage("Objekt se nenachází na území města Plzně."));
+		} else if ($service->getStatusCode() == CityService::HTTP_500 && $id == null) {
+			array_push($this->messages, new JPErrorMessage("Nepodařilo se získat informaci o městském obvodu. Chyba: " + $output->msg));
+		}
+	}
+
 	public function approve()
 	{
 		$object = $this->getObjectById($this->getObjectFromUrl()->id);
 		if ($object == null) {
+			array_push($this->messages, new JPErrorMessage("Objekt se nepodařilo dohledat."));
 			return null;
 		}
 
