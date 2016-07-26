@@ -71,6 +71,7 @@ class CityService
 
 		if ($this->statusCode == self::HTTP_200) {
 			$result->umo = $xml->umo;
+			$result->part = $xml->part;
 		} else {
 			$result->msg = $xml->msg;
 		}

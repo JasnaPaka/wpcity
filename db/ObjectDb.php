@@ -447,6 +447,6 @@ class ObjectDb extends JPDb
 	{
 		global $wpdb;
 
-		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE length(mestska_cast) = 0 AND deleted = 0 ORDER BY " . $this->getOrderSQL($order));
+		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE (length(mestska_cast) = 0 OR length(oblast) = 0) AND deleted = 0 ORDER BY " . $this->getOrderSQL($order));
 	}
 }

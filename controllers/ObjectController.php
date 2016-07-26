@@ -666,6 +666,7 @@ class ObjectController extends JPController
 
 		if ($service->getStatusCode() == CityService::HTTP_200) {
 			$object->mestska_cast = $output->umo;
+			$object->oblast = $output->part;
 			$this->db->update($object, $object->id);
 		} else if ($service->getStatusCode() == CityService::HTTP_404 && $id == null) {
 			array_push($this->messages, new JPErrorMessage("Objekt se nenachází na území města Plzně."));
