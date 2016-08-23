@@ -276,7 +276,7 @@ class ObjectDb extends JPDb
 		$results = $wpdb->get_results("SELECT obj.id, obj.nazev, fot.img_512 FROM " . $this->tableName . " obj
                     INNER JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                     INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
-                    WHERE fot.primarni = 1 AND obj.deleted = 0 AND fot.skryta = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.id DESC LIMIT 1");
+                    WHERE fot.primarni = 1 AND obj.deleted = 0 AND fot.skryta = 0 AND fot.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ORDER BY obj.id DESC LIMIT 1");
 		return $results[0];
 	}
 
