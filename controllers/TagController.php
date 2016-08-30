@@ -118,6 +118,10 @@ class TagController extends JPController {
 		}
 		
 		return $this->dbObject2Tag->getCountObjectsWithTag($id) == 0;
-	}	
+	}
+
+	public function getShowAll() {
+		return true;
+	}
 
 }

@@ -191,4 +191,8 @@ class CategoryController extends JPController
 		return $this->db->getAll();
 	}
 
+	public function getShowAll() {
+		return true;
+	}
+
 }
