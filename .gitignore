@@ -8,3 +8,5 @@ config.php
 .idea/workspace.xml
 
 .idea/wpcity.iml
+
+.idea/sqldialects.xml
