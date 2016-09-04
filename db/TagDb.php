@@ -15,17 +15,27 @@ class TagDb extends JPDb {
 
 	public function update($data, $id) {
 		global $wpdb;
+
+		print_r($data);
 		
 		$values = array (
 			"nazev" => $data->nazev,
-			"popis" => $data->popis
+			"popis" => $data->popis,
+			"skupina" => $data->skupina
 		);
 		
 		$types = array (
-			'%s', '%s'
+			'%s', '%s', '%d'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+	}
+
+	public function getTagWithTagGroup($idTagGroup) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT * FROM " . $this->tableName . " WHERE skupina = %d AND deleted = 0 ORDER BY nazev", $idTagGroup);
+		return $wpdb->get_results($sql);
 	}
 		
 }

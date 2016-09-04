@@ -11,5 +11,19 @@
 		<p class="description">Krátký popis štítku.</p>
 	</td>
 </tr>
+<tr>
+	<th scope="row"><label for="skupina">Skupina štítků</label></th>
+	<td>
+		<select name="skupina">
+			<option value="0">(nezvoleno)</option>
+			<?php foreach ($controller->getAllTagGroups() as $tagGroup) { ?>
+				<option value="<?php print($tagGroup->id) ?>"
+					<?php if ($row->skupina == $tagGroup->id) { print('selected="selected"'); } ?>>
+					<?php print($tagGroup->nazev) ?>
+				</option>
+			<?php } ?>
+		</select>
+	</td>
+</tr>
 </tbody>
 </table>
