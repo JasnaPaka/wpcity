@@ -27,6 +27,11 @@ class TagGroupController extends JPController
 		$row = new stdClass();
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
 		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
+		$row->barva = filter_input (INPUT_POST, "barva", FILTER_SANITIZE_STRING);
+		$row->poradi = (int)filter_input(INPUT_POST, "poradi", FILTER_SANITIZE_STRING);
+		if ($row->poradi == 0) {
+			$row->poradi = null;
+		}
 
 		return $row;
 	}

@@ -15,17 +15,17 @@ class TagDb extends JPDb {
 
 	public function update($data, $id) {
 		global $wpdb;
-		
+
 		$values = array (
 			"nazev" => $data->nazev,
 			"popis" => $data->popis,
 			"skupina" => $data->skupina
 		);
-		
+
 		$types = array (
 			'%s', '%s', '%d'
 		);
-		
+
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
 	}
 

@@ -16,7 +16,9 @@ $rows = $controller->getList();
 	<table class="wp-list-table widefat fixed posts">
 		<thead>
 		<tr>
+			<th>Pořadí</th>
 			<th>Název</th>
+			<th>Barva</th>
 			<th>Akce</th>
 		</tr>
 		</thead>
@@ -26,7 +28,7 @@ $rows = $controller->getList();
 			?>
 
 			<tr class="no-items">
-				<td class="colspanchange" colspan="2">
+				<td class="colspanchange" colspan="4">
 					Nebyla nalezena žádná skupina štítků.
 				</td>
 			</tr>
@@ -44,7 +46,9 @@ $rows = $controller->getList();
 					$barva = true;
 				}
 
+				printf ('<td>'.$row->poradi.'</td>');
 				printf ('<td><strong>'.$row->nazev.'</strong> '.'</td>');
+				printf ('<td>'.$row->barva.'</td>');
 				printf ('<td><a href="admin.php?page=tagGroup&amp;action=update&amp;id='.$row->id.'" title="Upraví skupinu štítků">Upravit</a>');
 				printf (' &middot; <a href="admin.php?page=tagGroup&amp;action=delete&amp;id='.$row->id.'" title="Smaže skupinu štítků">Smazat</a>');
 				printf ('</td>');

@@ -11,7 +11,23 @@ class TagGroupDb extends JPDb
 	}
 
 	public function getDefaultOrder() {
-		return "nazev";
+		return "-poradi DESC, nazev";
 	}
 
+	public function update($data, $id) {
+		global $wpdb;
+
+		$values = array (
+			"nazev" => $data->nazev,
+			"popis" => $data->popis,
+			"barva" => $data->barva,
+			"poradi" => $data->poradi
+		);
+
+		$types = array (
+			'%s', '%s', '%s', '%d'
+		);
+
+		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+	}
 }
