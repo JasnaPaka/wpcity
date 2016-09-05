@@ -15,8 +15,6 @@ class TagDb extends JPDb {
 
 	public function update($data, $id) {
 		global $wpdb;
-
-		print_r($data);
 		
 		$values = array (
 			"nazev" => $data->nazev,

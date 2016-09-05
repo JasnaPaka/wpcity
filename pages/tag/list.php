@@ -18,6 +18,7 @@
 		<tr>
 			<th>Název</th>
 			<th class="r">Počet objektů</th>
+			<th>Skupina štítků</th>
 			<th>Akce</th>
 		</tr>
 	</thead>
@@ -27,7 +28,7 @@
 		?>
 		
 		<tr class="no-items">
-			<td class="colspanchange" colspan="3">
+			<td class="colspanchange" colspan="4">
 				Nebyl nalezen žádný štítek.
 			</td>
 		</tr>
@@ -47,6 +48,14 @@
 					
 					printf ('<td><strong>'.$row->nazev.'</strong> '.'</td>');
 					printf ('<td><a href="/katalog/stitek/'.$row->id.'/">'.$controller->getCountObjectsWithTag($row->id).'</a></td>');
+
+					if ($row->skupina == null) {
+						print("<td></td>");
+					} else {
+						printf('<td><a href="admin.php?page=tagGroup&amp;action=view&amp;id=%d" 
+							title="Zobrazí detail skupiny">%s</a></td>', $row->skupina, $controller->getTagGroup()->nazev);
+					}
+
 					printf ('<td><a href="admin.php?page=tag&amp;action=update&amp;id='.$row->id.'" title="Upraví štítek">Upravit</a>');
 					printf (' &middot; <a href="admin.php?page=tag&amp;action=delete&amp;id='.$row->id.'" title="Smaže štítek">Smazat</a>');
 					printf ('</td>');

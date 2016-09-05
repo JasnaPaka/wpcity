@@ -136,4 +136,12 @@ class TagController extends JPController {
 		return $this->dbTagGroup->getAll();
 	}
 
+	public function getTagGroup() {
+		if ($this->getObjectFromUrl()->skupina == null) {
+			return null;
+		}
+
+		return $this->dbTagGroup->getById($this->getObjectFromUrl()->skupina);
+	}
+
 }
