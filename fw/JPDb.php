@@ -20,7 +20,7 @@ abstract class JPDb {
         $wpdb->show_errors();	
     }
 
-    protected function getOrderSQL($param) {
+    protected function getOrderSQL($order) {
         return $this->getDefaultOrder();
     } 
 

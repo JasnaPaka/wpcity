@@ -227,13 +227,13 @@ class ObjectDb extends JPDb
 		return $wpdb->get_results($sql);
 	}
 
-	protected function getOrderSQL($param)
+	protected function getOrderSQL($order)
 	{
-		if (strlen($param) == 0) {
+		if (strlen($order) == 0) {
 			return $this->getDefaultOrder();
 		}
 
-		switch ($param) {
+		switch ($order) {
 			case "nazev":
 				return "nazev";
 			case "vytvoreni":

@@ -1272,6 +1272,11 @@ class ObjectController extends JPController
 		return $this->dbTag->getAll();
 	}
 
+	public function getAllTagsForWeb()
+	{
+		return $this->dbTag->getAll("groups");
+	}
+
 	public function getIsTagSelected($idTag)
 	{
 

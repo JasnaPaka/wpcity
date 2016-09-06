@@ -14,6 +14,14 @@ class TagGroupDb extends JPDb
 		return "-poradi DESC, nazev";
 	}
 
+	protected function getOrderSQL($order) {
+		if ($order == "name") {
+			return "nazev";
+		}
+
+		return $this->getDefaultOrder();
+	}
+
 	public function update($data, $id) {
 		global $wpdb;
 

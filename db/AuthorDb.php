@@ -64,12 +64,12 @@ class AuthorDb extends JPDb {
 			GROUP BY aut.id ORDER BY ".$this->getOrderSQL($order)." LIMIT ".JPDb::MAX_ITEMS_ON_PAGE." OFFSET ".$offset);
 	}
 	
-	protected function getOrderSQL($param) {
-		if (strlen($param) == 0) {
+	protected function getOrderSQL($order) {
+		if (strlen($order) == 0) {
 			return $this->getDefaultOrder();	
 		}	
 		
-		switch($param) {
+		switch($order) {
 			case "nazev":
 				return "prijmeni, jmeno";
 			case "pocet-objektu":

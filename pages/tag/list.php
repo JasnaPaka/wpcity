@@ -52,8 +52,7 @@
 					if ($row->skupina == null) {
 						print("<td></td>");
 					} else {
-						printf('<td><a href="admin.php?page=tagGroup&amp;action=view&amp;id=%d" 
-							title="Zobrazí detail skupiny">%s</a></td>', $row->skupina, $controller->getTagGroup()->nazev);
+						printf('<td>%s</td>', $controller->getTagGroup($row->skupina)->nazev);
 					}
 
 					printf ('<td><a href="admin.php?page=tag&amp;action=update&amp;id='.$row->id.'" title="Upraví štítek">Upravit</a>');

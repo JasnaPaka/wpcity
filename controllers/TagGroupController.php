@@ -123,5 +123,4 @@ class TagGroupController extends JPController
 	public function getShowAll() {
 		return true;
 	}
-
 }
