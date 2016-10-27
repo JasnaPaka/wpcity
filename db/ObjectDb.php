@@ -48,6 +48,14 @@ class ObjectDb extends JPDb
 		return $wpdb->get_results($sql);
 	}
 
+	public function getListByTag($idTag, $order = "", $withCanceled = false)
+	{
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT obj.* FROM " . $this->tableName . " obj INNER JOIN ". $this->dbPrefix ."objekt2stitek o2s ON o2s.objekt = obj.id WHERE o2s.stitek = %d AND obj.deleted = 0 AND obj.schvaleno = 1 " . ($withCanceled ? "" : "AND obj.zruseno = 0") . " ORDER BY " . $this->getOrderSQL($order), $idTag);
+		return $wpdb->get_results($sql);
+	}
+
 	public function getList($order = "", $withCanceled = false)
 	{
 		global $wpdb;

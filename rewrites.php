@@ -55,6 +55,10 @@ function rules()
 	add_rewrite_tag('%stahnout%', '([^/]*)');
 	add_rewrite_tag('%filtr%', '([^/]*)');
 
+	add_rewrite_rule('^stahnout/stitek/([^/]*)/?', 'index.php?stahnoutstitek=$matches[1]', 'top');
+	add_rewrite_tag('%stahnoutstitek%', '([^/]*)');
+	add_rewrite_tag('%filtr%', '([^/]*)');
+
 	add_rewrite_rule('^stahnout/vse/?', 'index.php?stahnoutvse=1', 'top');
 	add_rewrite_tag('%stahnoutvse%', '([^/]*)');
 	add_rewrite_tag('%filtr%', '([^/]*)');
@@ -78,9 +82,10 @@ function wpcity_plugin_display($template)
 	$mapawebu = (int)get_query_var('mapawebu');
 	$category_id = (int)get_query_var('kategorie');
 	$download_id = (int)get_query_var('stahnout');
+	$download_tag = (int)get_query_var('stahnoutstitek');
 	$download__all_id = (int)get_query_var('stahnoutvse');
 
-	if ($download_id > 0 || $download__all_id > 0) {
+	if ($download_id > 0 || $download__all_id > 0 || $download_tag > 0) {
 		$new_template = locate_template(array('page-stahnout.php'));
 		if ('' != $new_template) {
 			return $new_template;

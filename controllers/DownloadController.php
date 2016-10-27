@@ -3,6 +3,7 @@ $ROOT = plugin_dir_path(__FILE__) . "../";
 
 include_once $ROOT . "db/CategoryDb.php";
 include_once $ROOT . "db/ObjectDb.php";
+include_once $ROOT . "db/TagDb.php";
 
 include_once $ROOT . "fw/JPMessages.php";
 include_once $ROOT . "fw/JPController.php";
@@ -22,6 +23,7 @@ class DownloadController extends JPController
 	{
 		$this->dbObject = new ObjectDb();
 		$this->dbCategory = new CategoryDb();
+		$this->dbTag = new TagDb();
 	}
 
 	public function getStringId()
@@ -37,11 +39,16 @@ class DownloadController extends JPController
 		global $wp_query;
 
 		$category_id = (int)$wp_query->query_vars["stahnout"];
+		$tag_id = (int)$wp_query->query_vars["stahnoutstitek"];
 		$action = filter_input(INPUT_GET, "filtr", FILTER_SANITIZE_STRING);
 
 		$objects = array();
 		if ($category_id > 0) {
 			$category = $this->dbCategory->getById($category_id);
+		}
+
+		if ($tag_id > 0) {
+			$tag = $this->dbTag->getById($tag_id);
 		}
 
 		switch ($action) {
@@ -57,6 +64,8 @@ class DownloadController extends JPController
 			case "existujici":
 				if ($category != null) {
 					$objects = $this->dbObject->getListByCategory($category_id, "", false);
+				} else	if ($tag != null) {
+					$objects = $this->dbObject->getListByTag($tag_id, "", false);
 				} else {
 					$objects = $this->dbObject->getList("", false);
 				}
@@ -65,7 +74,9 @@ class DownloadController extends JPController
 
 				if ($category != null) {
 					$objects = $this->dbObject->getListByCategory($category_id, "", true);
-				} else {
+				} else if ($tag != null) {
+					$objects = $this->dbObject->getListByTag($tag_id, "", true);
+			}	else {
 					$objects = $this->dbObject->getAllPublic();
 				}
 				break;
@@ -80,12 +91,19 @@ class DownloadController extends JPController
 			$exporter->addPoi($object->latitude, $object->longitude, $object->nazev);
 		}
 
-		$exporter->download($this->getFilename($category_id, $action));
+		$exporter->download($this->getFilename($category_id, $tag_id, $action));
 	}
 
-	private function getFilename($category_id, $action)
+	private function getFilename($category_id, $tag_id, $action)
 	{
 		$date = "-".date("Y-m-d");
+
+		if ($category_id > 0) {
+			$category = $this->dbCategory->getById($category_id);
+		}
+		if ($tag_id > 0) {
+			$tag = $this->dbTag->getById($tag_id);
+		}
 
 		switch ($action) {
 			case "bezfotografie":
@@ -98,9 +116,10 @@ class DownloadController extends JPController
 				return "krizky-a-vetrelci-bez-fotografie-verejne".$date.".gpx";
 				break;
 			case "existujici":
-				$category = $this->dbCategory->getById($category_id);
 				if ($category != null) {
-					return "kv-kategorie-" . $this->getCategoryNameForFile($category->nazev) . "-existujici".$date.".gpx";
+					return "kv-kategorie-" . $this->getCategoryNameForFile($category->nazev) . "-existujici" . $date . ".gpx";
+				} if ($tag != null) {
+					return "kv-stitek-" . $this->getCategoryNameForFile($tag->nazev) . "-existujici" . $date . ".gpx";
 				} else {
 					return "krizky-a-vetrelci-existujici".$date.".gpx";
 				}
@@ -109,6 +128,8 @@ class DownloadController extends JPController
 				$category = $this->dbCategory->getById($category_id);
 				if ($category != null) {
 					return "kv-kategorie-" . $this->getCategoryNameForFile($category->nazev) .$date.".gpx";
+				} if ($tag != null) {
+					return "kv-stitek-" . $this->getCategoryNameForFile($tag->nazev) . $date . ".gpx";
 				} else {
 					return "krizky-a-vetrelci".$date.".gpx";
 				}
@@ -117,10 +138,10 @@ class DownloadController extends JPController
 	}
 
 	private function getCategoryNameForFile($name)
-	{
-		// TODO: Rozchodit časem implementaci. Zlobí diakritika.
-		//$name = iconv("utf-8", "us-ascii//TRANSLIT", $name);
-		$name = str_replace(" ", "-", $name);
-		return $name;
-	}
+{
+	// TODO: Rozchodit časem implementaci. Zlobí diakritika.
+	//$name = iconv("utf-8", "us-ascii//TRANSLIT", $name);
+	$name = str_replace(" ", "-", $name);
+	return $name;
+}
 }
