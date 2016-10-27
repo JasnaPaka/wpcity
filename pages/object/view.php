@@ -1,5 +1,6 @@
 <?php
 $ROOT = plugin_dir_path(__FILE__) . "../../";
+$ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
 $action = filter_input(INPUT_GET, "action", FILTER_SANITIZE_STRING);
 
@@ -40,8 +41,14 @@ $photos = $controller->getPhotosForObject();
 		<tbody>
 		<tr>
 			<th><strong>Souřadnice</strong></th>
-			<td><?php echo '<a href="https://maps.google.cz/maps?q=' . $row->latitude . ',' . $row->longitude . '" target="_blank">' .
-					$row->latitude . ', ' . $row->longitude . '</a>'; ?></td>
+			<td>
+				<?php echo '<a href="https://maps.google.cz/maps?q=' . $row->latitude . ',' . $row->longitude . '" target="_blank">' .
+					$row->latitude . ', ' . $row->longitude . '</a>'; ?>
+
+				<?php printf ('<a href="http://ikatastr.cz/#ilat=%s&ilon=%s&zoom=19&lat=%s&lon=%s" title="Pohled na iKatastr.cz"><img src="%s" /></a>',
+					$row->latitude, $row->longitude, $row->latitude, $row->longitude, $ROOT_URL."/content/images/ikatastr-16.png") ?>
+
+			</td>
 		</tr>
 		<tr>
 			<th><strong>Kategorie</strong></th>
