@@ -117,6 +117,15 @@ if (isset($_POST["submit"])) {
 				</td>
 			</tr>
 
+			<tr>
+				<th scope="row" valign="top"><label for="hledame">Hledáme</label></th>
+				<td>
+					<textarea id="hledame" name="hledame" rows="4"
+							  cols="40"><?php print($row->hledame) ?></textarea>
+					<p class="description">Dotaz na web, co hledáme (informace).</p>
+				</td>
+			</tr>
+
 			</tbody>
 		</table>
 

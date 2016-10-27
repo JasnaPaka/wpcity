@@ -20,6 +20,7 @@ class SettingController extends JPController
 	public static $SETTING_MAP_IMAGE = "obrazekMapy";
 	public static $SETTING_GOOGLE_SEACH = "vyhledavaniGoogleKlic";
 	public static $SETTING_CITY_API_URL = "webovaSluzbaCityURL";
+	public static $SETTING_REQUEST = "hledame";
 
 	private $dbSetting;
 
@@ -69,6 +70,7 @@ class SettingController extends JPController
 		$row->obrazekMapy = filter_input(INPUT_POST, SettingController::$SETTING_MAP_IMAGE, FILTER_SANITIZE_STRING);
 		$row->vyhledavaniGoogleKlic = filter_input(INPUT_POST, SettingController::$SETTING_GOOGLE_SEACH, FILTER_SANITIZE_STRING);
 		$row->webovaSluzbaCityURL = filter_input(INPUT_POST, SettingController::$SETTING_CITY_API_URL, FILTER_SANITIZE_STRING);
+		$row->hledame = $_POST[SettingController::$SETTING_REQUEST];
 
 		return $row;
 	}
@@ -106,6 +108,7 @@ class SettingController extends JPController
 			$this->nastaveni->obrazekMapy = $this->getSettingValue(SettingController::$SETTING_MAP_IMAGE);
 			$this->nastaveni->vyhledavaniGoogleKlic = $this->getSettingValue(SettingController::$SETTING_GOOGLE_SEACH);
 			$this->nastaveni->webovaSluzbaCityURL = $this->getSettingValue(SettingController::$SETTING_CITY_API_URL);
+			$this->nastaveni->hledame = $this->getSettingValue(SettingController::$SETTING_REQUEST);
 		}
 
 		return $this->nastaveni;
