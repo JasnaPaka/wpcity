@@ -152,7 +152,7 @@ $photos = $controller->getPhotosForObject();
 	<form method="post">
 		<p class="submit">
 			<a href="admin.php?page=object&amp;action=update&amp;id=<?php echo $row->id ?>"
-			   class="button button-primary">Upravit</a>
+			   class="button">Upravit</a>
 			<?php if ($row->schvaleno == 0) { ?>
 				<input name="approve" id="approve" class="button" value="Schválit" type="submit">
 			<?php } ?>
