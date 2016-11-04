@@ -1,4 +1,33 @@
 <script src="<?php echo $ROOT_URL ?>content/js/ckeditor4.4.2/ckeditor.js"></script>
+<script>
+    function getGeocode() {
+        var latitude = document.getElementById("latitude").value;
+        var longitude = document.getElementById("longitude").value;
+
+        if (latitude && longitude) {
+            var latlng = new google.maps.LatLng(parseFloat(latitude), parseFloat(longitude));
+
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'latLng': latlng},
+                function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var address = results[0].formatted_address;
+                        document.getElementById("adresa").value = address.split(",")[0];
+                    } else {
+                        alert("Získání adresy se nezdařilo (" + status + ").");
+                    }
+                });
+        }
+    }
+
+    function showGM() {
+        var adresa = document.getElementById("adresa").value;
+        if (adresa && adresa.length > 3) {
+            window.open("https://www.google.cz/maps?q=" + encodeURIComponent(adresa + ", Plzeň"),"_blank");
+        }
+    }
+
+</script>
 
 <?php echo $controller->getGoogleMapPointEditContent($row->latitude, $row->longitude); ?>
 
@@ -50,6 +79,8 @@
     <th scope="row"><label for="adresa">Adresa</label></th>
     <td>
         <input name="adresa" id="adresa" class="regular-text" type="text" value="<?php echo $row->adresa ?>" maxlength="250" />
+        <a href="#" onclick="getGeocode()" title="Navrhne adresu na základě GPS souřadnic" class="button">Navrhnout</a>
+        <a href="#" onclick="showGM()" title="Zobrazí adresu v mapě" class="button">Zobrazit v mapě</a>
         <p class="description">Konkrétní adresa místa, kde se dílo nachází.</p>
     </td>
 </tr>
