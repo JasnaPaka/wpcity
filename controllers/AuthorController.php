@@ -19,13 +19,14 @@ class AuthorController extends JPController {
         protected $dbCategory;
         private $dbObject2Tag;
 	private $dbSource;
-	
-	function __construct() {
-            $this->db = new AuthorDb();
-            $this->dbObject = new ObjectDb();
-            $this->dbSource = new SourceDb();
-            $this->dbCategory = new CategoryDb();
-            $this->dbObject2Tag = new Object2TagDb();
+
+	function __construct()
+	{
+		$this->db = new AuthorDb();
+		$this->dbObject = new ObjectDb();
+		$this->dbSource = new SourceDb();
+		$this->dbCategory = new CategoryDb();
+		$this->dbObject2Tag = new Object2TagDb();
 	}
 	
 	public function getList() {
@@ -92,6 +93,16 @@ class AuthorController extends JPController {
 		if ($row->datum_umrti != null && DateTime::createFromFormat('d. m. Y', $row->datum_umrti) == false 
 			&& DateTime::createFromFormat('Y-m-d', $row->datum_umrti) == false) {
 			array_push($this->messages, new JPErrorMessage("Datum umrtí není platným datem."));
+		}
+
+		// místo narození
+		if (strlen($row->misto_narozeni) > 250) {
+			array_push($this->messages, new JPErrorMessage("Místo narození nesmí mít více než 250 znaků."));
+		}
+
+		// místo umrtí
+		if (strlen($row->misto_umrti) > 250) {
+			array_push($this->messages, new JPErrorMessage("Místo úmrtí nesmí mít více než 250 znaků."));
 		}
 		
 		if (strlen($row->web) > 250) {
@@ -228,7 +239,9 @@ class AuthorController extends JPController {
 		$row->titul_za = filter_input (INPUT_POST, "titul_za", FILTER_SANITIZE_STRING);
 		$row->datum_narozeni = filter_input (INPUT_POST, "datum_narozeni", FILTER_SANITIZE_STRING);
 		$row->datum_umrti = filter_input (INPUT_POST, "datum_umrti", FILTER_SANITIZE_STRING);
-		$row->obsah = $_POST["editor"]; // TODO: sanitize 
+		$row->misto_narozeni = filter_input (INPUT_POST, "misto_narozeni", FILTER_SANITIZE_STRING);
+		$row->misto_umrti = filter_input (INPUT_POST, "misto_umrti", FILTER_SANITIZE_STRING);
+		$row->obsah = $_POST["editor"]; // TODO: sanitize
 		$row->web = filter_input (INPUT_POST, "web", FILTER_SANITIZE_STRING);
 		
 		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);
