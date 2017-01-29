@@ -275,6 +275,7 @@ class ObjectController extends JPController
 		$result = $this->validate($row);
 		if ($result) {
 			$row = $this->setAuthors($row);
+			$row->potreba_foto = 0;
 			$row->schvaleno = $public ? 0 : 1;
 			$result = $this->db->create($row);
 
@@ -829,6 +830,28 @@ class ObjectController extends JPController
 		}
 
 		return $newPhotos;
+	}
+
+	public function needPhoto()
+	{
+		$id = $this->getObjectFromUrl()->id;
+		if ($id == null) {
+			return null;
+		}
+
+		$this->db->updateNeedPhoto(1, $id);
+		array_push($this->messages, new JPInfoMessage('Byla nastavena potřeba přefotit dílo.'));
+	}
+
+	public function noNeedPhoto()
+	{
+		$id = $this->getObjectFromUrl()->id;
+		if ($id == null) {
+			return null;
+		}
+
+		$this->db->updateNeedPhoto(0, $id);
+		array_push($this->messages, new JPInfoMessage('Byla zrušena potřeba přefotit dílo.'));
 	}
 
 	public function delete()

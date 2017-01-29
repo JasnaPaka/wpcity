@@ -123,6 +123,7 @@ class ObjectDb extends JPDb
 			"interni" => $data->interni,
 			"rok_realizace" => $data->rok_realizace,
 			"rok_vzniku" => $data->rok_vzniku,
+			"rok_zaniku" => $data->rok_zaniku,
 			"prezdivka" => $data->prezdivka,
 			"material" => $data->material,
 			"pamatkova_ochrana" => $data->pamatkova_ochrana,
@@ -135,8 +136,7 @@ class ObjectDb extends JPDb
 			"zruseno" => ($data->zruseno ? 1 : 0),
 			"zpracovano" => ($data->zpracovano ? 1 : 0),
 			"pridano_osm" => ($data->pridano_osm ? 1 : 0),
-			"pridano_vv" => ($data->pridano_vv ? 1 : 0),
-			"rok_zaniku" => $data->rok_zaniku
+			"pridano_vv" => ($data->pridano_vv ? 1 : 0)
 		);
 
 		$types = array(
@@ -158,11 +158,25 @@ class ObjectDb extends JPDb
 			'%s',
 			'%s',
 			'%s',
+			'%s',
 			'%d',
 			'%d',
 			'%d',
 			'%d',
-			'%d',
+			'%d'
+		);
+
+		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
+	}
+
+	public function updateNeedPhoto($needPhoto, $id) {
+		global $wpdb;
+
+		$values = array(
+			"potreba_foto" => $needPhoto
+			);
+
+		$types = array(
 			'%s'
 		);
 

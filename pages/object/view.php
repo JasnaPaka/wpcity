@@ -12,6 +12,14 @@ if ($action === "location-update") {
 	$controller->updateLocation();
 }
 
+// atribut přefocení
+if ($action === "newphoto") {
+	$controller->needPhoto();
+}
+if ($action === "nonewphoto") {
+	$controller->noNeedPhoto();
+}
+
 // schválení objektu
 if (isset($_POST["approve"])) {
 	$row = $controller->approve();
@@ -266,6 +274,15 @@ $photos = $controller->getPhotosForObject();
 		<p class="submit">
 			<a href="admin.php?page=object&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat či
 				upravit fotografie</a>
+            <?php
+                if ($row->potreba_foto) {
+					printf('<a href="admin.php?page=object&amp;action=nonewphoto&amp;id=%d" 
+                        class="button">Už není potřeba přefotit</a>', $row->id);
+                } else {
+					printf('<a href="admin.php?page=object&amp;action=newphoto&amp;id=%d" 
+                        class="button">Potřeba přefotit</a>', $row->id);
+                }
+            ?>
 		</p>
 
 	<?php } ?>

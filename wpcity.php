@@ -146,9 +146,11 @@ function wpCityObjectPageCallback()
 			require_once("pages/object/poi-delete.php");
 			break;
 		case 'location-update':
-			// Aktualizace polohy proběhne při zobrazení view
+		case 'newphoto':
+		case 'nonewphoto':
 			require_once("pages/object/view.php");
 			break;
+
 		default:
 			require_once("pages/object/list.php");
 			break;
