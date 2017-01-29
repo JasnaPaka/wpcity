@@ -74,6 +74,12 @@ $photos = $controller->getPhotosForObject();
 				<td><?php echo $row->rok_vzniku ?></td>
 			</tr>
 		<?php } ?>
+		<?php if (strlen($row->rok_zaniku) > 0) { ?>
+            <tr>
+                <th><strong>Rok zániku</strong></th>
+                <td><?php echo $row->rok_zaniku ?></td>
+            </tr>
+		<?php } ?>
 		<?php if (strlen($row->prezdivka) > 0) { ?>
 			<tr>
 				<th><strong>Přezdívka</strong></th>

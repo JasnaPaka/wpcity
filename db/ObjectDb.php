@@ -135,7 +135,8 @@ class ObjectDb extends JPDb
 			"zruseno" => ($data->zruseno ? 1 : 0),
 			"zpracovano" => ($data->zpracovano ? 1 : 0),
 			"pridano_osm" => ($data->pridano_osm ? 1 : 0),
-			"pridano_vv" => ($data->pridano_vv ? 1 : 0)
+			"pridano_vv" => ($data->pridano_vv ? 1 : 0),
+			"rok_zaniku" => $data->rok_zaniku
 		);
 
 		$types = array(
@@ -161,7 +162,8 @@ class ObjectDb extends JPDb
 			'%d',
 			'%d',
 			'%d',
-			'%d'
+			'%d',
+			'%s'
 		);
 
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);

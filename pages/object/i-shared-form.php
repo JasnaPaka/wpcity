@@ -176,6 +176,15 @@
         <p class="description">Rok, kdy bylo dílo osazeno/odhaleno.</p>
     </td>
 </tr>
+
+<tr>
+    <th scope="row"><label for="rok_zaniku">Rok zániku</label></th>
+    <td>
+        <input name="rok_zaniku" id="rok_zaniku" class="regular-text" type="text" value="<?php echo $row->rok_zaniku ?>" maxlength="250" />
+        <p class="description">Rok, kdy dílo zaniklo.</p>
+    </td>
+</tr>
+
 <tr>
     <th scope="row"><label for="prezdivka">Přezdívka</label></th>
     <td><input name="prezdivka" id="prezdivka" class="regular-text" type="text" value="<?php echo $row->prezdivka ?>" maxlength="250" /></td>
