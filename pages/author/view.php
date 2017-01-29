@@ -16,20 +16,30 @@
 	<tbody>
 	<?php if (strlen ($row->datum_narozeni) > 0) { ?>
 		<tr>
-			<th><strong>Datum narození</strong></th>
-			<td><?php echo date_format(new DateTime($row->datum_narozeni), "d. m. Y") ?></td>
+			<th><strong>Narození</strong></th>
+			<td><?php
+                print date_format(new DateTime($row->datum_narozeni), "d. m. Y");
+                if (strlen($row->misto_narozeni)) {
+                    printf (' (%s)', $row->misto_narozeni);
+                }
+                ?></td>
 		</tr>
 	<?php } ?>
 	<?php if (strlen ($row->datum_umrti) > 0) { ?>
 		<tr>
-			<th><strong>Datum úmrtí</strong></th>
-			<td><?php echo date_format(new DateTime($row->datum_umrti), "d. m. Y") ?></td>
+			<th><strong>Úmrtí</strong></th>
+			<td><?php
+                print date_format(new DateTime($row->datum_umrti), "d. m. Y");
+				if (strlen($row->misto_umrti)) {
+					printf (' (%s)', $row->misto_umrti);
+				}
+                ?></td>
 		</tr>
 	<?php } ?>
 	<?php if (strlen ($row->web) > 0) { ?>
 		<tr>
 			<th><strong>Webová stránka</strong></th>
-			<td><a href="<?php printf ($row->web) ?>"><?php printf ($row->web) ?></a></td>
+			<td><a href="<?php print ($row->web) ?>"><?php print ($row->web) ?></a></td>
 		</tr>
 	<?php } ?>
 	</tbody>
