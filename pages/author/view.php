@@ -20,7 +20,7 @@
 			<td><?php
                 print date_format(new DateTime($row->datum_narozeni), "d. m. Y");
                 if (strlen($row->misto_narozeni)) {
-                    printf (' (%s)', $row->misto_narozeni);
+                    printf (', %s', $row->misto_narozeni);
                 }
                 ?></td>
 		</tr>
@@ -31,7 +31,7 @@
 			<td><?php
                 print date_format(new DateTime($row->datum_umrti), "d. m. Y");
 				if (strlen($row->misto_umrti)) {
-					printf (' (%s)', $row->misto_umrti);
+					printf (', %s', $row->misto_umrti);
 				}
                 ?></td>
 		</tr>
