@@ -14,6 +14,8 @@
 	<thead>
 		<tr>
 			<th>Název</th>
+            <th>Datum přidání</th>
+            <th>Autor příspěvku</th>
 		</tr>
 		
 <?php if ($controller->getCountKeSchvaleni() == 0) { ?>
@@ -28,15 +30,19 @@
 		$barva = true;
 		foreach ($rows as $row) {
 			if ($barva) {
-				echo '<tr class="alternate">';
+				print '<tr class="alternate">';
 				$barva = false;
 			} else {
-				echo '<tr>';
+				print '<tr>';
 				$barva = true;
 			}
 			
-			echo '<td><a href="admin.php?page=object&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->nazev.'</strong></a></td>';
-			echo '</tr>';
+			print '<td><a href="admin.php?page=object&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->nazev.'</strong></a></td>';
+
+			printf ('<td>%s</td>', date_format(new DateTime($row->pridal_datum), "d. m. Y"));
+			printf ('<td>%s</td>', $row->pridal_autor);
+
+			print '</tr>';
 					
 		}
 
