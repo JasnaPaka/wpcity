@@ -57,21 +57,71 @@
 	<td><input name="spoluprace2" id="spoluprace2" class="regular-text" type="text" value="<?php echo $cooperations[1]  ?>" maxlength="255" /></td>
 </tr>
 <tr>
-	<th scope="row"><label for="autor3">Autor č. 3</label></th>
-	<td>	
-		<select name="autor3">
-			<option value="0">(nezvoleno)</option>
+    <th scope="row"><label for="autor3">Autor č. 3</label></th>
+    <td>
+        <select name="autor3">
+            <option value="0">(nezvoleno)</option>
 			<?php foreach ($controller->getAllAuthors() as $author) { ?>
-				<option value="<?php echo $author->id ?>"
+                <option value="<?php echo $author->id ?>"
 					<?php if ($selectedAuthors[2] == $author->id) { echo 'selected="selected"'; } ?>>
 					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
-				</option>
+                </option>
 			<?php } ?>
-		</select>	
-	</td>
-	<th scope="row"><label for="spoluprace3">Forma spolupráce</label></th>
-	<td><input name="spoluprace3" id="spoluprace3" class="regular-text" type="text" value="<?php echo $cooperations[2]  ?>" maxlength="255" /></td>
+        </select>
+    </td>
+    <th scope="row"><label for="spoluprace3">Forma spolupráce</label></th>
+    <td><input name="spoluprace3" id="spoluprace3" class="regular-text" type="text" value="<?php echo $cooperations[2]  ?>" maxlength="255" /></td>
 </tr>
+
+<tr>
+    <th scope="row"><label for="autor4">Autor č. 4</label></th>
+    <td>
+        <select name="autor4">
+            <option value="0">(nezvoleno)</option>
+			<?php foreach ($controller->getAllAuthors() as $author) { ?>
+                <option value="<?php echo $author->id ?>"
+					<?php if ($selectedAuthors[3] == $author->id) { echo 'selected="selected"'; } ?>>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
+                </option>
+			<?php } ?>
+        </select>
+    </td>
+    <th scope="row"><label for="spoluprace4">Forma spolupráce</label></th>
+    <td><input name="spoluprace4" id="spoluprace4" class="regular-text" type="text" value="<?php echo $cooperations[3]  ?>" maxlength="255" /></td>
+</tr>
+<tr>
+    <th scope="row"><label for="autor5">Autor č. 5</label></th>
+    <td>
+        <select name="autor5">
+            <option value="0">(nezvoleno)</option>
+			<?php foreach ($controller->getAllAuthors() as $author) { ?>
+                <option value="<?php echo $author->id ?>"
+					<?php if ($selectedAuthors[4] == $author->id) { echo 'selected="selected"'; } ?>>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
+                </option>
+			<?php } ?>
+        </select>
+    </td>
+    <th scope="row"><label for="spoluprace5">Forma spolupráce</label></th>
+    <td><input name="spoluprace5" id="spoluprace5" class="regular-text" type="text" value="<?php echo $cooperations[4]  ?>" maxlength="255" /></td>
+</tr>
+<tr>
+    <th scope="row"><label for="autor3">Autor č. 6</label></th>
+    <td>
+        <select name="autor6">
+            <option value="0">(nezvoleno)</option>
+			<?php foreach ($controller->getAllAuthors() as $author) { ?>
+                <option value="<?php echo $author->id ?>"
+					<?php if ($selectedAuthors[5] == $author->id) { echo 'selected="selected"'; } ?>>
+					<?php echo $author->prijmeni ?> <?php echo $author->jmeno ?>
+                </option>
+			<?php } ?>
+        </select>
+    </td>
+    <th scope="row"><label for="spoluprace6">Forma spolupráce</label></th>
+    <td><input name="spoluprace6" id="spoluprace6" class="regular-text" type="text" value="<?php echo $cooperations[5]  ?>" maxlength="255" /></td>
+</tr>
+
 </tbody>
 </table>
 

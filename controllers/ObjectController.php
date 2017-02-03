@@ -994,7 +994,7 @@ class ObjectController extends JPController
 		}
 
 		// doplníme ty nevyplněné (prázdné)
-		for ($i = count($authors); $i < 3; $i++) {
+		for ($i = count($authors); $i < 6; $i++) {
 			array_push($authors, 0);
 		}
 
@@ -1025,7 +1025,7 @@ class ObjectController extends JPController
 		}
 
 		// doplníme ty nevyplněné (prázdné)
-		for ($i = count($cooperations); $i < 3; $i++) {
+		for ($i = count($cooperations); $i < 6; $i++) {
 			array_push($cooperations, "");
 		}
 
@@ -1112,6 +1112,9 @@ class ObjectController extends JPController
 		array_push($authors, (int)filter_input(INPUT_POST, "autor1", FILTER_SANITIZE_STRING));
 		array_push($authors, (int)filter_input(INPUT_POST, "autor2", FILTER_SANITIZE_STRING));
 		array_push($authors, (int)filter_input(INPUT_POST, "autor3", FILTER_SANITIZE_STRING));
+		array_push($authors, (int)filter_input(INPUT_POST, "autor4", FILTER_SANITIZE_STRING));
+		array_push($authors, (int)filter_input(INPUT_POST, "autor5", FILTER_SANITIZE_STRING));
+		array_push($authors, (int)filter_input(INPUT_POST, "autor6", FILTER_SANITIZE_STRING));
 
 		return $authors;
 	}
@@ -1123,6 +1126,10 @@ class ObjectController extends JPController
 		array_push($cooperations, filter_input(INPUT_POST, "spoluprace1", FILTER_SANITIZE_STRING));
 		array_push($cooperations, filter_input(INPUT_POST, "spoluprace2", FILTER_SANITIZE_STRING));
 		array_push($cooperations, filter_input(INPUT_POST, "spoluprace3", FILTER_SANITIZE_STRING));
+		array_push($cooperations, filter_input(INPUT_POST, "spoluprace4", FILTER_SANITIZE_STRING));
+		array_push($cooperations, filter_input(INPUT_POST, "spoluprace5", FILTER_SANITIZE_STRING));
+		array_push($cooperations, filter_input(INPUT_POST, "spoluprace6", FILTER_SANITIZE_STRING));
+
 
 		return $cooperations;
 	}
