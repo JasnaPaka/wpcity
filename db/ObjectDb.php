@@ -70,9 +70,12 @@ class ObjectDb extends JPDb
 
 		$iZruseneStr = $iZrusene ? " " : "AND kv.zruseno = 0";
 
-		$sql = $wpdb->prepare("SELECT DISTINCT kv.*, fot.img_512 as img_512, fot.skryta as skryta FROM " . $this->tableName . " kv INNER JOIN " . $this->dbPrefix . "objekt2autor o2a ON kv.id = o2a.objekt
+		$sql = $wpdb->prepare("SELECT DISTINCT kv.*, 
+						(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+						(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta 
+						 FROM " . $this->tableName . " kv INNER JOIN " . $this->dbPrefix . "objekt2autor o2a ON kv.id = o2a.objekt
                     LEFT JOIN " . $this->dbPrefix . "fotografie fot ON fot.objekt = kv.id
-                    WHERE o2a.autor = %d AND kv.deleted = 0 AND o2a.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND kv.schvaleno = 1 " . $iZruseneStr . " AND (fot.primarni IS NULL OR fot.primarni = 1) ORDER BY kv.nazev", $idAuthor);
+                    WHERE o2a.autor = %d AND kv.deleted = 0 AND o2a.deleted = 0 AND kv.schvaleno = 1 " . $iZruseneStr . " ORDER BY kv.nazev", $idAuthor);
 
 		return $wpdb->get_results($sql);
 	}
@@ -314,30 +317,39 @@ class ObjectDb extends JPDb
 		}
 
 		if ($search != null) {
-			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
+			$sql = $wpdb->prepare("SELECT DISTINCT obj.id, obj.nazev,  
+							(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+							(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta, 
+							kat.nazev as katnazev,  kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
                             LEFT JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                             INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
-                            WHERE obj.nazev LIKE %s AND (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ORDER BY obj.nazev",
+                            WHERE obj.nazev LIKE %s AND obj.deleted = 0 AND obj.schvaleno = 1 ORDER BY obj.nazev",
 				"%" . $search . "%");
 
 			return $wpdb->get_results($sql);
 		}
 
 		if ($tag != null) {
-			$sql = $wpdb->prepare("SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
+			$sql = $wpdb->prepare("SELECT DISTINCT obj.id, obj.nazev, 
+					(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+					(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta, 
+					kat.nazev as katnazev, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
                     LEFT JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                     INNER JOIN " . $this->dbPrefix . "objekt2stitek o2s ON o2s.objekt = obj.id
                     INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
-                    WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1
+                    WHERE obj.deleted = 0 AND obj.schvaleno = 1
                             AND o2s.stitek = %d ORDER BY obj.nazev", $tag->id);
 
 			return $wpdb->get_results($sql);
 		}
 
-		$sql = "SELECT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
+		$sql = "SELECT DISTINCT obj.id, obj.nazev, 
+					(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+					(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta, 
+					 kat.nazev as katnazev, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
                     LEFT JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                     INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
-                    WHERE (fot.primarni = 1 OR fot.primarni IS NULL) AND obj.deleted = 0 AND (fot.deleted = 0 OR fot.deleted IS NULL) AND obj.schvaleno = 1 ";
+                    WHERE obj.deleted = 0 AND obj.schvaleno = 1 ";
 
 		if ($category != null) {
 			$sql = $sql . "AND kat.id = %d ";
@@ -361,7 +373,10 @@ class ObjectDb extends JPDb
 	{
 		global $wpdb;
 
-		$sql = "SELECT DISTINCT obj.id, obj.nazev, fot.img_512, kat.nazev as katnazev, fot.skryta as skryta, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
+		$sql = "SELECT DISTINCT obj.id, obj.nazev, 
+					(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+					(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta,
+					kat.nazev as katnazev, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
                     LEFT JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                     LEFT JOIN " . $this->dbPrefix . "objekt2autor o2a ON obj.id = o2a.objekt
                     INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
