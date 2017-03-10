@@ -16,9 +16,9 @@ class AuthorDb extends JPDb {
 		global $wpdb;
 		
 		$sql = "UPDATE ".$this->tableName." SET jmeno = %s, prijmeni = %s, titul_pred = %s, titul_za = %s, 
-			obsah = %s, zpracovano = %d, web = %s, misto_narozeni = %s, misto_umrti = %s WHERE id = %d";
+			obsah = %s, interni = %s, zpracovano = %d, web = %s, misto_narozeni = %s, misto_umrti = %s WHERE id = %d";
 		$sql = $wpdb->prepare($sql, $data->jmeno, $data->prijmeni, $data->titul_pred, $data->titul_za,
-			$data->obsah, $data->zpracovano, $data->web, $data->misto_narozeni, $data->misto_umrti, $id);
+			$data->obsah, $data->interni, $data->zpracovano, $data->web, $data->misto_narozeni, $data->misto_umrti, $id);
 		$result = $wpdb->query($sql);
 		
 		// aktualizace data narození
@@ -108,7 +108,7 @@ class AuthorDb extends JPDb {
 		if ($search != null) {
 				$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." aut WHERE deleted = 0 AND 
 					((CONCAT (aut.prijmeni, ' ', aut.jmeno) LIKE %s OR CONCAT (aut.jmeno, ' ', aut.prijmeni) LIKE %s)) 
-					ORDER BY ".$this->getOrderSQL($order), "%".$search."%", "%".$search."%");
+					ORDER BY ".$this->getOrderSQL(null), "%".$search."%", "%".$search."%");
 				return $wpdb->get_results($sql);
 		} 
 		

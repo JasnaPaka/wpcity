@@ -63,7 +63,15 @@ class CollectionController extends JPController {
 		
 		$row->nazev = filter_input (INPUT_POST, "nazev", FILTER_SANITIZE_STRING);
 		$row->latitude = (double) filter_input (INPUT_POST, "latitude", FILTER_SANITIZE_STRING);
+		if ($row->latitude == 0) {
+			$row->latitude = null;
+		}
+
 		$row->longitude = (double) filter_input (INPUT_POST, "longitude", FILTER_SANITIZE_STRING);
+		if ($row->longitude == 0) {
+			$row->longitude = null;
+		}
+
 		$row->popis = filter_input (INPUT_POST, "popis", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize 
 		$row->interni = $_POST["interni"]; // TODO: sanitize
@@ -86,12 +94,12 @@ class CollectionController extends JPController {
 		}
 
 		// latitude
-		if (!GPSUtils::getIsValidLatitude($row->latitude)) {
+		if (strlen($row->latitude) > 0 && !GPSUtils::getIsValidLatitude($row->latitude)) {
 			array_push($this->messages, new JPErrorMessage("Neplatná latitude u GPS souřadnice."));
 		}
 		
 		// longitude
-		if (!GPSUtils::getIsValidLongitude($row->longitude)) {
+		if (strlen($row->longitude) > 0 && !GPSUtils::getIsValidLongitude($row->longitude)) {
 			array_push($this->messages, new JPErrorMessage("Neplatná longitude u GPS souřadnice."));
 		}
 		
@@ -218,6 +226,11 @@ class CollectionController extends JPController {
 	
 	public function getImgForCollection($idCollection) {
 		return $this->dbObject2Collection->getImgForCollection($idCollection);
+	}
+
+	public function getCoordinatesExists() {
+		$obj = $this->getObjectFromUrl();
+		return (strlen($obj->latitude) != null && strlen($obj->longitude) != null);
 	}
 		
 }

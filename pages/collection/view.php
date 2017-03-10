@@ -9,7 +9,8 @@
 
 <div class="wrap">
 
-<h2>Soubor děl '<?php echo $row->nazev ?>' &nbsp;&nbsp;<a href="/katalog/soubor/<?php echo $row->id ?>/" class="button">Detail souboru děl</a></h2>
+<h2>Soubor děl '<?php echo $row->nazev ?>'
+    <a href="/katalog/soubor/<?php echo $row->id ?>/" class="button">Detail souboru děl</a></h2>
 
 
 <?php include_once $ROOT."fw/templates/messages.php"; ?>
@@ -17,9 +18,13 @@
 <table class="widefat" style="max-width: 500px">
 <tbody>
 	<tr>
-		<th><strong>Souřadnice</strong></th>
-		<td><?php echo '<a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
-						$row->latitude.', '.$row->longitude.'</a>'; ?></td>
+        <th><strong>Souřadnice</strong></th>
+		<?php if ($controller->getCoordinatesExists()) { ?>
+            <td><?php echo '<a href="https://maps.google.cz/maps?q='.$row->latitude.','.$row->longitude.'" target="_blank">'.
+                            $row->latitude.', '.$row->longitude.'</a>'; ?></td>
+		<?php } else { ?>
+            <td><em>(nejsou zadány)</em></td>
+		<?php } ?>
 	</tr>	
 	<tr>
 		<th><strong>Zpracován text</strong></th>
@@ -30,7 +35,11 @@
 </table>
 
 <br />
-<?php echo $controller->getGoogleMapPointContent($row->latitude, $row->longitude); ?>
+<?php
+    if ($controller->getCoordinatesExists()) {
+        print $controller->getGoogleMapPointContent($row->latitude, $row->longitude);
+    }
+?>
 
 <?php if (strlen($row->popis) > 0) { ?>
 

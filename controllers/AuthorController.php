@@ -242,6 +242,7 @@ class AuthorController extends JPController {
 		$row->misto_narozeni = filter_input (INPUT_POST, "misto_narozeni", FILTER_SANITIZE_STRING);
 		$row->misto_umrti = filter_input (INPUT_POST, "misto_umrti", FILTER_SANITIZE_STRING);
 		$row->obsah = $_POST["editor"]; // TODO: sanitize
+		$row->interni = $_POST["interni"]; // TODO: sanitize
 		$row->web = filter_input (INPUT_POST, "web", FILTER_SANITIZE_STRING);
 		
 		$row->zpracovano = filter_input (INPUT_POST, "zpracovano", FILTER_SANITIZE_STRING);

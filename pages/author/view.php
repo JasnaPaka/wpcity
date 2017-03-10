@@ -56,6 +56,16 @@
 
 <?php } ?>
 
+<?php if (strlen($row->interni) > 1) { ?>
+
+    <h3>Interní poznámka</h3>
+
+    <div class="content-width">
+        <?php echo stripslashes($row->interni) ?>
+    </div>
+
+<?php } ?>
+
 <h3>Díla</h3>
 
 <table class="wp-list-table widefat fixed posts">
