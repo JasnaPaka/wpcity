@@ -482,10 +482,29 @@ class ObjectDb extends JPDb
 		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE deleted = 0 AND schvaleno = 1 ORDER BY " . $this->getOrderSQL($order));
 	}
 
+	/**
+	 * Vrátí díla, která nemají vyplněnu městskou část či část obce.
+	 *
+	 * @param string $order
+	 * @return mixed
+	 */
 	public function getObjectsWithoutLocation($order = "")
 	{
 		global $wpdb;
 
 		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE (length(mestska_cast) = 0 OR length(oblast) = 0) AND deleted = 0 ORDER BY " . $this->getOrderSQL($order));
 	}
+
+	/**
+	 * Vrátí seznam existujících a schválených objektů, které mají nahránu primární fotografii.
+	 */
+	public function getObjectsWithPrimaryPhoto() {
+		global $wpdb;
+
+		return $wpdb->get_results("SELECT obj.*, fot.img_original FROM " . $this->tableName . " obj INNER JOIN ". $this->dbPrefix ."fotografie fot 
+		ON fot.objekt = obj.id WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND fot.primarni = 1 AND fot.skryta = 0 AND fot.deleted = 0
+		ORDER BY obj.id");
+	}
+
+
 }

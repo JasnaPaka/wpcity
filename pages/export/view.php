@@ -10,13 +10,20 @@
 
 <h2>Export</h2>
 
+    <p>Exporty ve formátu CSV lze snadno vizualizovat pomocí <a href="http://www.gpsvisualizer.com/map_input?form=google">GPSVisualiser</a>.
+    </p>
+
 <dt>
 	<dl>
-		<a href="admin.php?page=export&amp;action=nophotos">Export CSV s objekty bez fotek</a>
-		(<a href="admin.php?page=export&amp;action=nophotosPublic">pouze veřejné</a>)
-	</dl>
-	<dd>Provede export CSV s objekty bez fotografií tak, aby pomocí výstupu šla snadno vygenerovat
-		mapa pomocí <a href="http://www.gpsvisualizer.com/map_input?form=google">GPSVisualiser</a>.</dd>
+        <a href="admin.php?page=export&amp;action=nophotos">Export CSV s objekty bez fotek</a>
+        (<a href="admin.php?page=export&amp;action=nophotosPublic">pouze veřejné</a>)
+    </dl>
+    <dd>Provede export CSV s objekty bez fotografií.</dd>
+
+    <dl>
+        <a href="admin.php?page=export&amp;action=newPhotoRequired">Export CSV s díly na přefocení</a>
+    </dl>
+    <dd>Provede export CSV s objekty s fotografiemi, které jsou na výšku a je potřeba je přefotit.</dd>
 </dt>
 
 <h3>Export kategorií do CSV</h3>
@@ -55,13 +62,5 @@ mapa pomocí <a href="http://www.gpsvisualizer.com/map_input?form=google">GPSVis
 <?php
 	}
 ?>
-
-<h3>Servisní akce</h3>
-
-<dt>
-	<dl><a href="admin.php?page=export&amp;action=importadres">Nastavení městských částí a čtvrtí</a></dl>
-	<dd>Provede nastavení městských částí a čtvrtí na základě údajů z Google Geocode, pokud nejsou údaje vyplněny.
-		Nastaví najednou max. 200 děl.</dd>
-</dt>
 
 </div>

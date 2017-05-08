@@ -74,6 +74,9 @@ class ExportController extends JPController
 			case "importadres":
 				$this->importadres();
 				break;
+			case "newPhotoRequired":
+				$this->newPhotoRequired();
+				break;
 			default:
 				if (strpos($this->getAction(), "category") == 0) {
 					$id = str_replace($this->getAction(), "category", "");
@@ -284,6 +287,41 @@ class ExportController extends JPController
 		} else {
 			return "\"" . $str . "\"";
 		}
+	}
+
+	public function newPhotoRequired() {
+		global $wpdb;
+		$separator = ",";
+
+		putenv('TMPDIR=' . getenv('TMPDIR'));
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni";
+
+		$file = fopen($tmpName, 'w');
+
+		fwrite($file, "name" . $separator . "latitude" . $separator . "longitude\n");
+
+		foreach ($this->dbObject->getObjectsWithPrimaryPhoto() as $obj) {
+			$path = ABSPATH . "wp-content/uploads/sites/" . $wpdb->blogid . $obj->img_original;
+			if (!file_exists($path)) {
+				continue;
+			}
+
+			$info = getimagesize($path);
+			if (!$info) {
+				continue;
+			}
+
+			if ($info[1] > $info[0]) {
+				$str = $this->printString($obj->nazev) . $separator . $obj->latitude . $separator . $obj->longitude . "\n";
+				fwrite($file, $str);
+			}
+
+		}
+
+		fclose($file);
+
+		$nazev = "objekty-prefoceni.csv";
+		$this->download($tmpName, $nazev);
 	}
 
 }
