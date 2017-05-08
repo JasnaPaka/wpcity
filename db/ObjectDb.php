@@ -502,7 +502,7 @@ class ObjectDb extends JPDb
 		global $wpdb;
 
 		return $wpdb->get_results("SELECT obj.*, fot.img_original FROM " . $this->tableName . " obj INNER JOIN ". $this->dbPrefix ."fotografie fot 
-		ON fot.objekt = obj.id WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND fot.primarni = 1 AND fot.skryta = 0 AND fot.deleted = 0
+		ON fot.objekt = obj.id WHERE obj.deleted = 0 AND obj.schvaleno = 1 AND obj.zruseno = 0 AND fot.primarni = 1 AND fot.skryta = 0 AND fot.deleted = 0
 		ORDER BY obj.id");
 	}
 
