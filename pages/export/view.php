@@ -21,9 +21,14 @@
     <dd>Provede export CSV s objekty bez fotografií.</dd>
 
     <dl>
-        <a href="admin.php?page=export&amp;action=newPhotoRequired">Export CSV s díly na přefocení</a>
+        <a href="admin.php?page=export&amp;action=newPhotoRequired">Export CSV s díly focenými na výšku</a>
     </dl>
     <dd>Provede export CSV s objekty s fotografiemi, které jsou na výšku a je potřeba je přefotit.</dd>
+
+    <dl>
+        <a href="admin.php?page=export&amp;action=newPhotoRequired2">Export CSV s díly na přefocení</a>
+    </dl>
+    <dd>Provede export CSV s objekty s fotografiemi, které nemají odpovídající kvalitu a je potřeba je přefotit.</dd>
 </dt>
 
 <h3>Export kategorií do CSV</h3>

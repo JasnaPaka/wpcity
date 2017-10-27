@@ -77,6 +77,9 @@ class ExportController extends JPController
 			case "newPhotoRequired":
 				$this->newPhotoRequired();
 				break;
+			case "newPhotoRequired2":
+				$this->newPhotoRequired2();
+				break;
 			default:
 				if (strpos($this->getAction(), "category") == 0) {
 					$id = str_replace($this->getAction(), "category", "");
@@ -289,12 +292,15 @@ class ExportController extends JPController
 		}
 	}
 
+	/**
+	 * Exportuje do CSV díla, kde je hlavní fotografie na výšku.
+	 */
 	public function newPhotoRequired() {
 		global $wpdb;
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku";
 
 		$file = fopen($tmpName, 'w');
 
@@ -316,6 +322,31 @@ class ExportController extends JPController
 				fwrite($file, $str);
 			}
 
+		}
+
+		fclose($file);
+
+		$nazev = "objekty-foto-na-vysku.csv";
+		$this->download($tmpName, $nazev);
+	}
+
+	/**
+	 * Exportuje do CSV díla, která jsou označena na přefocení.
+	 */
+	public function newPhotoRequired2() {
+		global $wpdb;
+		$separator = ",";
+
+		putenv('TMPDIR=' . getenv('TMPDIR'));
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni";
+
+		$file = fopen($tmpName, 'w');
+
+		fwrite($file, "name" . $separator . "latitude" . $separator . "longitude\n");
+
+		foreach ($this->dbObject->getObjectsNeedNewPhoto() as $obj) {
+			$str = $this->printString($obj->nazev) . $separator . $obj->latitude . $separator . $obj->longitude . "\n";
+			fwrite($file, $str);
 		}
 
 		fclose($file);
