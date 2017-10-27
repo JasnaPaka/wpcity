@@ -92,7 +92,7 @@ class ObjectController extends JPController
 		}
 
 		if (!$this->getSearchValueValid()) {
-			return parent::getCount();
+			return $this->db->getCount(true);
 		}
 
 		return $this->db->getCountByNazev($this->getSearchValue());

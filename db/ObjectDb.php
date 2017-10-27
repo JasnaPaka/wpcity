@@ -108,7 +108,8 @@ class ObjectDb extends JPDb
 	{
 		global $wpdb;
 
-		$sql = $wpdb->prepare("SELECT count(*) FROM " . $this->tableName . " WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 AND zruseno = 0", '%' . $nazev . '%');
+		$sql = $wpdb->prepare("SELECT count(*) FROM " . $this->tableName . " 
+			WHERE nazev LIKE %s AND deleted = 0 AND schvaleno = 1 AND zruseno = 0", '%' . $nazev . '%');
 		return $wpdb->get_var($sql);
 	}
 
@@ -506,5 +507,21 @@ class ObjectDb extends JPDb
 		ORDER BY obj.id");
 	}
 
+	public function getObjectsNeedNewPhoto()
+	{
+		global $wpdb;
+
+		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE potreba_foto = 1 AND deleted = 0 ORDER BY " . $this->getOrderSQL());
+	}
+
+	public function getCount($justAgreed) {
+		global $wpdb;
+
+		if (!$justAgreed) {
+			return parent::getCount();
+		}
+
+		return $wpdb->get_var ("SELECT count(*) FROM ".$this->tableName." WHERE deleted = 0 AND schvaleno = 1");
+	}
 
 }
