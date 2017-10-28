@@ -119,8 +119,8 @@ class ObjectController extends JPController
 	private function validate($row)
 	{
 		// název
-		if (strlen($row->nazev) < 3 || strlen($row->nazev) > 250) {
-			array_push($this->messages, new JPErrorMessage("Název objektu musí mít min. 3 a nejvíce 250 znaků."));
+		if (strlen(trim($row->nazev)) < 1 || strlen(trim($row->nazev)) > 250) {
+			array_push($this->messages, new JPErrorMessage("Název objektu musí mít min. 1 a nejvíce 250 znaků."));
 		}
 
 		// latitude
