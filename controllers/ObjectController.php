@@ -92,7 +92,7 @@ class ObjectController extends JPController
 		}
 
 		if (!$this->getSearchValueValid()) {
-			return $this->db->getCount(true);
+			return $this->db->getCountAgreed();
 		}
 
 		return $this->db->getCountByNazev($this->getSearchValue());
@@ -572,9 +572,9 @@ class ObjectController extends JPController
 				}
 
 				if (isset($source->id)) {
-					$result = $this->dbSource->update($source, $source->id, true);
+					$result = $this->dbSource->updateWithObject($source, $source->id, true);
 				} else {
-					$result = $this->dbSource->create($source, true);
+					$result = $this->dbSource->createWithObject($source, true);
 				}
 			}
 

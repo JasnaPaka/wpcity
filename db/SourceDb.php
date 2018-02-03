@@ -31,7 +31,7 @@ class SourceDb extends JPDb {
 		return $wpdb->get_results ($sql); 
 	}
 	
-	public function update($data, $id, $isObject) {
+	public function updateWithObject($data, $id, $isObject) {
 		global $wpdb;
 		
 		$values = array (
@@ -62,7 +62,7 @@ class SourceDb extends JPDb {
 		$wpdb->print_error();
 	}	
 	
-	public function create($data, $isObject) {
+	public function createWithObject($data, $isObject) {
 		global $wpdb;
 		
 		$values = array (

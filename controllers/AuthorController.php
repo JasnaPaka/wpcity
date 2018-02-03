@@ -396,9 +396,9 @@ class AuthorController extends JPController {
 				}
 				
 				if (isset($source->id)) {
-					$result = $this->dbSource->update($source, $source->id, false);
+					$result = $this->dbSource->updateWithObject($source, $source->id, false);
 				} else {
-					$result = $this->dbSource->create($source, false);
+					$result = $this->dbSource->createWithObject($source, false);
 				}
 			}
 			
