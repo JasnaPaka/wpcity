@@ -375,8 +375,8 @@ class ObjectDb extends JPDb
 		global $wpdb;
 
 		$sql = "SELECT DISTINCT obj.id, obj.nazev, 
-					(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
-					(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = kv.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta,
+					(SELECT img_512 FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as img_512,
+					(SELECT skryta FROM " . $this->dbPrefix . "fotografie fot_obj WHERE fot_obj.objekt = obj.id AND (primarni IS NULL OR primarni = 1) AND (deleted = 0 OR deleted IS NULL)) as skryta,
 					kat.nazev as katnazev, kat.id as kategorie, obj.zruseno as zruseno FROM " . $this->tableName . " obj
                     LEFT JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
                     LEFT JOIN " . $this->dbPrefix . "objekt2autor o2a ON obj.id = o2a.objekt
