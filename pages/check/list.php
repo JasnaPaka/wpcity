@@ -59,5 +59,8 @@
 	</tbody>
 </table>
 
+<p class="submit">
+    <a href="admin.php?page=check&amp;action=monuments" class="button">Wikidata (památky)</a>
+</p>
 
 </div>

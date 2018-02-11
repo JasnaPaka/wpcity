@@ -317,6 +317,9 @@ function wpCityCheckPageCallback()
 		case "material":
 			require_once("pages/check/material.php");
 			break;
+		case "monuments":
+			require_once("pages/check/monuments.php");
+			break;
 		default:
 			require_once("pages/check/list.php");
 			break;

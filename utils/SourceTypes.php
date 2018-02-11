@@ -23,11 +23,11 @@ class SourceTypes
 				"%s na serveru Wikidata", "https://www.wikidata.org/wiki/%s"),
 			new SourceType(self::CODE_PAMATKOVY_KATALOG, "Památkový katalog",
 				"%s v Památkovém katalogu",
-				"http://pamatkovykatalog.cz?element=%s&action=element&presenter=ElementsResults", true),
+				"http://pamatkovykatalog.cz/?mode=parametric&presenter=ElementsResults&catalogNumber=%s", true),
 			new SourceType(self::CODE_CS_WIKI, "Česká Wikipedie",
 				"%s na České Wikipedii",null, true),
 			new SourceType(self::CODE_MONUMNET, "Monumnet",
-				"%s na Monumnetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true)
+				"%s na MonumNetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true)
 		);
 	}
 

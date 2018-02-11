@@ -56,6 +56,14 @@ class ObjectDb extends JPDb
 		return $wpdb->get_results($sql);
 	}
 
+	public function getListByPamatkovaOchrana($order = "")
+	{
+		global $wpdb;
+
+		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " 
+			WHERE deleted = 0 AND length(pamatkova_ochrana) > 2 ORDER BY " . $this->getOrderSQL($order));
+	}
+
 	public function getList($order = "", $withCanceled = false)
 	{
 		global $wpdb;
