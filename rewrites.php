@@ -4,6 +4,7 @@ $ROOT = plugin_dir_path(__FILE__);
 
 include_once $ROOT . "controllers/DownloadController.php";
 include_once $ROOT . "controllers/ObjectController.php";
+include_once $ROOT . "controllers/AuthorController.php";
 include_once $ROOT . "controllers/CategoryController.php";
 include_once $ROOT . "controllers/AuthorController.php";
 include_once $ROOT . "controllers/TagController.php";
@@ -174,7 +175,10 @@ function kv_object_info()
 	$obj->fotografiePrim = $oc->getPhotosForObjectMain();
 	$obj->fotografieNotPrim = $oc->getPhotosForObjectNotMain();
 	$obj->mapa = $oc->getGoogleMapPointContent($obj->latitude, $obj->longitude);
-	$obj->zdroje = $oc->getSourcesForObject();
+	$obj->zdroje = $oc->getSystemSourcesForObject();
+	foreach ($oc->getSourcesForObject() as $source) {
+		$obj->zdroje[] = $source;
+	}
 
 	return $obj;
 }
@@ -228,7 +232,12 @@ function kv_collection_objects()
 function kv_author_sources()
 {
 	$ac = new AuthorController();
-	return $ac->getSourcesForAuthor();
+	$sources = $ac->getSystemSourcesForAuthor();
+	foreach ($ac->getSourcesForAuthor() as $source) {
+		$sources[] = $source;
+	}
+
+	return $sources;
 }
 
 function kv_autor_seznam()
@@ -300,6 +309,11 @@ function kv_soubor_controller()
 function kv_object_controller()
 {
 	return new ObjectController();
+}
+
+function kv_author_controller()
+{
+	return new AuthorController();
 }
 
 function kv_download_controller()

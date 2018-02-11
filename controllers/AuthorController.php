@@ -9,6 +9,9 @@ include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/SourceDb.php";
 include_once $ROOT."db/CategoryDb.php";
 
+include_once $ROOT."utils/SourceType.php";
+include_once $ROOT."utils/SourceTypes.php";
+
 /**
  * Správa autorů
  */
@@ -252,9 +255,13 @@ class AuthorController extends JPController {
 
 	public function getObjectId() {
 		global $wp_query;
-		
-		$id = (int) $wp_query->query_vars['autor'];
-		if ($id == null) {
+
+		if (isset($wp_query->query_vars['autor'])) {
+			$id = (int)$wp_query->query_vars['autor'];
+			if ($id == null) {
+				return parent::getObjectId();
+			}
+		} else {
 			return parent::getObjectId();
 		}
 		
@@ -317,7 +324,7 @@ class AuthorController extends JPController {
 			return null;
 		}
 		
-		return $this->dbSource->getSourcesForAuthor($this->getObjectId());	
+		return $this->dbSource->getSourcesForAuthor($this->getObjectId());
 	}
 	
 	public function getCatalogPage($page, $search) {
@@ -342,11 +349,13 @@ class AuthorController extends JPController {
 				if ($id > 0) {
 					$source->id = $id;	
 				}
-				
+
+				$source->typ = filter_input(INPUT_POST, "typ" . $value, FILTER_SANITIZE_STRING);
+				$source->identifikator = filter_input(INPUT_POST, "identifikator" . $value, FILTER_SANITIZE_STRING);
+
 				$source->nazev = filter_input (INPUT_POST, "nazev".$value, FILTER_SANITIZE_STRING);
 				$source->url = filter_input (INPUT_POST, "url".$value, FILTER_SANITIZE_STRING);
-				$source->isbn = filter_input (INPUT_POST, "isbn".$value, FILTER_SANITIZE_STRING);
-				
+
 				$source->cerpano = filter_input (INPUT_POST, "cerpano".$value, FILTER_SANITIZE_STRING);
 				$source->cerpano = ($source->cerpano === "on" ? 1 : 0);
 
@@ -365,11 +374,8 @@ class AuthorController extends JPController {
 	private function validateSources($sources) {
 		
 		foreach ($sources as $source) {
-			if (isset($source->id) && strlen($source->nazev) == 0 && !$source->deleted) {
-				array_push($this->messages, new JPErrorMessage("Každý zdroj, který byl dříve uložen, musí mít vyplněný název nebo být označen pro smazání."));
-			}
-			if (!isset($source->id) && strlen($source->nazev) == 0 && (strlen($source->url) > 0 || strlen ($source->isbn) > 0)) {
-				array_push($this->messages, new JPErrorMessage("Každý zdroj, který má zadáno URL či ISBN, musí mít i název."));
+			if (!isset($source->id) && strlen($source->nazev) == 0 && strlen($source->url) > 0) {
+				array_push($this->messages, new JPErrorMessage("Každý zdroj, který má zadáno URL, musí mít i název."));
 			}
 		}
 		
@@ -380,14 +386,14 @@ class AuthorController extends JPController {
 		$sources = $this->getFormSourcesValues();
 		
 		if (count($sources) == 0) {
-			return $this.getSelectedSources();	
+			return $this->getSelectedSources();
 		}
 		
 		$result = $this->validateSources($sources);
 		if ($result) {
 			foreach ($sources as $source) {
-				if (strlen($source->nazev) == 0) {
-					continue;	
+				if (strlen($source->typ) == 0 && strlen($source->nazev) == 0) {
+					continue;
 				}
 				
 				if (isset($source->id)) {
@@ -395,6 +401,11 @@ class AuthorController extends JPController {
 				} else {
 					$result = $this->dbSource->createWithObject($source, false);
 				}
+			}
+
+			$wb = new WikidataBuilder($this->dbSource, $sources);
+			if (!$wb->process()) {
+				array_push($this->messages, new JPErrorMessage("Nepodařilo se zaktualizovat zdroje z Wikidat."));
 			}
 			
 			array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány. 
@@ -457,6 +468,28 @@ class AuthorController extends JPController {
         }
 
         return $str;
-    }    
-        
+    }
+
+	public function getSourceType($code) {
+		return SourceTypes::getInstance()->getSourceType($code);
+	}
+
+	public function getIsKniha($code) {
+		return SourceTypes::getInstance()->getIsKniha($code);
+	}
+
+	public function getAllSourceTypes() {
+		return SourceTypes::getInstance()->getNonSystemValues();
+	}
+
+	public function getSystemSourcesForAuthor()
+	{
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+
+		return $this->dbSource->getSourcesForAuthor($this->getObjectId(), true);
+	}
+
+
 }

@@ -1,8 +1,10 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
-	include_once $ROOT."controllers/ObjectController.php";
-	$controller = new ObjectController();
+
+include_once $ROOT."controllers/ObjectSourceController.php";
+	$controller = new ObjectSourceController();
 	
 	$row = $controller->getObjectFromUrl();
 	
@@ -10,10 +12,14 @@
 		$selectedSources = $controller->manageSources();
 	} else {
 		$selectedSources = $controller->getSelectedSources();
+		$selectedSystemSources = $controller->getSystemSourcesForObject();
 	}
 ?>
 
 <div class="wrap">
+
+<script type="application/javascript" src="<?php print $ROOT_URL ?>content/js/objectSource.js">
+</script>
 
 <h2>Zdroje pro '<?php echo $row->nazev ?>'</h2>
 

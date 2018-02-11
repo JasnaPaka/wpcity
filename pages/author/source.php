@@ -1,7 +1,9 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
-	include_once $ROOT."controllers/AuthorController.php";
+
+include_once $ROOT."controllers/AuthorController.php";
 	$controller = new AuthorController();
 	
 	$row = $controller->getObjectFromUrl();
@@ -10,10 +12,15 @@
 		$selectedSources = $controller->manageSources();
 	} else {
 		$selectedSources = $controller->getSelectedSources();
+		$selectedSystemSources = $controller->getSystemSourcesForAuthor();
+
 	}
 ?>
 
 <div class="wrap">
+
+<script type="application/javascript" src="<?php print $ROOT_URL ?>content/js/objectSource.js">
+</script>
 
 <h2>Zdroje pro '<?php echo $controller->getFullname() ?>'</h2>
 

@@ -23,24 +23,28 @@ include_once $ROOT . "db/Object2CollectionDb.php";
 include_once $ROOT . "db/HistoryDb.php";
 include_once $ROOT . "db/SettingDb.php";
 
+include_once $ROOT . "utils/SourceType.php";
+include_once $ROOT . "utils/SourceTypes.php";
+include_once $ROOT . "utils/WikidataBuilder.php";
+
 include_once $ROOT . "controllers/SettingController.php";
 
 class ObjectController extends JPController
 {
 
 	protected $db;
-	private $dbCategory;
-	private $dbPhoto;
-	private $dbAuthor;
-	private $dbSource;
-	private $dbObject2Author;
-	private $dbTag;
-	private $dbObject2Tag;
-	private $dbObject2Collection;
-	private $dbCollection;
-	private $dbPoi;
-	private $dbHistory;
-	private $dbSetting;
+	protected $dbCategory;
+	protected $dbPhoto;
+	protected $dbAuthor;
+	protected $dbSource;
+	protected $dbObject2Author;
+	protected $dbTag;
+	protected $dbObject2Tag;
+	protected $dbObject2Collection;
+	protected $dbCollection;
+	protected $dbPoi;
+	protected $dbHistory;
+	protected $dbSetting;
 
 	private $cacheTagSelected;
 
@@ -557,36 +561,6 @@ class ObjectController extends JPController
 	}
 
 
-	public function manageSources()
-	{
-		$sources = $this->getFormSourcesValues();
-		if (count($sources) == 0) {
-			return $this . getSelectedSources();
-		}
-
-		$result = $this->validateSources($sources);
-		if ($result) {
-			foreach ($sources as $source) {
-				if (strlen($source->nazev) == 0) {
-					continue;
-				}
-
-				if (isset($source->id)) {
-					$result = $this->dbSource->updateWithObject($source, $source->id, true);
-				} else {
-					$result = $this->dbSource->createWithObject($source, true);
-				}
-			}
-
-			array_push($this->messages, new JPInfoMessage('Zdroje byly aktualizovány.
-                    <a href="' . $this->getUrl(JPController::URL_VIEW) . '">Zobrazit detail</a>'));
-
-			return $this->getSelectedSources();
-		}
-
-		return $sources;
-	}
-
 	public function update()
 	{
 		$row = $this->getFormValues();
@@ -690,20 +664,6 @@ class ObjectController extends JPController
 		array_push($this->messages, new JPInfoMessage("Objekt byl úspěšně schválen."));
 
 		return $object;
-	}
-
-	private function validateSources($sources)
-	{
-		foreach ($sources as $source) {
-			if (isset($source->id) && strlen($source->nazev) == 0 && !$source->deleted) {
-				array_push($this->messages, new JPErrorMessage("Každý zdroj, který byl dříve uložen, musí mít vyplněný název nebo být označen pro smazání."));
-			}
-			if (!isset($source->id) && strlen($source->nazev) == 0 && (strlen($source->url) > 0 || strlen($source->isbn) > 0)) {
-				array_push($this->messages, new JPErrorMessage("Každý zdroj, který má zadáno URL či ISBN, musí mít i název."));
-			}
-		}
-
-		return count($this->messages) === 0;
 	}
 
 	private function validatePhotos()
@@ -986,6 +946,15 @@ class ObjectController extends JPController
 		return $this->dbSource->getSourcesForObject($this->getObjectId());
 	}
 
+	public function getSystemSourcesForObject()
+	{
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+
+		return $this->dbSource->getSourcesForObject($this->getObjectId(), true);
+	}
+
 	public function getSelectedAuthors()
 	{
 		$authors = array();
@@ -1030,21 +999,6 @@ class ObjectController extends JPController
 		}
 
 		return $cooperations;
-	}
-
-	public function getSelectedSources()
-	{
-		$sources = array();
-		foreach ($this->getSourcesForObject() as $source) {
-			array_push($sources, $source);
-		}
-
-		// doplníme pět dalších
-		for ($i = 1; $i <= 5; $i++) {
-			array_push($sources, 0);
-		}
-
-		return $sources;
 	}
 
 	private function getAuthorFromAddForm()
@@ -1145,39 +1099,6 @@ class ObjectController extends JPController
 		return $collections;
 	}
 
-	private function getFormSourcesValues()
-	{
-		$sources = array();
-
-		foreach ($_POST as $key => $value) {
-			$pos = strpos($key, "zdroj");
-
-			if ($pos === 0) {
-
-				$source = new stdClass();
-				$id = (int)filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
-				if ($id > 0) {
-					$source->id = $id;
-				}
-
-				$source->nazev = filter_input(INPUT_POST, "nazev" . $value, FILTER_SANITIZE_STRING);
-				$source->url = filter_input(INPUT_POST, "url" . $value, FILTER_SANITIZE_STRING);
-				$source->isbn = filter_input(INPUT_POST, "isbn" . $value, FILTER_SANITIZE_STRING);
-
-				$source->cerpano = filter_input(INPUT_POST, "cerpano" . $value, FILTER_SANITIZE_STRING);
-				$source->cerpano = ($source->cerpano === "on" ? 1 : 0);
-
-				$source->deleted = filter_input(INPUT_POST, "deleted" . $value, FILTER_SANITIZE_STRING);
-				$source->deleted = ($source->deleted === "on" ? 1 : 0);
-				$source->objekt = $this->getObjectId();
-				$source->autor = null;
-
-				array_push($sources, $source);
-			}
-		}
-
-		return $sources;
-	}
 
 	public function getGoogleMapSettings()
 	{
@@ -1244,8 +1165,12 @@ class ObjectController extends JPController
 	{
 		global $wp_query;
 
-		$id = (int)$wp_query->query_vars['objekt'];
-		if ($id == null) {
+		if (isset($wp_query->query_vars['objekt'])) {
+			$id = (int)$wp_query->query_vars['objekt'];
+			if ($id == null) {
+				return parent::getObjectId();
+			}
+		} else {
 			return parent::getObjectId();
 		}
 
@@ -1527,5 +1452,13 @@ class ObjectController extends JPController
 		}
 
 		return $settings;
+	}
+
+	public function getSourceType($code) {
+		return SourceTypes::getInstance()->getSourceType($code);
+	}
+
+	public function getIsKniha($code) {
+		return SourceTypes::getInstance()->getIsKniha($code);
 	}
 }
