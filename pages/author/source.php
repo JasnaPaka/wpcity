@@ -7,14 +7,13 @@ include_once $ROOT."controllers/AuthorController.php";
 	$controller = new AuthorController();
 	
 	$row = $controller->getObjectFromUrl();
-	
-	if (isset($_POST["submit"])) {
+
+    if (isset($_POST["submit"])) {
 		$selectedSources = $controller->manageSources();
 	} else {
 		$selectedSources = $controller->getSelectedSources();
-		$selectedSystemSources = $controller->getSystemSourcesForAuthor();
-
 	}
+    $selectedSystemSources = $controller->getSystemSourcesForAuthor();
 ?>
 
 <div class="wrap">

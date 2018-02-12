@@ -106,7 +106,7 @@ class ObjectSourceController extends ObjectController
 			}
 
 			// Zpracujeme identifikatory
-			$wb = new WikidataBuilder(null, $this->dbSource, $sources);
+			$wb = new WikidataBuilder($this->dbSource, $sources);
 			if (!$wb->process()) {
 				array_push($this->messages, new JPErrorMessage("Nepodařilo se zaktualizovat zdroje z Wikidat."));
 			}

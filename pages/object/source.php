@@ -3,17 +3,17 @@
     $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
 
-include_once $ROOT."controllers/ObjectSourceController.php";
+    include_once $ROOT."controllers/ObjectSourceController.php";
 	$controller = new ObjectSourceController();
 	
 	$row = $controller->getObjectFromUrl();
-	
-	if (isset($_POST["submit"])) {
+
+    if (isset($_POST["submit"])) {
 		$selectedSources = $controller->manageSources();
 	} else {
 		$selectedSources = $controller->getSelectedSources();
-		$selectedSystemSources = $controller->getSystemSourcesForObject();
 	}
+    $selectedSystemSources = $controller->getSystemSourcesForObject();
 ?>
 
 <div class="wrap">
