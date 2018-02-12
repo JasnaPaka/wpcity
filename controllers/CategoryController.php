@@ -46,7 +46,8 @@ class CategoryController extends JPController
 			array_push($this->messages, new JPErrorMessage("Ikona musí mít min. 3 a nejvíce 250 znaků."));
 		}
 
-		if (!preg_match("%^((http?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i", $row->ikona)) {
+		if (!preg_match("%^((http?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i", $row->ikona)
+				&& !preg_match("%^((https?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i", $row->ikona)) {
 			array_push($this->messages, new JPErrorMessage("URL ikony není platnou adresou."));
 		}
 
