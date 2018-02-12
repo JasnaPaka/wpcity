@@ -27,6 +27,9 @@ function kv_MapaData() {
 	global $wpdb;
 	
 	$uploadDir = wp_upload_dir();
+	if (is_ssl()) {
+		$uploadDir = str_replace("http://", "https://", $uploadDir);
+	}
 	$siteUrl = site_url();
 	$themeUrl = get_template_directory_uri()."-child-krizkyavetrelci";
 	
@@ -38,8 +41,9 @@ function kv_MapaData() {
 		".getKvDbPrefix()."kategorie.zoom
 		FROM ".getKvDbPrefix()."objekt AS kv INNER JOIN ".getKvDbPrefix()."kategorie ON kv.kategorie = ".getKvDbPrefix()."kategorie.id WHERE kv.deleted = 0 AND kv.schvaleno = 1
 		ORDER BY kategorie, nazev");
-		
-	foreach($rows as $row) {		
+
+	$output = "";
+	foreach($rows as $row) {
 		if (strlen($output) > 0) {
 			$output.=",";
 		}
