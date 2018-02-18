@@ -5,6 +5,8 @@ abstract class JPDb {
     protected $tableName;
     protected $dbPrefix;
 
+    protected $objectCache = array();
+
     CONST MAX_ITEMS_ON_PAGE = 20;	
 
     function __construct() {
@@ -48,13 +50,17 @@ abstract class JPDb {
     public function getById($id) {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE id = %d AND deleted = 0", $id); 
-        $rows = $wpdb->get_results ($sql);
-        if (count($rows) === 0) {
-                return null;
-        }
+        if (!isset($this->objectCache[$id])) {
+			$sql = $wpdb->prepare("SELECT * FROM " . $this->tableName . " WHERE id = %d AND deleted = 0", $id);
+			$rows = $wpdb->get_results($sql);
+			if (count($rows) === 0) {
+				return null;
+			}
 
-        return $rows[0];
+			$this->objectCache[$id] = $rows[0];
+		}
+
+		return $this->objectCache[$id];
     }
 
     public function create($data) {

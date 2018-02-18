@@ -33,6 +33,7 @@ class ObjectSourceController extends ObjectController
 				$source->objekt = $this->getObjectId();
 				$source->autor = null;
 				$source->system_zdroj = null;
+				$source->soubor = null;
 
 				array_push($sources, $source);
 			}

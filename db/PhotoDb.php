@@ -1,7 +1,9 @@
 <?php
 
 class PhotoDb extends JPDb {
-	
+
+	private $photosByObjectCache = array();
+
 	function __construct() {
 		parent::__construct();
 		
@@ -22,8 +24,12 @@ class PhotoDb extends JPDb {
 	public function getPhotosByObject($idObject) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE objekt = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idObject); 
-		return $wpdb->get_results ($sql);
+		if (!isset($this->photosByObjectCache[$idObject])) {
+			$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE objekt = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idObject);
+			$this->photosByObjectCache[$idObject] = $wpdb->get_results ($sql);
+		}
+
+		return $this->photosByObjectCache[$idObject];
 	}
 	
 	public function update($data, $id) {

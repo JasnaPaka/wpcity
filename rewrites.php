@@ -217,6 +217,17 @@ function kv_collection_info()
 	return $collection;
 }
 
+function kv_collection_sources()
+{
+	$cc = new CollectionController();
+	$sources = $cc->getSystemSourcesForCollection();
+	foreach ($cc->getSourcesForCollection() as $source) {
+		$sources[] = $source;
+	}
+
+	return $sources;
+}
+
 function kv_author_objects()
 {
 	$ac = new AuthorController();

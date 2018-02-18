@@ -75,10 +75,17 @@ function kv_MapaData() {
 	return $output;
 }
 
+$kv_ObjektPocet_cache = null;
+
 function kv_ObjektPocet() {
 	global $wpdb;
-	
-	return $wpdb->get_var("SELECT count(*) FROM ".getKvDbPrefix()."objekt WHERE deleted = 0 AND schvaleno = 1");
+	global $kv_ObjektPocet_cache;
+
+	if ($kv_ObjektPocet_cache == null) {
+		$kv_ObjektPocet_cache = $wpdb->get_var("SELECT count(*) FROM " . getKvDbPrefix() . "objekt WHERE deleted = 0 AND schvaleno = 1");
+	}
+
+	return $kv_ObjektPocet_cache;
 }
 
 function kv_category_count() {

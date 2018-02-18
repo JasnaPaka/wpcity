@@ -11,10 +11,15 @@ class SourceDb extends JPDb {
 	public function getDefaultOrder() {
 		return "id";
 	}
-	
+
 	/**
-	 * Vrací seznam nesmazaných zdrojů pro konkrétní objekt. V závislosti na druhém parametru vrací ty, které jsou
-	 * uživatelem zaznamenané nebo ty, které jsou spravovány systémem.
+	 * Vrátí seznam zdrojů pro objekt. Standardně vrací seznam děl, které může uživatel
+	 * editovat. Může však na základě druhého parametru vracet i zdroje "systémové", které
+	 * jsou spravovány automaticky.
+	 *
+	 * @param $idObject id objektu
+	 * @param bool $system true, pokud se mají brát systémové zdroje, jinak false (výchozí)
+	 * @return mixed
 	 */
 	public function getSourcesForObject($idObject, $system = false) {
 		global $wpdb;
@@ -22,7 +27,8 @@ class SourceDb extends JPDb {
 		$szSql = $system ? "IS NOT NULL" : "IS NULL";
 
 		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
-			zdr WHERE zdr.deleted = 0 AND zdr.objekt = %d AND zdr.system_zdroj ".$szSql." ORDER BY ".$this->getDefaultOrder(), $idObject);
+			zdr WHERE zdr.deleted = 0 AND zdr.objekt = %d AND zdr.system_zdroj ".$szSql." 
+			ORDER BY ".$this->getDefaultOrder(), $idObject);
 		
 		return $wpdb->get_results ($sql);
 	}
@@ -45,15 +51,46 @@ class SourceDb extends JPDb {
 		return $wpdb->query($sql);
 	}
 
-	public function getSourcesForAuthor($idObject, $system = false) {
+	/**
+	 * Vrátí seznam zdrojů pro autora. Standardně vrací seznam děl, které může uživatel
+	 * editovat. Může však na základě druhého parametru vracet i zdroje "systémové", které
+	 * jsou spravovány automaticky.
+	 *
+	 * @param $idAuthor id autora
+	 * @param bool $system true, pokud se mají brát systémové zdroje, jinak false (výchozí)
+	 * @return mixed
+	 */
+	public function getSourcesForAuthor($idAuthor, $system = false) {
 		global $wpdb;
 
 		$szSql = $system ? "IS NOT NULL" : "IS NULL";
 
 		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
-			zdr WHERE zdr.deleted = 0 AND zdr.autor = %d AND zdr.system_zdroj ".$szSql." ORDER BY ".$this->getDefaultOrder(), $idObject);
+			zdr WHERE zdr.deleted = 0 AND zdr.autor = %d AND zdr.system_zdroj ".$szSql." 
+				ORDER BY ".$this->getDefaultOrder(), $idAuthor);
 		
 		return $wpdb->get_results ($sql); 
+	}
+
+	/**
+	 * Vrátí seznam zdrojů pro soubor děl. Standardně vrací seznam děl, které může uživatel
+	 * editovat. Může však na základě druhého parametru vracet i zdroje "systémové", které
+	 * jsou spravovány automaticky.
+	 *
+	 * @param $idCollection id souboru děl
+	 * @param bool $system true, pokud se mají brát systémové zdroje, jinak false (výchozí)
+	 * @return mixed
+	 */
+	public function getSourcesForCollection($idCollection, $system = false) {
+		global $wpdb;
+
+		$szSql = $system ? "IS NOT NULL" : "IS NULL";
+
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
+			zdr WHERE zdr.deleted = 0 AND zdr.soubor = %d AND zdr.system_zdroj ".$szSql." 
+				ORDER BY ".$this->getDefaultOrder(), $idCollection);
+
+		return $wpdb->get_results ($sql);
 	}
 	
 	public function updateWithObject($data, $id, $isObject) {
@@ -66,7 +103,8 @@ class SourceDb extends JPDb {
 			"url" => $data->url,
 			"cerpano" => $data->cerpano,
 			"deleted" => $data->deleted,
-			"system_zdroj" => $data->system_zdroj
+			"system_zdroj" => $data->system_zdroj,
+			"soubor" => $data->soubor
 		);
 		
 		if ($isObject) {
@@ -82,7 +120,8 @@ class SourceDb extends JPDb {
 			'%s',
 			'%d',
 			'%d',
-			'%s'
+			'%s',
+			'%d'
 		);
 				
 		$wpdb->update($this->tableName, $values, array("id" => $id), $types);
@@ -98,7 +137,8 @@ class SourceDb extends JPDb {
 			"url" => $data->url,
 			"cerpano" => $data->cerpano,
 			"deleted" => $data->deleted,
-			"system_zdroj" => $data->system_zdroj
+			"system_zdroj" => $data->system_zdroj,
+			"soubor" => $data->soubor
 		);
 		
 		if ($isObject) {
@@ -114,7 +154,8 @@ class SourceDb extends JPDb {
 			'%s',
 			'%d',
 			'%d',
-			'%s'
+			'%s',
+			'%d'
 		);
 		
 		

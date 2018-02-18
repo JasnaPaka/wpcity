@@ -208,6 +208,9 @@ function wpCityCollectionPageCallback()
 		case 'view':
 			require_once("pages/collection/view.php");
 			break;
+		case 'source':
+			require_once("pages/collection/source.php");
+			break;
 		default:
 			require_once("pages/collection/list.php");
 			break;

@@ -363,6 +363,7 @@ class AuthorController extends JPController {
 				$source->deleted = ($source->deleted === "on" ? 1 : 0);
 				$source->autor = $this->getObjectId();
 				$source->objekt = null;
+				$source->soubor = null;
 
 				array_push($sources, $source);
 			}

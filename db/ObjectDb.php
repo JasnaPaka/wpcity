@@ -281,14 +281,20 @@ class ObjectDb extends JPDb
 		}
 	}
 
+	private $countObjectsWithPhotosCache;
+
 	public function getCountObjectsWithPhotos()
 	{
 		global $wpdb;
 
-		return $wpdb->get_var("SELECT count(*) FROM " . $this->tableName . " obj
-                    INNER JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
-                    INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
-                    WHERE fot.primarni = 1 AND fot.skryta = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+		if ($this->countObjectsWithPhotosCache == null) {
+			$this->countObjectsWithPhotosCache = $wpdb->get_var("SELECT count(*) FROM " . $this->tableName . " obj
+						INNER JOIN " . $this->dbPrefix . "fotografie fot ON obj.id = fot.objekt
+						INNER JOIN " . $this->dbPrefix . "kategorie kat ON obj.kategorie = kat.id
+						WHERE fot.primarni = 1 AND fot.skryta = 0 AND obj.deleted = 0 AND obj.schvaleno = 1 AND kat.systemova = 0 AND obj.zruseno = 0 ");
+		}
+
+		return $this->countObjectsWithPhotosCache;
 	}
 
 	public function getRandomObjectWithPhoto($randomNumber)

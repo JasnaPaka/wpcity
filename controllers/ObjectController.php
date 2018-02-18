@@ -47,6 +47,7 @@ class ObjectController extends JPController
 	protected $dbSetting;
 
 	private $cacheTagSelected;
+	private $poisForObjectObjCache = null;
 
 	function __construct()
 	{
@@ -1381,21 +1382,25 @@ class ObjectController extends JPController
 	public function getPoisForObject()
 	{
 
-		$object = $this->getObjectFromUrl();
-		if ($object == null) {
-			$id = $this->getObjectId();
-			if ($id == null) {
+		if ($this->poisForObjectObjCache == null) {
+			$object = $this->getObjectFromUrl();
+			if ($object == null) {
+				$id = $this->getObjectId();
+				if ($id == null) {
+					return null;
+				}
+
+				$object = $this->getObjectById($id);
+			}
+
+			if ($object == null) {
 				return null;
 			}
 
-			$object = $this->getObjectById($id);
+			$this->poisForObjectObjCache = $object;
 		}
 
-		if ($object == null) {
-			return null;
-		}
-
-		return $this->dbPoi->getPoisForObject($object->id);
+		return $this->dbPoi->getPoisForObject($this->poisForObjectObjCache->id);
 	}
 
 	public function getPoiFromUrl()

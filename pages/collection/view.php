@@ -111,6 +111,7 @@ foreach ($controller->getObjectsInCollection($row->id) as $object) {
 <form method="post">
 <p class="submit">
 	<a href="admin.php?page=collection&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+    <a href="admin.php?page=collection&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
 
 	<a href="admin.php?page=collection&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
 	<a href="admin.php?page=collection" class="button">Zpět na výpis</a>
