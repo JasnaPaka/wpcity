@@ -398,9 +398,9 @@ class AuthorController extends JPController {
 				}
 				
 				if (isset($source->id)) {
-					$result = $this->dbSource->updateWithObject($source, $source->id, false);
+					$result = $this->dbSource->updateWithObject($source, $source->id, false, false);
 				} else {
-					$result = $this->dbSource->createWithObject($source, false);
+					$result = $this->dbSource->createWithObject($source, false, false);
 				}
 			}
 
@@ -492,5 +492,12 @@ class AuthorController extends JPController {
 		return $this->dbSource->getSourcesForAuthor($this->getObjectId(), true);
 	}
 
+	public function getSourceName() {
+		$obj = $this->getObjectById($this->getObjectId());
+		if ($obj == null) {
+			return null;
+		}
 
+		return trim($obj->jmeno." ".$obj->prijmeni);
+	}
 }

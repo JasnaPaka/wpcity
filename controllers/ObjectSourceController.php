@@ -100,9 +100,9 @@ class ObjectSourceController extends ObjectController
 				}
 
 				if (isset($source->id)) {
-					$result = $this->dbSource->updateWithObject($source, $source->id, true);
+					$result = $this->dbSource->updateWithObject($source, $source->id, true, false);
 				} else {
-					$result = $this->dbSource->createWithObject($source, true);
+					$result = $this->dbSource->createWithObject($source, true, false);
 				}
 			}
 
@@ -123,5 +123,14 @@ class ObjectSourceController extends ObjectController
 
 	public function getAllSourceTypes() {
 		return SourceTypes::getInstance()->getNonSystemValues();
+	}
+
+	public function getSourceName() {
+		$obj = $this->getObjectById($this->getObjectId());
+		if ($obj == null) {
+			return null;
+		}
+
+		return $obj->nazev;
 	}
 }

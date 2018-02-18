@@ -317,6 +317,10 @@ function kv_soubor_controller()
 	return new CollectionController();
 }
 
+function kv_source_controller() {
+	return new CollectionController();
+}
+
 function kv_object_controller()
 {
 	return new ObjectController();

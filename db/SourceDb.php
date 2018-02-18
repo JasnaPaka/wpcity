@@ -51,6 +51,15 @@ class SourceDb extends JPDb {
 		return $wpdb->query($sql);
 	}
 
+	public function deleteSystemForCollection($collectionId, $code) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("DELETE FROM ".$this->tableName." WHERE
+			soubor = %d AND system_zdroj = %s", $collectionId, $code);
+
+		return $wpdb->query($sql);
+	}
+
 	/**
 	 * Vrátí seznam zdrojů pro autora. Standardně vrací seznam děl, které může uživatel
 	 * editovat. Může však na základě druhého parametru vracet i zdroje "systémové", které
@@ -93,7 +102,7 @@ class SourceDb extends JPDb {
 		return $wpdb->get_results ($sql);
 	}
 	
-	public function updateWithObject($data, $id, $isObject) {
+	public function updateWithObject($data, $id, $isObject, $idCollection) {
 		global $wpdb;
 		
 		$values = array (
@@ -103,12 +112,13 @@ class SourceDb extends JPDb {
 			"url" => $data->url,
 			"cerpano" => $data->cerpano,
 			"deleted" => $data->deleted,
-			"system_zdroj" => $data->system_zdroj,
-			"soubor" => $data->soubor
+			"system_zdroj" => $data->system_zdroj
 		);
-		
+
 		if ($isObject) {
 			$values["objekt"] = $data->objekt;
+		} else if ($idCollection) {
+			$values["soubor"] = $data->soubor;
 		} else {
 			$values["autor"] = $data->autor;
 		}
@@ -127,9 +137,9 @@ class SourceDb extends JPDb {
 		$wpdb->update($this->tableName, $values, array("id" => $id), $types);
 	}
 	
-	public function createWithObject($data, $isObject) {
+	public function createWithObject($data, $isObject, $idCollection) {
 		global $wpdb;
-		
+
 		$values = array (
 			"typ" => $data->typ,
 			"identifikator" => $data->identifikator,
@@ -137,12 +147,13 @@ class SourceDb extends JPDb {
 			"url" => $data->url,
 			"cerpano" => $data->cerpano,
 			"deleted" => $data->deleted,
-			"system_zdroj" => $data->system_zdroj,
-			"soubor" => $data->soubor
+			"system_zdroj" => $data->system_zdroj
 		);
 		
 		if ($isObject) {
 			$values["objekt"] = $data->objekt;
+		} else if ($idCollection) {
+			$values["soubor"] = $data->soubor;
 		} else {
 			$values["autor"] = $data->autor;
 		}

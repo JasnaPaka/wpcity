@@ -71,6 +71,16 @@
 
 <?php } ?>
 
+<form method="post">
+    <p class="submit">
+        <a href="admin.php?page=collection&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
+        <a href="admin.php?page=collection&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
+
+        <a href="admin.php?page=collection&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
+        <a href="admin.php?page=collection" class="button">Zpět na výpis</a>
+    </p>
+</form>
+
 <?php if (count($controller->getObjectsInCollection($row->id)) > 0) { ?>
 
 <h3>Díla v souboru</h3>
@@ -106,16 +116,5 @@ foreach ($controller->getObjectsInCollection($row->id) as $object) {
 <?php } ?>
 </tbody>
 </table>
-
-
-<form method="post">
-<p class="submit">
-	<a href="admin.php?page=collection&amp;action=update&amp;id=<?php echo $row->id ?>" class="button button-primary">Upravit</a>
-    <a href="admin.php?page=collection&amp;action=source&amp;id=<?php echo $row->id ?>" class="button">Správa zdrojů</a>
-
-	<a href="admin.php?page=collection&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
-	<a href="admin.php?page=collection" class="button">Zpět na výpis</a>
-</p>
-</form>
 
 </div>
