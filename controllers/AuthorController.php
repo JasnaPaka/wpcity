@@ -8,6 +8,9 @@ include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/ObjectDb.php";
 include_once $ROOT."db/SourceDb.php";
 include_once $ROOT."db/CategoryDb.php";
+include_once $ROOT."db/PhotoDb.php";
+
+include_once $ROOT . "controllers/AbstractDefaultController.php";
 
 include_once $ROOT."utils/SourceType.php";
 include_once $ROOT."utils/SourceTypes.php";
@@ -15,13 +18,14 @@ include_once $ROOT."utils/SourceTypes.php";
 /**
  * Správa autorů
  */
-class AuthorController extends JPController {
+class AuthorController extends AbstractDefaultController {
 		
 	protected $db;
 	protected $dbObject;
-        protected $dbCategory;
-        private $dbObject2Tag;
+	protected $dbCategory;
+	private $dbObject2Tag;
 	private $dbSource;
+
 
 	function __construct()
 	{
@@ -30,6 +34,7 @@ class AuthorController extends JPController {
 		$this->dbSource = new SourceDb();
 		$this->dbCategory = new CategoryDb();
 		$this->dbObject2Tag = new Object2TagDb();
+		$this->dbPhoto = new PhotoDb();
 	}
 	
 	public function getList() {
@@ -332,7 +337,14 @@ class AuthorController extends JPController {
 	}
 	
 	public function getImgForAuthor($authorId) {
-		return $this->db->getImgForAuthor($authorId);	
+		$photos = $this->dbPhoto->getPhotosByAuthor($authorId);
+		foreach ($photos as $photo) {
+			if ($photo->primarni) {
+				return $photo;
+			}
+		}
+
+		return $this->db->getImgForAuthor($authorId);
 	}
 	
 	
@@ -500,4 +512,63 @@ class AuthorController extends JPController {
 
 		return trim($obj->jmeno." ".$obj->prijmeni);
 	}
+
+	public function getPhotosForAuthor()
+	{
+		if ($this->getObjectId() == null) {
+			return null;
+		}
+
+		return $this->dbPhoto->getPhotosByAuthor($this->getObjectId());
+	}
+
+
+
+	public function managePhotos()
+	{
+		$id = $this->getObjectFromUrl()->id;
+		if ($id == null) {
+			return null;
+		}
+
+		// Nejdříve zaktualizujeme existující fotografie
+		$photos = $this->getPhotosForAuthor();
+		$newPhotos = array();
+		if (count($photos) > 0) {
+			if ($this->validatePhotos($photos)) {
+				foreach ($photos as $photo) {
+
+					$idDelete = "delete" . $photo->id;
+					if (isset($_POST[$idDelete])) {
+						$this->dbPhoto->delete($photo->id);
+					} else {
+						$photo = $this->refreshPhoto($photo);
+						array_push($newPhotos, $photo);
+						$result = $this->dbPhoto->update($photo, $photo->id);
+					}
+				}
+			} else {
+				foreach ($photos as $photo) {
+					$photo = $this->refreshPhoto($photo);
+					array_push($newPhotos, $photo);
+				}
+			}
+		}
+
+		// Nahrajeme nové fotografie
+		$photos = $this->addPhotos(null, $id, null,count($photos) > 0);
+		if ($photos != null && count($photos) > 0) {
+			foreach ($photos as $photo) {
+				array_push($newPhotos, $photo);
+			}
+		}
+
+		if (count($this->messages) == 0) {
+			array_push($this->messages, new JPInfoMessage('Úprava fotografií byla dokončena.
+            <a href="' . $this->getUrl(JPController::URL_VIEW) . '">Zobrazit detail autora</a>'));
+		}
+
+		return $newPhotos;
+	}
+
 }

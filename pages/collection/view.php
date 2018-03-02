@@ -4,6 +4,9 @@
     $controller = new CollectionController();
 
     $row = $controller->getObjectFromUrl();
+
+    // pomocné kolekce
+    $photos = $controller->getPhotosForCollection();
 ?>
 
 
@@ -80,6 +83,37 @@
         <a href="admin.php?page=collection" class="button">Zpět na výpis</a>
     </p>
 </form>
+
+<h3>Fotografie</h3>
+
+<?php if (count($photos) == 0) { ?>
+
+    <p>K souboru děl nejsou prozatím nahrány žádné fotografie.</p>
+
+    <p class="submit">
+        <a href="admin.php?page=collection&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat
+            fotografie</a>
+    </p>
+
+<?php } else {
+
+foreach ($photos as $photo) {
+    $uploadDir = wp_upload_dir();
+    ?>
+
+    <span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>"
+                                  title="Pro zvětšení klepněte">
+<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt=""/>
+</a></span>
+
+<?php } ?>
+
+    <p class="submit">
+        <a href="admin.php?page=collection&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat či
+            upravit fotografie</a>
+    </p>
+
+<?php } ?>
 
 <?php if (count($controller->getObjectsInCollection($row->id)) > 0) { ?>
 

@@ -211,6 +211,9 @@ function wpCityCollectionPageCallback()
 		case 'source':
 			require_once("pages/collection/source.php");
 			break;
+		case 'photo':
+			require_once("pages/collection/photo.php");
+			break;
 		default:
 			require_once("pages/collection/list.php");
 			break;
@@ -298,6 +301,9 @@ function wpCityAuthorPageCallback()
 			break;
 		case 'source':
 			require_once("pages/author/source.php");
+			break;
+		case 'photo':
+			require_once("pages/author/photo.php");
 			break;
 		default:
 			require_once("pages/author/list.php");

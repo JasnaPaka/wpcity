@@ -5,6 +5,9 @@
 	$controller = new AuthorController();
 	
 	$row = $controller->getObjectFromUrl();
+
+    // pomocné kolekce
+    $photos = $controller->getPhotosForAuthor();
 ?>
 
 <div class="wrap">
@@ -56,6 +59,7 @@
 
 <?php } ?>
 
+
 <?php if (strlen($row->interni) > 1) { ?>
 
     <h3>Interní poznámka</h3>
@@ -72,6 +76,38 @@
     <a href="admin.php?page=author&amp;action=delete&amp;id=<?php echo $row->id ?>" class="button">Smazat</a>
     <a href="admin.php?page=author" class="button">Zpět na výpis</a>
 </p>
+
+<h3>Fotografie</h3>
+
+<?php if (count($photos) == 0) { ?>
+
+    <p>K autorovi nejsou prozatím nahrány žádné fotografie.</p>
+
+    <p class="submit">
+        <a href="admin.php?page=author&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat
+            fotografie</a>
+    </p>
+
+<?php } else {
+
+    foreach ($photos as $photo) {
+        $uploadDir = wp_upload_dir();
+        ?>
+
+        <span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>"
+                                      title="Pro zvětšení klepněte">
+<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt=""/>
+</a></span>
+
+    <?php } ?>
+
+        <p class="submit">
+            <a href="admin.php?page=author&amp;action=photo&amp;id=<?php echo $row->id ?>" class="button">Přidat či
+                upravit fotografie</a>
+        </p>
+
+	<?php } ?>
+
 
 <h3>Díla</h3>
 

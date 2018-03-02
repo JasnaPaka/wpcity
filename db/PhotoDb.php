@@ -2,8 +2,6 @@
 
 class PhotoDb extends JPDb {
 
-	private $photosByObjectCache = array();
-
 	function __construct() {
 		parent::__construct();
 		
@@ -20,18 +18,48 @@ class PhotoDb extends JPDb {
 		$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET deleted = 1 WHERE objekt = %d", $idObject);
 		return $wpdb->query($sql);
 	}
+
+	public function deletePhotosByAuthor($idAuthor) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET deleted = 1 WHERE autor_id = %d", $idAuthor);
+		return $wpdb->query($sql);
+	}
+
+	public function deletePhotosByCollection($idCollection) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("UPDATE ".$this->tableName." SET deleted = 1 WHERE soubor = %d", $idCollection);
+		return $wpdb->query($sql);
+	}
 	
 	public function getPhotosByObject($idObject) {
 		global $wpdb;
 
-		if (!isset($this->photosByObjectCache[$idObject])) {
-			$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." WHERE objekt = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idObject);
-			$this->photosByObjectCache[$idObject] = $wpdb->get_results ($sql);
-		}
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
+			WHERE objekt = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idObject);
 
-		return $this->photosByObjectCache[$idObject];
+		return $wpdb->get_results ($sql);
 	}
-	
+
+	public function getPhotosByAuthor($idAuthor) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
+			WHERE autor_id = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idAuthor);
+
+		return $wpdb->get_results ($sql);
+	}
+
+	public function getPhotosByCollection($idCollection) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare("SELECT * FROM ".$this->tableName." 
+			WHERE soubor = %d AND deleted = 0 ORDER BY ".$this->getDefaultOrder(), $idCollection);
+
+		return $wpdb->get_results ($sql);
+	}
+
 	public function update($data, $id) {
 		global $wpdb;
 		
@@ -50,7 +78,9 @@ class PhotoDb extends JPDb {
 			"autor" => $data->autor,
 			"url" => $data->url,
 			"popis" => $data->popis,
-			"rok" => $data->rok
+			"rok" => $data->rok,
+			"soubor" => $data->soubor,
+			"autor_id" => $data->autor_id
 		);
 		
 		$types = array (
@@ -65,10 +95,12 @@ class PhotoDb extends JPDb {
 			'%d',
 			'%d',
 			'%d',
-			'%s',			
 			'%s',
 			'%s',
-			'%s'
+			'%s',
+			'%s',
+			'%d',
+			'%d'
 		);
 		
 		return $wpdb->update($this->tableName, $values, array("id" => $id), $types);
