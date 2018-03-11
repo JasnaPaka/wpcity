@@ -3,6 +3,7 @@ $ROOT = plugin_dir_path( __FILE__ )."../";
 
 include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
+include_once $ROOT."fw/IdentifierAble.php";
 
 include_once $ROOT."db/AuthorDb.php";
 include_once $ROOT."db/ObjectDb.php";
@@ -18,7 +19,7 @@ include_once $ROOT."utils/SourceTypes.php";
 /**
  * Správa autorů
  */
-class AuthorController extends AbstractDefaultController {
+class AuthorController extends AbstractDefaultController implements IdentifierAble {
 		
 	protected $db;
 	protected $dbObject;
@@ -569,6 +570,21 @@ class AuthorController extends AbstractDefaultController {
 		}
 
 		return $newPhotos;
+	}
+
+	/**
+	 * Pro aktuální objekt vrátí jeho identifikátor
+	 *
+	 * @return int číslo identifikátoru nebo -1, pokud jej nebylo možné získat
+	 */
+	public function getIdentifier(): int
+	{
+		$idObject = $this->getObjectId();
+		if ($idObject == null) {
+			return -1;
+		}
+
+		return WikidataIdentifier::getIdentifierForAuthor($idObject);
 	}
 
 }

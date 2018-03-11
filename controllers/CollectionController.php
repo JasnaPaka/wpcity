@@ -3,6 +3,8 @@ $ROOT = plugin_dir_path( __FILE__ )."../";
 
 include_once $ROOT."fw/JPMessages.php";
 include_once $ROOT."fw/JPController.php";
+include_once $ROOT."fw/IdentifierAble.php";
+
 
 include_once $ROOT."db/CollectionDb.php";
 include_once $ROOT."db/Object2CollectionDb.php";
@@ -453,5 +455,21 @@ class CollectionController extends AbstractDefaultController {
 
 		return $newPhotos;
 	}
+
+	/**
+	 * Pro aktuální objekt vrátí jeho identifikátor
+	 *
+	 * @return int číslo identifikátoru nebo -1, pokud jej nebylo možné získat
+	 */
+	public function getIdentifier(): int
+	{
+		$idObject = $this->getObjectId();
+		if ($idObject == null) {
+			return -1;
+		}
+
+		return WikidataIdentifier::getIdentifierForCollection($idObject);
+	}
+
 
 }

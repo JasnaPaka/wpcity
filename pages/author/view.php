@@ -45,6 +45,10 @@
 			<td><a href="<?php print ($row->web) ?>"><?php print ($row->web) ?></a></td>
 		</tr>
 	<?php } ?>
+        <tr>
+            <th><strong>Identifikátor</strong></th>
+            <td><?php print $controller->getIdentifier(); ?></td>
+        </tr>
 	</tbody>
 	</table>
 <?php } ?>

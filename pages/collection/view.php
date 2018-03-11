@@ -28,7 +28,11 @@
 		<?php } else { ?>
             <td><em>(nejsou zadány)</em></td>
 		<?php } ?>
-	</tr>	
+	</tr>
+    <tr>
+        <th><strong>Identifikátor</strong></th>
+        <td><?php print $controller->getIdentifier(); ?></td>
+    </tr>
 	<tr>
 		<th><strong>Zpracován text</strong></th>
 		<td><?php echo ($row->zpracovano? "Ano" : "Ne") ?></td>

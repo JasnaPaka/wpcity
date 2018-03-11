@@ -6,6 +6,7 @@ include_once $ROOT . "fw/JPMessages.php";
 include_once $ROOT . "fw/GPSUtils.php";
 include_once $ROOT . "fw/GoogleMapsBuilder.php";
 include_once $ROOT . "fw/CityService.php";
+include_once $ROOT . "fw/IdentifierAble.php";
 
 include_once $ROOT . "db/CategoryDb.php";
 include_once $ROOT . "db/ObjectDb.php";
@@ -24,11 +25,12 @@ include_once $ROOT . "db/SettingDb.php";
 include_once $ROOT . "utils/SourceType.php";
 include_once $ROOT . "utils/SourceTypes.php";
 include_once $ROOT . "utils/WikidataBuilder.php";
+include_once $ROOT . "utils/WikidataIdentifier.php";
 
 include_once $ROOT . "controllers/SettingController.php";
 include_once $ROOT . "controllers/AbstractDefaultController.php";
 
-class ObjectController extends AbstractDefaultController
+class ObjectController extends AbstractDefaultController implements IdentifierAble
 {
 
 	protected $db;
@@ -1267,5 +1269,20 @@ class ObjectController extends AbstractDefaultController
 
 	public function getIsKniha($code) {
 		return SourceTypes::getInstance()->getIsKniha($code);
+	}
+
+	/**
+	 * Pro aktuální objekt vrátí jeho identifikátor
+	 *
+	 * @return int číslo identifikátoru nebo -1, pokud jej nebylo možné získat
+	 */
+	public function getIdentifier(): int
+	{
+		$idObject = $this->getObjectId();
+		if ($idObject == null) {
+			return -1;
+		}
+
+		return WikidataIdentifier::getIdentifierForObject($idObject);
 	}
 }

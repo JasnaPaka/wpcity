@@ -144,7 +144,10 @@ $photos = $controller->getPhotosForObject();
 				</td>
 			</tr>
 		<?php } ?>
-
+        <tr>
+            <th><strong>Identifikátor</strong></th>
+            <td><?php print $controller->getIdentifier(); ?></td>
+        </tr>
 		<tr>
 			<th><strong>Zpracován text</strong></th>
 			<td><?php echo($row->zpracovano ? "Ano" : "Ne") ?></td>

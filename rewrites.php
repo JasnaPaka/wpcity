@@ -10,6 +10,8 @@ include_once $ROOT . "controllers/AuthorController.php";
 include_once $ROOT . "controllers/TagController.php";
 include_once $ROOT . "controllers/CollectionController.php";
 
+include_once $ROOT . "utils/WikidataIdentifier.php";
+
 add_action('init', 'rules');
 
 function rules()
@@ -48,6 +50,9 @@ function rules()
 	add_rewrite_rule('^katalog/soubory/?', 'index.php?soubory=1', 'top');
 	add_rewrite_tag('%soubory%', '([^/]*)');
 
+	add_rewrite_rule('^katalog/polozka/([^/]*)', 'index.php?polozka=$matches[1]', 'top');
+	add_rewrite_tag('%polozka%', '([^/]*)');
+
 	add_rewrite_rule('^katalog/?', 'index.php?prehled=1', 'top');
 	add_rewrite_tag('%prehled%', '([^/]*)');
 	add_rewrite_tag('%stranka%', '([^/]*)');
@@ -79,6 +84,7 @@ function wpcity_plugin_display($template)
 	$catalog = (int)get_query_var('prehled');
 	$autori = (int)get_query_var('autori');
 	$soubory = (int)get_query_var('soubory');
+	$polozka = (int)get_query_var('polozka');
 	$pridat = (int)get_query_var('pridat');
 	$mapawebu = (int)get_query_var('mapawebu');
 	$category_id = (int)get_query_var('kategorie');
@@ -142,6 +148,10 @@ function wpcity_plugin_display($template)
 		}
 	}
 
+	if ($polozka > 0) {
+		redirectToObject();
+	}
+
 	if ($pridat > 0) {
 		$new_template = locate_template(array('page-dilo-pridat.php'));
 		if ('' != $new_template) {
@@ -157,6 +167,20 @@ function wpcity_plugin_display($template)
 	}
 
 	return $template;
+}
+
+function redirectToObject() {
+	global $wp_query;
+
+	$id = (int) $wp_query->query_vars['polozka'];
+	if (!WikidataIdentifier::getIsValidIdentifier($id)) {
+		$wp_query->set_404();
+		status_header( 404 );
+		get_template_part( 404 );
+		exit();
+	}
+
+	wp_redirect(WikidataIdentifier::getURLForRedirect($id));
 }
 
 function kv_object_info()
