@@ -3,6 +3,8 @@ WPCity
 
 Plugin pro WordPress vyvinutý pro projekt [Křížky a vetřelci](http://krizkyavetrelci.plzne.cz/), který mapuje drobně umění v Plzni. Plugin umožňuje spravovat informace o dílech, kategorizovat je, spravovat informace o autorech, fotografie či zařazovat díla do souborů děl.
 
+[![Stav buidu](https://travis-ci.org/JasnaPaka/wpcity.svg?branch=master)](https://travis-ci.org/JasnaPaka/wpcity)
+
 Instalace
 ----------
 Poslední vydaná verze pluginu WPCity je **1.3**, kterou získáte na stránce [Releases](https://github.com/JasnaPaka/wpcity/releases). 
