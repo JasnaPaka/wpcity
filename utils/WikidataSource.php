@@ -93,7 +93,7 @@ class WikidataSource
 
 	private function getSiteUrl($siteCode) {
 		$items = $this->jsonData->entities;
-		if (sizeof($items) !== 1) {
+		if (is_array($items) && sizeof($items) !== 1) {
 			return false;
 		}
 
@@ -111,7 +111,7 @@ class WikidataSource
 
 	private function getClaimId($siteId) {
 		$items = $this->jsonData->entities;
-		if (sizeof($items) !== 1) {
+		if (is_array($items) && sizeof($items) !== 1) {
 			return false;
 		}
 
