@@ -14,6 +14,30 @@ class WikidataSource
 	const DATA_URL = "https://www.wikidata.org/wiki/Special:EntityData/%s.json";
 	const SEARCH_URL = "https://tools.wmflabs.org/hub/P762:%s?format=json";
 
+	const SPARQL_URL = "https://query.wikidata.org/sparql?query=%s&format=json";
+	const SPARQL_AUTHOR_QUERY = 'SELECT ?item ?itemLabel ?datum_n ?datum_u ?misto_n ?misto_nLabel ?misto_uLabel
+								{
+								  VALUES ?item { %s } .
+								  OPTIONAL { ?item wdt:P569 ?datum_n } .
+								  OPTIONAL { ?item wdt:P570 ?datum_u } .
+								  OPTIONAL { ?item wdt:P19 ?misto_n } .
+								  OPTIONAL { ?item wdt:P20 ?misto_u } .
+								  SERVICE wikibase:label { bd:serviceParam wikibase:language "cs,en" } .
+								}';
+
+	const SPARQL_ITEMS_P4935 = "SELECT ?item ?itemLabel ?kvItem
+								WHERE
+								{
+								  ?item wdt:P4935 ?kvItem
+								  SERVICE wikibase:label { bd:serviceParam wikibase:language \"cs,en\" }
+								}";
+
+	const SPARQL_ITEMS_INFO = "SELECT ?item ?itemLabel
+								{
+								  VALUES ?item { %s } .
+								  SERVICE wikibase:label { bd:serviceParam wikibase:language \"cs,en\" }
+								}";
+	
 	const SITE_CSWIKI_CODE = "cswiki";
 	const SITE_COMMONS_CODE = "commonswiki";
 
@@ -130,13 +154,7 @@ class WikidataSource
 		return false;
 	}
 
-	/**
-	 * Vrátí kód položky Wikidat na základě identifikátoru z Monumentu nebo false, pokud se ho nepodařilo načíst.
-	 *
-	 * @param $monumnetId
-	 * @return bool
-	 */
-	public static function getWikidataIdentifier($monumnetId) {
+	private static function createContext() {
 		$options = array(
 			'http'=>array(
 				'method'=>"GET",
@@ -146,7 +164,19 @@ class WikidataSource
 		);
 
 		$context = stream_context_create($options);
-		$json = file_get_contents(sprintf(self::SEARCH_URL, $monumnetId), false, $context);
+		return $context;
+	}
+
+	/**
+	 * Vrátí kód položky Wikidat na základě identifikátoru z Monumentu nebo false, pokud se ho nepodařilo načíst.
+	 *
+	 * @param $monumnetId
+	 * @return bool
+	 */
+	public static function getWikidataIdentifier($monumnetId) {
+
+		$json = file_get_contents(sprintf(self::SEARCH_URL, $monumnetId), false,
+				self::createContext());
 		if (!$json) {
 			return false;
 		}
@@ -159,4 +189,120 @@ class WikidataSource
 
 		return $jsonData->origin->qid;
 	}
+
+	/**
+	 * Vytvoří dotaz na údaje o autorech ve Wikidatech.
+	 *
+	 * @param string $query vstupní dotaz (spíš jeho kostra)
+	 * @param array $ids seznam identifikátorů
+	 * @return string
+	 */
+	private static function prepareSPAROLQuery(string $query, array $ids):string {
+		$idsStr = "";
+		foreach ($ids as $id) {
+			$idsStr = $idsStr." wd:".$id;
+		}
+
+		$query = sprintf($query, $idsStr);
+
+		//$query = trim(preg_replace('/\s\s+/', ' ', $query));
+		$query = urlencode($query);
+
+		return $query;
+	}
+
+	/**
+	 * Vrátí informace o autorech ve Wikidatech dle vstupních identifikátorů Wikidat
+	 *
+	 * @param array $ids seznam identifikátorů Wikidat, pro které zjišťujeme informace
+	 * @return array
+	 */
+	public static function getInfoAuthors(array $ids):array {
+		$data = array();
+
+		$query = self::prepareSPAROLQuery(self::SPARQL_AUTHOR_QUERY, $ids);
+		$jsonStr = file_get_contents(sprintf(self::SPARQL_URL, $query), false, self::createContext());
+		$json = json_decode($jsonStr);
+
+		foreach ($json->results->bindings as $item) {
+			$obj = new stdClass();
+
+			if ($item->datum_n != null) {
+				$obj->datumNarozeni = new DateTime($item->datum_n->value);
+			}
+			if ($item->datum_u != null) {
+				$obj->datumUmrti = new DateTime($item->datum_u->value);
+			}
+			if ($item->misto_nLabel != null) {
+				$obj->mistoNarozeni = $item->misto_nLabel->value;
+			}
+			if ($item->misto_uLabel != null) {
+				$obj->mistoUmrti = $item->misto_uLabel->value;
+			}
+
+			$wdUrl = $item->item->value;
+			$parts = explode("/", $wdUrl);
+			$obj->identifikator = $parts[sizeof($parts) - 1];
+
+			$data[] = $obj;
+		}
+
+		return $data;
+	}
+
+
+	public static function getWDItems():array {
+		$items = array();
+
+		$query = urlencode(self::SPARQL_ITEMS_P4935);
+		$jsonStr = file_get_contents(sprintf(self::SPARQL_URL, $query),
+				false, self::createContext());
+		$json = json_decode($jsonStr);
+
+		foreach ($json->results->bindings as $item) {
+			$obj = new stdClass();
+			$wdUrl = $item->item->value;
+			$parts = explode("/", $wdUrl);
+			$obj->nazev =  $item->itemLabel->value;
+			$obj->identifikator = $parts[sizeof($parts) - 1];
+
+			$items[] = $obj;
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Vrátí informace o heslech na Wikidatech.
+	 *
+	 * @param array $ids identifikátory Wikidat, ke kterým se dohledává informace.
+	 * @return array
+	 */
+	public static function getWDItemsInfo(array $ids):array {
+		$data = array();
+
+		$idsStr = "";
+		foreach ($ids as $id) {
+			$idsStr = $idsStr." wd:".$id;
+		}
+
+		$query = urlencode(sprintf(self::SPARQL_ITEMS_INFO, $idsStr));
+		$jsonStr = file_get_contents(sprintf(self::SPARQL_URL, $query),
+			false, self::createContext());
+		$json = json_decode($jsonStr);
+
+		foreach ($json->results->bindings as $item) {
+			$obj = new stdClass();
+			$wdUrl = $item->item->value;
+			$parts = explode("/", $wdUrl);
+			$obj->identifikator = $parts[sizeof($parts) - 1];
+			$obj->nazev = $item->itemLabel->value;
+
+			$data[] = $obj;
+		}
+
+		return $data;
+	}
+
 }
+

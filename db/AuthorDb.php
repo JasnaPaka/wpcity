@@ -146,5 +146,18 @@ class AuthorDb extends JPDb {
 		$sql = $wpdb->prepare("SELECT DISTINCT LEFT(prijmeni, 1) as znak FROM ".$this->tableName." order by znak;", "");
 		return $wpdb->get_results ($sql);
 	}
+
+	/**
+	 * Vrátí seznam autorů, kteří mají u sebe nastaven identifikátor pro integraci s Wikidaty.
+	 */
+	public function getAuthorsWithWD() {
+		global $wpdb;
+
+		return $wpdb->get_results("SELECT DISTINCT aut.id, aut.jmeno, aut.prijmeni, aut.datum_narozeni, 
+					aut.datum_umrti, aut.misto_narozeni, aut.misto_umrti, z.identifikator FROM ".$this->tableName." aut 
+						INNER JOIN ".$this->dbPrefix."zdroj z ON z.autor = aut.id 
+						WHERE aut.deleted = false AND z.deleted = false AND z.typ = 'WIKIDATA' ORDER BY 
+						".$this->getDefaultOrder());
+	}
 		
 }

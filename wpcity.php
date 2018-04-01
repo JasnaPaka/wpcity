@@ -329,6 +329,12 @@ function wpCityCheckPageCallback()
 		case "monuments":
 			require_once("pages/check/monuments.php");
 			break;
+        case "checkWDAuthors":
+            require_once("pages/check/checkWDAuthors.php");
+            break;
+		case "checkWDMissing":
+			require_once("pages/check/checkWDMissing.php");
+			break;
 		default:
 			require_once("pages/check/list.php");
 			break;

@@ -44,4 +44,11 @@ class WikidataIdentifierTest extends TestCase
 		$this->assertFalse(WikidataIdentifier::getIsValidIdentifier(WikidataIdentifier::IDENTIFIER_COLLECTION));
 	}
 
+	public function testGetIsValidWikiDataIdentifier() {
+		$this->assertTrue(WikidataIdentifier::getIsValidWikiDataIdentifier("Q123"));
+		$this->assertFalse(WikidataIdentifier::getIsValidWikiDataIdentifier(""));
+		$this->assertFalse(WikidataIdentifier::getIsValidWikiDataIdentifier("Q123abc"));
+		$this->assertFalse(WikidataIdentifier::getIsValidWikiDataIdentifier("AQ123"));
+	}
+
 }

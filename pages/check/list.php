@@ -59,8 +59,14 @@
 	</tbody>
 </table>
 
+<h2>Wikidata</h2>
+
+<p>Akce sloužící k porovnání údajů evidovaných u nás s těmi, co jsou evidovány v projektu Wikidata.</p>
+
 <p class="submit">
-    <a href="admin.php?page=check&amp;action=monuments" class="button">Wikidata (památky)</a>
+    <a href="admin.php?page=check&amp;action=checkWDAuthors" class="button">Kontrola údajů u autorů</a>
+    <a href="admin.php?page=check&amp;action=checkWDMissing" class="button">Nalezení chybějícího provázání</a>
+
 </p>
 
 </div>

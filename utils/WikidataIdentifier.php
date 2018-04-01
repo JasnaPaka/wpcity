@@ -61,4 +61,14 @@ class WikidataIdentifier
 
 		return $id > 0;
 	}
+
+	/**
+	 * Provede test, zda je vstupní identifikátor platným identifikátorem Wikidat. Ten má formát "Qčíslo".
+	 *
+	 * @param string $identifier
+	 * @return bool
+	 */
+	public static function getIsValidWikiDataIdentifier(string $identifier):bool {
+		return preg_match("/^Q{1}([0-9]+)$/", $identifier) > 0;
+	}
 }

@@ -171,6 +171,18 @@ class SourceDb extends JPDb {
 		
 		
 		return $wpdb->insert($this->tableName, (array) $values, $types);
-	}	
-		
+	}
+
+	/**
+	 * Získá seznam zdrojů, které jsou typu 'Wikidata'.
+	 *
+	 * @return array
+	 */
+	public function getSourceWithWD():array {
+		global $wpdb;
+
+		$sql = "SELECT * FROM ".$this->tableName." WHERE deleted = false AND typ = 'WIKIDATA'";
+		return $wpdb->get_results ($sql);
+	}
+
 }
