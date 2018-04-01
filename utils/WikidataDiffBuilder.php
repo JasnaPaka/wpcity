@@ -10,7 +10,7 @@ include_once $ROOT . "utils/WikidataSource.php";
 class WikidataDiffBuilder
 {
 
-	private static function findAuthorWD(array $authorsWD, string $identifier):object {
+	private static function findAuthorWD(array $authorsWD, string $identifier) {
 		foreach ($authorsWD as $authorWD) {
 			if ($authorWD->identifikator === $identifier) {
 				return $authorWD;
