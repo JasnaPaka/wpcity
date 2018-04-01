@@ -50,4 +50,8 @@ $rows = $controller->getWDMissing();
 			<?php } ?>
 	<?php } ?>
 
+	<p class="submit">
+		<a href="admin.php?page=check" class="button">Zpět na kontrolu</a>
+	</p>
+
 </div>
