@@ -233,11 +233,10 @@ class CollectionController extends AbstractDefaultController {
 		return $id;
 	}
 	
-	
 	public function getImgForCollection($idCollection) {
 		$photos = $this->dbPhoto->getPhotosByCollection($idCollection);
 		foreach ($photos as $photo) {
-			if ($photo->primarni) {
+			if ($photo->primarni && !$photo->skryta) {
 				return $photo->img_512;
 			}
 		}
