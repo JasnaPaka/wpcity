@@ -1,8 +1,39 @@
 <h2>Změny ve verzích</h2>
 
+<style>
+    ul {
+        list-style: unset;
+    }
+
+    li {
+        margin: 0 0 0 18px;
+    }
+</style>
+
 <p>Novinky a opravy v jednotlivých verzích pluginu WPCity.</p>
 
-<h3>1.2</h3>
+<h3>1.4 (5. května 2018)</h3>
+
+<ul>
+    <li>Přidána integrace s Wikidaty</li>
+    <li>Přidáno vyhledávání děl a autorů na titulní stranu webu.</li>
+    <li>Přidána možnost k autorům přidat fotografie.</li>
+    <li>Přidán odkaz do Památkového katalogu NPU u děl, odkud se tato informace stáhne z Wikidat.</li>
+    <li>Přidána možnost zdrojů u souborů děl.</li>
+    <li>Přidána podpora pro zabezpečenou podobu webu.</li>
+    <li>Lepší formátování textu na stránce se štítkem.</li>
+    <li>Změna přiblížení mapy s díly.</li>
+</ul>
+
+<h3>1.3 (16. říjen 2017)</h3>
+
+<ul>
+    <li>Přidána evidence místa narození a úmrtí i autorů.</li>
+    <li>Přidána evidence doby zániku díla.</li>
+    <li>Přidán atribut, zda je potřeba přefotit dílo.</li>
+</ul>
+
+<h3>1.2 (6. listopad 2016)</h3>
 <ul>
     <li>Přidána možnost stáhnout informace o dílech do GPX.</li>
     <li>Přidána možnost evidovat městskou část, část obce a konkrétní adresu u díla.</li>
@@ -14,7 +45,7 @@
     <li>Opravena kolize našeho editoru s tím interním.</li>
 </ul>
 
-<h3>1.1</h3>
+<h3>1.1 (12. květen 2016)</h3>
 <ul>
     <li>Přidáno nastavení pluginu.</li>
     <li>Odkazy na další informace k dílům/autorům se nyní zobrazují bez ohledu
@@ -26,5 +57,5 @@
     <li>Opraven export děl bez fotek do CSV.</li>
 </ul>
 
-<h3>1.0</h3>
+<h3>1.0 (17. prosinec 2015)</h3>
 <p>Úvodní verze.</p>
