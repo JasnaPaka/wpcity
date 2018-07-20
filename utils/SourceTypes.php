@@ -9,6 +9,7 @@ class SourceTypes
 	const CODE_PAMATKOVY_KATALOG = "PAMATKOVY_KATALOG";
 	const CODE_CS_WIKI = "CS_WIKI";
 	const CODE_MONUMNET = "MONUMNET";
+	const CODE_CEVH = "CEVH";
 
 	private static $instance;
 
@@ -27,7 +28,10 @@ class SourceTypes
 			new SourceType(self::CODE_CS_WIKI, "Česká Wikipedie",
 				"%s na České Wikipedii",null, true),
 			new SourceType(self::CODE_MONUMNET, "Monumnet",
-				"%s na MonumNetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true)
+				"%s na MonumNetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true),
+			new SourceType(self::CODE_CEVH, "Evid. váleč. hrobů",
+				"%s v Centrální evidenci válečných hrobů",
+				"http://www.evidencevh.army.cz/Evidence/detail-hrobu-ci-mista?id=%s", false)
 		);
 	}
 
