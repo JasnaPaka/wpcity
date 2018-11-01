@@ -266,10 +266,9 @@ $photos = $controller->getPhotosForObject();
 		foreach ($photos as $photo) {
 			$uploadDir = wp_upload_dir();
 			?>
-
 			<span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_original ?>"
 										  title="Pro zvětšení klepněte">
-	<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt=""/>
+	<img src="<?php echo upload_images_dir() ?><?php echo $photo->img_thumbnail ?>" alt=""/>
 </a></span>
 
 		<?php } ?>

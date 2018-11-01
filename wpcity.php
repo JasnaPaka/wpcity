@@ -376,6 +376,14 @@ function initDatabase()
 	new DatabaseSchemeUpdater($prefix);
 }
 
+function upload_images_dir() {
+	$uploadDir = wp_upload_dir();
+	if (is_ssl()) {
+		return str_replace("http:", "https:", $uploadDir["baseurl"]);
+	}
+
+	return $uploadDir["baseurl"];
+}
 
 /** Mapa*/
 include "mapa.php";
