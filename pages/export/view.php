@@ -29,7 +29,15 @@
         <a href="admin.php?page=export&amp;action=newPhotoRequired2">Export CSV s díly na přefocení</a>
     </dl>
     <dd>Provede export CSV s objekty s fotografiemi, které nemají odpovídající kvalitu a je potřeba je přefotit.</dd>
-</dt>
+
+    <dl>
+        <a href="admin.php?page=export&amp;action=importadres">Doplnění městských obvodů</a>
+    </dl>
+    <dd>Provede doplnění informace o městském obvodu a části obce u děl, kde tento údaj chybí.</dd>
+
+    </dt>
+
+
 
 <h3>Export kategorií do CSV</h3>
 
