@@ -33,7 +33,7 @@
 	<tr>
 		<td valign="top"><span class="photo-detail"><a href="<?php echo $uploadDir["baseurl"] ?>
 			<?php echo $photo->img_original ?>" title="Pro zvětšení klepněte">
-		<img src="<?php echo $uploadDir["baseurl"] ?><?php echo $photo->img_thumbnail ?>" alt="" /></a></span></td>
+		<img src="<?php echo upload_images_dir() ?><?php echo $photo->img_thumbnail ?>" alt="" /></a></span></td>
 		
 		<td>
 			<table>
