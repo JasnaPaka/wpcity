@@ -199,7 +199,13 @@ function kv_object_info()
 	$obj->fotografiePrim = $oc->getPhotosForObjectMain();
 	$obj->fotografieNotPrim = $oc->getPhotosForObjectNotMain();
 	$obj->mapa = $oc->getGoogleMapPointContent($obj->latitude, $obj->longitude);
-	$obj->zdroje = $oc->getSystemSourcesForObject();
+	foreach ($oc->getSystemSourcesForObject() as $source) {
+		if ($source->typ == SourceTypes::CODE_MONUMNET) {
+			continue;
+		}
+
+		$obj->zdroje[] = $source;
+	}
 	foreach ($oc->getSourcesForObject() as $source) {
 		$obj->zdroje[] = $source;
 	}
@@ -244,7 +250,14 @@ function kv_collection_info()
 function kv_collection_sources()
 {
 	$cc = new CollectionController();
-	$sources = $cc->getSystemSourcesForCollection();
+	$sources = array();
+	foreach ($cc->getSystemSourcesForCollection() as $source) {
+		if ($source->typ == SourceTypes::CODE_MONUMNET) {
+			continue;
+		}
+
+		$sources[] = $source;
+	}
 	foreach ($cc->getSourcesForCollection() as $source) {
 		$sources[] = $source;
 	}
@@ -267,7 +280,15 @@ function kv_collection_objects()
 function kv_author_sources()
 {
 	$ac = new AuthorController();
-	$sources = $ac->getSystemSourcesForAuthor();
+	$sources = array();
+	foreach ($ac->getSystemSourcesForAuthor() as $source) {
+		if ($source->typ == SourceTypes::CODE_MONUMNET) {
+			continue;
+		}
+
+		$sources[] = $source;
+	}
+
 	foreach ($ac->getSourcesForAuthor() as $source) {
 		$sources[] = $source;
 	}
