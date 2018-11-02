@@ -37,7 +37,7 @@ class SourceTypes
 			new SourceType(self::CODE_DP, "Drobné památky.cz",
 				"%s na webu Drobnépamátky.cz",
 				"http://www.drobnepamatky.cz/node/%s", false),
-			new SourceType(self::CODE_ABART, "Databáze abArt",
+			new SourceType(self::CODE_ABART, "Databáze abART",
 				"%s v databázi abART",
 				"http://www.isabart.org/person/%s", false)
 		);
