@@ -10,6 +10,8 @@ class SourceTypes
 	const CODE_CS_WIKI = "CS_WIKI";
 	const CODE_MONUMNET = "MONUMNET";
 	const CODE_CEVH = "CEVH";
+	const CODE_DP = "DP";
+	const CODE_ABART = "abART";
 
 	private static $instance;
 
@@ -31,7 +33,13 @@ class SourceTypes
 				"%s na MonumNetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true),
 			new SourceType(self::CODE_CEVH, "Evid. váleč. hrobů",
 				"%s v Centrální evidenci válečných hrobů",
-				"http://www.evidencevh.army.cz/Evidence/detail-hrobu-ci-mista?id=%s", false)
+				"http://www.evidencevh.army.cz/Evidence/detail-hrobu-ci-mista?id=%s", false),
+			new SourceType(self::CODE_DP, "Drobné památky.cz",
+				"%s na webu Drobnépamátky.cz",
+				"http://www.drobnepamatky.cz/node/%s", false),
+			new SourceType(self::CODE_ABART, "Databáze abArt",
+				"%s v databázi abART",
+				"http://www.isabart.org/person/%s", false)
 		);
 	}
 
