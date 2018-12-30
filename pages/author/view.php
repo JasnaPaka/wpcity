@@ -21,7 +21,7 @@
 		<tr>
 			<th><strong>Narození</strong></th>
 			<td><?php
-                print date_format(new DateTime($row->datum_narozeni), "d. m. Y");
+                print date_format(new DateTime($row->datum_narozeni), "j. n. Y");
                 if (strlen($row->misto_narozeni)) {
                     printf (', %s', $row->misto_narozeni);
                 }
@@ -32,7 +32,7 @@
 		<tr>
 			<th><strong>Úmrtí</strong></th>
 			<td><?php
-                print date_format(new DateTime($row->datum_umrti), "d. m. Y");
+                print date_format(new DateTime($row->datum_umrti), "j. n. Y");
 				if (strlen($row->misto_umrti)) {
 					printf (', %s', $row->misto_umrti);
 				}
