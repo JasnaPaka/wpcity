@@ -58,17 +58,30 @@ class AuthorController extends AbstractDefaultController implements IdentifierAb
 		foreach($rows as $row) {
 			if ($row->datum_narozeni != null) {
 				$dt = new DateTime($row->datum_narozeni);
-				$row->datum_narozeni = $dt->format('d. m. Y');	
+				$row->datum_narozeni = $dt->format('j. n. Y');
 			}	
 			
 			if ($row->datum_umrti != null) {
 				$dt = new DateTime($row->datum_umrti);
-				$row->datum_umrti = $dt->format('d. m. Y');	
-			}	
+				$row->datum_umrti = $dt->format('j. n. Y');
+			}
+
+            $row->wikipediaUrl = $this->getWikipediaUrl($row->id);
 		}
 		
 		return $rows;
 	}
+
+	private function getWikipediaUrl($id) {
+        $sources = $this->dbSource->getSourcesForAuthor($id, true);
+        foreach ($sources as $source) {
+            if ($source->typ == SourceTypes::CODE_CS_WIKI) {
+                return $source->url;
+            }
+        }
+
+        return "";
+    }
 	
 	private function validate($row) {
 

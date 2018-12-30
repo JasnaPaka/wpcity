@@ -1,7 +1,8 @@
 <?php
 	$ROOT = plugin_dir_path( __FILE__ )."../../";
+    $ROOT_URL = plugin_dir_url ( __FILE__ )."../../";
 
-	include_once $ROOT."controllers/AuthorController.php";
+    include_once $ROOT."controllers/AuthorController.php";
 	$controller = new AuthorController();
 	
 	$rows = $controller->getList();
@@ -39,9 +40,9 @@
 	<thead>
 		<tr>
 			<th>Jméno</th>
-			<th class="date column-date">Datum narození</th>
-			<th class="date column-date">Datum úmrtí</th>
-			<th class="num">Počet objektů</th>
+			<th class="r" style="text-align: right">Datum narození</th>
+			<th class="r" style="text-align: right">Datum úmrtí</th>
+			<th class="num r">Počet objektů</th>
 			<th>Akce</th>
 		</tr>
 	</thead>
@@ -69,10 +70,16 @@
 						$barva = true;
 					}
 					
-					echo '<td><a href="admin.php?page=author&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->prijmeni.' '.$row->jmeno.'</strong></a></td>';
-					echo '<td class="date column-date">'.$row->datum_narozeni.'</td>';
-					echo '<td class="date column-date">'.$row->datum_umrti.'</td>';
-					echo '<td class="num">'.$controller->getCountObjectsForAuthor($row->id).'</td>';
+					echo '<td>';
+					echo '<a href="admin.php?page=author&amp;action=view&amp;id='.$row->id.'"><strong>'.$row->prijmeni.' '.$row->jmeno.'</strong></a>';
+					if (strlen($row->wikipediaUrl) > 0) {
+                        echo '&nbsp;<a href="'.$row->wikipediaUrl.'"><img src="'.$ROOT_URL.'content/images/wikipedia-32.png" 
+                                alt="" width="16" height="16"/></a>';
+                    }
+					echo '</td>';
+					echo '<td class="r">'.$row->datum_narozeni.'</td>';
+					echo '<td class="r">'.$row->datum_umrti.'</td>';
+					echo '<td class="num r">'.$controller->getCountObjectsForAuthor($row->id).'</td>';
 					echo '<td><a href="admin.php?page=author&amp;action=update&amp;id='.$row->id.'" title="Upraví autora">Upravit</a> 
 						&middot; <a href="admin.php?page=author&amp;action=delete&amp;id='.$row->id.'" title="Smaže autora">Smazat</a></td>';
 					echo '</tr>';
