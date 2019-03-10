@@ -99,7 +99,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-fotek";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-fotek"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -125,7 +125,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-autora";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-autora"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -157,7 +157,7 @@ class ExportController extends JPController
 		}
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-kategorie";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-kategorie"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -300,7 +300,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku" + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -338,7 +338,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni";
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni" + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
