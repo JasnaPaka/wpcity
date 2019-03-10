@@ -525,7 +525,7 @@ class ObjectDb extends JPDb
 	{
 		global $wpdb;
 
-		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE potreba_foto = 1 AND deleted = 0 ORDER BY " . $this->getOrderSQL());
+		return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE potreba_foto = 1 AND deleted = 0 ORDER BY " . $this->getOrderSQL(null));
 	}
 
 	public function getCountAgreed() {
