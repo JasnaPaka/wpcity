@@ -35,6 +35,11 @@
     </dl>
     <dd>Provede doplnění informace o městském obvodu a části obce u děl, kde tento údaj chybí.</dd>
 
+    <dl>
+        <a href="admin.php?page=export&amp;action=exportAuthorsWikidata">Export autorů pro Wikidata</a>
+    </dl>
+    <dd>Provede export autorů děl, kteří mají 3 a více děl v databázi a nemáme nastaveno provázání na Wikidata.</dd>
+
     </dt>
 
 

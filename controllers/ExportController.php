@@ -20,6 +20,8 @@ class ExportController extends JPController
 	private $dbPhoto;
 	private $dbCategory;
 	private $dbSetting;
+	private $dbAuthor;
+	private $dbSource;
 
 	function __construct()
 	{
@@ -27,6 +29,8 @@ class ExportController extends JPController
 		$this->dbPhoto = new PhotoDb();
 		$this->dbCategory = new CategoryDB();
 		$this->dbSetting = new SettingDB();
+		$this->dbAuthor = new AuthorDb();
+		$this->dbSource = new SourceDb();
 	}
 
 	/**
@@ -80,6 +84,9 @@ class ExportController extends JPController
 			case "newPhotoRequired2":
 				$this->newPhotoRequired2();
 				break;
+            case "exportAuthorsWikidata":
+                $this->exportAuthorsWikidata();
+                break;
 			default:
 				if (strpos($this->getAction(), "category") == 0) {
 					$id = str_replace($this->getAction(), "category", "");
@@ -300,7 +307,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku" + random_int(1, 50000);
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku".random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -338,7 +345,7 @@ class ExportController extends JPController
 		$separator = ",";
 
 		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni" + random_int(1, 50000);
+		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni".random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -354,5 +361,45 @@ class ExportController extends JPController
 		$nazev = "objekty-prefoceni.csv";
 		$this->download($tmpName, $nazev);
 	}
+
+	public function exportAuthorsWikidata() {
+        global $wpdb;
+        $separator = ",";
+
+        putenv('TMPDIR=' . getenv('TMPDIR'));
+        $tmpName = ini_get('upload_tmp_dir') . "/authors-wikidata".random_int(1, 50000);
+
+        $file = fopen($tmpName, 'w');
+        $authors = $this->dbAuthor->getAuthorsWithoutWD();
+
+        fwrite($file, "id" . $separator."počet" . $separator . "jméno" . $separator . "příjmení" . $separator. "datum narození"
+            . $separator. "datum úmrtí" . $separator. "místo narození" . $separator. "místo úmrtí\n");
+
+        foreach ($authors as $author) {
+            $sources = $this->dbSource->getSourcesForAuthor($author->id, false);
+            $nalezeno = false;
+            foreach ($sources as $source) {
+                if ($source->typ == SourceTypes::CODE_WIKIDATA) {
+                    $nalezeno = true;
+                }
+            }
+
+            if ($nalezeno) {
+                continue;
+            }
+
+            if ($author->datum_narozeni == null) {
+                continue;
+            }
+
+            fwrite($file, ($author->id + 100000) . $separator .$author->pocet . $separator . $author->jmeno . $separator . $author->prijmeni . $separator . $author->datum_narozeni .
+                $separator . $author->datum_umrti . $separator . $author->misto_narozeni . $separator . $author->misto_umrti . "\n");
+        }
+
+        fclose($file);
+
+        $nazev = "wikidata-authors.csv";
+        $this->download($tmpName, $nazev);
+    }
 
 }

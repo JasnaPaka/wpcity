@@ -159,5 +159,16 @@ class AuthorDb extends JPDb {
 						WHERE aut.deleted = false AND z.deleted = false AND z.typ = 'WIKIDATA' ORDER BY 
 						".$this->getDefaultOrder());
 	}
-		
+
+    public function getAuthorsWithoutWD() {
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT count(*) as pocet, aut.id, aut.jmeno, aut.prijmeni, aut.datum_narozeni,
+					aut.datum_umrti, aut.misto_narozeni, aut.misto_umrti FROM ".$this->tableName." aut 
+						INNER JOIN ".$this->dbPrefix."objekt2autor o2a ON o2a.autor = aut.id
+						INNER JOIN ".$this->dbPrefix."objekt obj ON o2a.objekt = obj.id 
+						WHERE aut.deleted = false AND obj.deleted = false AND o2a.deleted = false
+						GROUP BY aut.id, aut.jmeno, aut.prijmeni, aut.datum_narozeni, aut.datum_umrti, aut.misto_narozeni, aut.misto_umrti 
+						ORDER BY pocet DESC, ".$this->getDefaultOrder());
+    }
 }
