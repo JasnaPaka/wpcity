@@ -373,14 +373,19 @@ class ExportController extends JPController
         $authors = $this->dbAuthor->getAuthorsWithoutWD();
 
         fwrite($file, "id" . $separator."počet" . $separator . "jméno" . $separator . "příjmení" . $separator. "datum narození"
-            . $separator. "datum úmrtí" . $separator. "místo narození" . $separator. "místo úmrtí\n");
+            . $separator. "datum úmrtí" . $separator. "místo narození" . $separator. "místo úmrtí". $separator."abART\n");
 
         foreach ($authors as $author) {
             $sources = $this->dbSource->getSourcesForAuthor($author->id, false);
             $nalezeno = false;
+            $abArt = null;
+
             foreach ($sources as $source) {
                 if ($source->typ == SourceTypes::CODE_WIKIDATA) {
                     $nalezeno = true;
+                }
+                if ($source->typ == SourceTypes::CODE_ABART) {
+                    $abArt = $source->identifikator;
                 }
             }
 
@@ -393,7 +398,7 @@ class ExportController extends JPController
             }
 
             fwrite($file, ($author->id + 100000) . $separator .$author->pocet . $separator . $author->jmeno . $separator . $author->prijmeni . $separator . $author->datum_narozeni .
-                $separator . $author->datum_umrti . $separator . $author->misto_narozeni . $separator . $author->misto_umrti . "\n");
+                $separator . $author->datum_umrti . $separator . $author->misto_narozeni . $separator . $author->misto_umrti . $separator . ($abArt == null ? "" : $abArt) ."\n");
         }
 
         fclose($file);
