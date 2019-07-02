@@ -222,7 +222,6 @@ class WikidataSource
 		$data = array();
 
 		$query = self::prepareSPAROLQuery(self::SPARQL_AUTHOR_QUERY, $ids);
-		echo $query;
 		$jsonStr = file_get_contents(sprintf(self::SPARQL_URL, $query), false, self::createContext());
 		$json = json_decode($jsonStr);
 
