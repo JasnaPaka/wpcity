@@ -111,6 +111,17 @@ class CheckController extends JPController {
 	 */
 	public function getWDDiffAuthors():array {
 		$authorsDb = $this->dbAuthor->getAuthorsWithWD();
+
+		// doplnění identifikátoru abart
+		$abArtCol = $this->dbSource->getSourceForAuthors(SourceTypes::CODE_ABART);
+		foreach ($authorsDb as $author) {
+		    foreach ($abArtCol as $item) {
+                if ($item->autor == $author->id) {
+                    $author->abart = $item->identifikator;
+                }
+            }
+        }
+
 		$ids = $this->getWikiDataIdentifiers($authorsDb);
 		$authorsWD = WikidataSource::getInfoAuthors($ids);
 

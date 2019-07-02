@@ -15,13 +15,14 @@ class WikidataSource
 	const SEARCH_URL = "https://tools.wmflabs.org/hub/P762:%s?format=json";
 
 	const SPARQL_URL = "https://query.wikidata.org/sparql?query=%s&format=json";
-	const SPARQL_AUTHOR_QUERY = 'SELECT ?item ?itemLabel ?datum_n ?datum_u ?misto_n ?misto_nLabel ?misto_uLabel
+	const SPARQL_AUTHOR_QUERY = 'SELECT ?item ?itemLabel ?datum_n ?datum_u ?misto_n ?misto_nLabel ?misto_uLabel ?abart
 								{
 								  VALUES ?item { %s } .
 								  OPTIONAL { ?item wdt:P569 ?datum_n } .
 								  OPTIONAL { ?item wdt:P570 ?datum_u } .
 								  OPTIONAL { ?item wdt:P19 ?misto_n } .
 								  OPTIONAL { ?item wdt:P20 ?misto_u } .
+								  OPTIONAL { ?item wdt:P6844 ?abart } .
 								  SERVICE wikibase:label { bd:serviceParam wikibase:language "cs,en" } .
 								}';
 
@@ -221,6 +222,7 @@ class WikidataSource
 		$data = array();
 
 		$query = self::prepareSPAROLQuery(self::SPARQL_AUTHOR_QUERY, $ids);
+		echo $query;
 		$jsonStr = file_get_contents(sprintf(self::SPARQL_URL, $query), false, self::createContext());
 		$json = json_decode($jsonStr);
 
@@ -239,6 +241,9 @@ class WikidataSource
 			if ($item->misto_uLabel != null) {
 				$obj->mistoUmrti = $item->misto_uLabel->value;
 			}
+			if ($item->abart != null) {
+			    $obj->abart = $item->abart->value;
+            }
 
 			$wdUrl = $item->item->value;
 			$parts = explode("/", $wdUrl);

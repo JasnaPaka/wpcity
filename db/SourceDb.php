@@ -81,6 +81,22 @@ class SourceDb extends JPDb {
 		return $wpdb->get_results ($sql); 
 	}
 
+    /**
+     * Vrátí všechny záznamy, kde je pro autora konkrétní typ zdroje. Vrací se pro každý záznam id autora a hodnota typu zdroje.
+     *
+     * @param $sourceType
+     * @return mixed
+     */
+	public function getSourceForAuthors($sourceType) {
+        global $wpdb;
+
+        $sql = $wpdb->prepare("SELECT aut.id as autor, zdr.identifikator as identifikator FROM ".$this->tableName.
+            " zdr INNER JOIN ".$this->dbPrefix."autor aut ON aut.id = zdr.autor
+         WHERE zdr.deleted = 0 AND aut.deleted = 0 AND zdr.typ = '".$sourceType."'", []);
+
+        return $wpdb->get_results ($sql);
+    }
+
 	/**
 	 * Vrátí seznam zdrojů pro soubor děl. Standardně vrací seznam děl, které může uživatel
 	 * editovat. Může však na základě druhého parametru vracet i zdroje "systémové", které

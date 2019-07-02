@@ -116,6 +116,13 @@ class WikidataDiffBuilder
 				$data[] = $item;
 				$item = self::createDiffObject($author);
 			}
+
+            // AbArt
+            if (self::compareStringValue($item, "Identifikátor abArt", $author->abart,
+                $authorWD->abart, false)) {
+                $data[] = $item;
+                $item = self::createDiffObject($author);
+            }
 		}
 
 		return $data;
