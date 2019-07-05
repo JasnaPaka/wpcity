@@ -12,6 +12,16 @@
 
 <p>Novinky a opravy v jednotlivých verzích pluginu WPCity.</p>
 
+<h3>1.5 (5. červenec 2019)</h3>
+
+<ul>
+    <li>Přidáno provázání na web abArt.</li>
+    <li>Přidáno provázání na web Drobnepamatky.cz.</li>
+    <li>Přidáno provázání na web Centrální evidence válečných hrobů.</li>
+    <li>Odstranění odkazů na MonumNet.</li>
+    <li>Oprava exportu děl pro přefocení.</li>
+</ul>
+
 <h3>1.4 (5. května 2018)</h3>
 
 <ul>
