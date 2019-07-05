@@ -12,6 +12,9 @@ class SourceTypes
 	const CODE_CEVH = "CEVH";
 	const CODE_DP = "DP";
 	const CODE_ABART = "abART";
+    const CODE_ENCYKLOPEDIE_OSOBY = "ENCYKLOPEDIE_OSOBY";
+    const CODE_ENCYKLOPEDIE_OBJEKTY = "ENCYKLOPEDIE_OBJEKTY";
+    const CODE_ENCYKLOPEDIE_STAVBY = "ENCYKLOPEDIE_STAVBY";
 
 	private static $instance;
 
@@ -39,7 +42,16 @@ class SourceTypes
 				"http://www.drobnepamatky.cz/node/%s", false),
 			new SourceType(self::CODE_ABART, "Databáze abART",
 				"%s v databázi abART",
-				"http://www.isabart.org/person/%s", false)
+				"http://www.isabart.org/person/%s", false),
+            new SourceType(self::CODE_ENCYKLOPEDIE_OSOBY, "Encyklopedie Plzně (osoby)",
+                "%s v Encyklopedii Plzně",
+                "https://encyklopedie.plzen.eu/home-mup/?acc=profil_osobnosti&load=%s&qc=&qa=0", false),
+            new SourceType(self::CODE_ENCYKLOPEDIE_OBJEKTY, "Encyklopedie Plzně (objekty)",
+                "%s v Encyklopedii Plzně",
+                "https://encyklopedie.plzen.eu/home-mup/?acc=profil_objektu&load=%s&qt=&qc=&qe=", false),
+            new SourceType(self::CODE_ENCYKLOPEDIE_STAVBY, "Encyklopedie Plzně (stavby)",
+                "%s v Encyklopedii Plzně",
+                "https://encyklopedie.plzen.eu/home-mup/?acc=profil_domu&load=%s&qt=&qc=", false)
 		);
 	}
 
