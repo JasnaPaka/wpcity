@@ -40,6 +40,13 @@ class WikidataBuilder
 					SourceTypes::CODE_WIKIDATA, $source->objekt, $source->autor, $source->soubor);
 				$this->sourceDb->createWithObject($data, $source->objekt != null, $source->soubor != null);
 			}
+			
+			$dpId = $wd->getDrobnePamatkyId();
+			if (strlen($dpId) > 1) {
+			    $data = $this->createObject(SourceTypes::CODE_DP, $dpId, null, null,
+			        SourceTypes::CODE_WIKIDATA, $source->objekt, $source->autor, $source->soubor);
+			    $this->sourceDb->createWithObject($data, $source->objekt != null, $source->soubor != null);
+			}
 
 			$cswiki = $wd->getCsWikiUrl();
 			if (strlen($cswiki) > 1) {

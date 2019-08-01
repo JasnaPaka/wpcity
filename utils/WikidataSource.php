@@ -44,6 +44,7 @@ class WikidataSource
 
 	const CLAIMS_PAMATKOVY_KATALOG = "P4075";
 	const CLAIMS_MONUMNET = "P762";
+	const CLAIMS_DROBNE_PAMATKY = "P6736";
 
 	private $identifikator;
 	private $jsonData;
@@ -106,6 +107,10 @@ class WikidataSource
 	 */
 	public function getPamatkovyKatalogId() {
 		return $this->getClaimId(self::CLAIMS_PAMATKOVY_KATALOG);
+	}
+	
+	public function getDrobnePamatkyId() {
+	    return $this->getClaimId(self::CLAIMS_DROBNE_PAMATKY);
 	}
 
 	/**
