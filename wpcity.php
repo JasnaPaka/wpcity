@@ -335,6 +335,9 @@ function wpCityCheckPageCallback()
 		case "checkWDMissing":
 			require_once("pages/check/checkWDMissing.php");
 			break;
+        case "checkWDUpdate":
+            require_once("pages/check/checkWDUpdate.php");
+            break;
 		default:
 			require_once("pages/check/list.php");
 			break;

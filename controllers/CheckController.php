@@ -162,5 +162,12 @@ class CheckController extends JPController {
 		$wdItems = WikidataSource::getWDItems();
 		return WikidataDiffBuilder::getWDIdentifiersDiff($dbItems, $wdItems);
 	}
+
+	public function updateWD() {
+        $sources = $this->dbSource->getSourceWithWD();
+        
+        $wb = new WikidataBuilder($this->dbSource, $sources);
+        $wb->process();
+    }
 }
 

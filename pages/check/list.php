@@ -66,7 +66,7 @@
 <p class="submit">
     <a href="admin.php?page=check&amp;action=checkWDAuthors" class="button">Kontrola údajů u autorů</a>
     <a href="admin.php?page=check&amp;action=checkWDMissing" class="button">Nalezení chybějícího provázání</a>
-
+    <a href="admin.php?page=check&amp;action=checkWDUpdate" class="button">Aktualizace existujících navázání</a>
 </p>
 
 </div>
