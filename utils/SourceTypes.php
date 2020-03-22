@@ -29,7 +29,7 @@ class SourceTypes
 				"%s na serveru Wikidata", "https://www.wikidata.org/wiki/%s"),
 			new SourceType(self::CODE_PAMATKOVY_KATALOG, "Památkový katalog",
 				"%s v Památkovém katalogu",
-				"http://pamatkovykatalog.cz/?mode=parametric&presenter=ElementsResults&catalogNumber=%s", true),
+				"https://pamatkovykatalog.cz/soupis/podle-relevance/1/seznam?katCislo=%s", true),
 			new SourceType(self::CODE_CS_WIKI, "Česká Wikipedie",
 				"%s na České Wikipedii",null, true),
 			new SourceType(self::CODE_MONUMNET, "Monumnet",
