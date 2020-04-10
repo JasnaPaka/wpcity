@@ -105,8 +105,7 @@ class ExportController extends JPController
 	{
 		$separator = ",";
 
-		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-fotek"  + random_int(1, 50000);
+		$tmpName = sys_get_temp_dir() . "/objekty-bez-fotek"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -131,8 +130,7 @@ class ExportController extends JPController
 	{
 		$separator = ",";
 
-		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-bez-autora"  + random_int(1, 50000);
+		$tmpName = sys_get_temp_dir() . "/objekty-bez-autora"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -163,8 +161,7 @@ class ExportController extends JPController
 			return;
 		}
 
-		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-kategorie"  + random_int(1, 50000);
+		$tmpName = sys_get_temp_dir() . "/objekty-kategorie"  + random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -306,8 +303,7 @@ class ExportController extends JPController
 		global $wpdb;
 		$separator = ",";
 
-		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-foto-na-vysku".random_int(1, 50000);
+		$tmpName = sys_get_temp_dir() . "/objekty-foto-na-vysku".random_int(1, 50000);
 
 		$file = fopen($tmpName, 'w');
 
@@ -341,12 +337,9 @@ class ExportController extends JPController
 	 * Exportuje do CSV díla, která jsou označena na přefocení.
 	 */
 	public function newPhotoRequired2() {
-		global $wpdb;
 		$separator = ",";
 
-		putenv('TMPDIR=' . getenv('TMPDIR'));
-		$tmpName = ini_get('upload_tmp_dir') . "/objekty-prefoceni".random_int(1, 50000);
-
+		$tmpName = sys_get_temp_dir(). "/objekty-prefoceni".random_int(1, 50000);
 		$file = fopen($tmpName, 'w');
 
 		fwrite($file, "name" . $separator . "latitude" . $separator . "longitude\n");
@@ -366,8 +359,7 @@ class ExportController extends JPController
         global $wpdb;
         $separator = ",";
 
-        putenv('TMPDIR=' . getenv('TMPDIR'));
-        $tmpName = ini_get('upload_tmp_dir') . "/authors-wikidata".random_int(1, 50000);
+        $tmpName = sys_get_temp_dir() . "/authors-wikidata".random_int(1, 50000);
 
         $file = fopen($tmpName, 'w');
         $authors = $this->dbAuthor->getAuthorsWithoutWD();
