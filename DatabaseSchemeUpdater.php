@@ -63,7 +63,7 @@ class DatabaseSchemeUpdater {
                 if ($lastChar == ";") {
                     $sql = $this->replacePrefix($sql);
                     if (!$this->wpdb->query($sql)) {
-                        die("WPCity: Database scheme was not created. Script: ".$filename);
+                        die("WPCity: Database scheme was not created.");
                     }
                     $sql = "";
                 }

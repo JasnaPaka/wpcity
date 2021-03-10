@@ -1,16 +1,16 @@
 .photo-detail {
-    margin: 5px;
+	margin: 5px;
 }
 
 #map-canvas {
-    width: 600px;
-    height: 300px;
+	width: 600px;
+	height: 300px;
 }
 
 .r {
-    text-align: right;
+	text-align: right;
 }
 
 .content-width {
-    max-width: 800px;
+	max-width: 800px;
 }
