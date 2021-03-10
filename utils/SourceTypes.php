@@ -15,6 +15,7 @@ class SourceTypes
     const CODE_ENCYKLOPEDIE_OSOBY = "ENCYKLOPEDIE_OSOBY";
     const CODE_ENCYKLOPEDIE_OBJEKTY = "ENCYKLOPEDIE_OBJEKTY";
     const CODE_ENCYKLOPEDIE_STAVBY = "ENCYKLOPEDIE_STAVBY";
+    const CODE_SOCHY_MESTA = "SOCHY_MESTA";
 
 	private static $instance;
 
@@ -51,7 +52,10 @@ class SourceTypes
                 "https://encyklopedie.plzen.eu/home-mup/?acc=profil_objektu&load=%s&qt=&qc=&qe=", false),
             new SourceType(self::CODE_ENCYKLOPEDIE_STAVBY, "Encyklopedie Plzně (stavby)",
                 "%s v Encyklopedii Plzně",
-                "https://encyklopedie.plzen.eu/home-mup/?acc=profil_domu&load=%s&qt=&qc=", false)
+                "https://encyklopedie.plzen.eu/home-mup/?acc=profil_domu&load=%s&qt=&qc=", false),
+            new SourceType(self::CODE_SOCHY_MESTA, "Sochy a města",
+                "%s na webu Sochy a města",
+                "https://sochyamesta.cz/zaznam/%s", false)
 		);
 	}
 
