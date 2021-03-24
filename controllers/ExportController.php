@@ -87,6 +87,9 @@ class ExportController extends JPController
             case "exportAuthorsWikidata":
                 $this->exportAuthorsWikidata();
                 break;
+            case "exportDilaCentrum":
+                $this->exportDilaCentrum();
+                break;
 			default:
 				if (strpos($this->getAction(), "category") == 0) {
 					$id = str_replace($this->getAction(), "category", "");
@@ -354,6 +357,18 @@ class ExportController extends JPController
 		$nazev = "objekty-prefoceni.csv";
 		$this->download($tmpName, $nazev);
 	}
+
+	public function exportDilaCentrum() {
+
+	    $objects = $this->dbObject->getObjectsInCenter();
+
+        $exporter = new GPXExporter();
+        foreach ($objects as $object) {
+            $exporter->addPoi($object->latitude, $object->longitude, $object->nazev." (".$object->id.")");
+        }
+
+        $exporter->download("centrum.gpx");
+    }
 
 	public function exportAuthorsWikidata() {
         global $wpdb;

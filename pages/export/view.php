@@ -40,6 +40,11 @@
     </dl>
     <dd>Provede export autorů děl, kteří mají 3 a více děl v databázi a nemáme nastaveno provázání na Wikidata.</dd>
 
+    <dl>
+        <a href="admin.php?page=export&amp;action=exportDilaCentrum">Export děl pro UKR</a>
+    </dl>
+    <dd>Jednorázový export děl ve veřejném prostoru v centrum pro UKR.</dd>
+
     </dt>
 
 
