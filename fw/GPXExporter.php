@@ -22,6 +22,12 @@ class GPXExporter
 		$this->pois[] = $poi;
 	}
 
+    public function addPoiExtended($lat, $lon, $name, $desc, $link) {
+        $poi = array($lat, $lon, $name, $desc, $link);
+
+        $this->pois[] = $poi;
+    }
+
 	/**
 	 * Vrací obsah vygenerovaného souboru ve formátu GPX.
 	 *
@@ -36,6 +42,12 @@ class GPXExporter
 		foreach ($this->pois as $poi) {
 			$content .= sprintf("<wpt lat=\"%f\" lon=\"%f\">\n", $poi[0], $poi[1]);
 			$content .= sprintf("    <name>%s</name>\n", $this->removeInvalidXMLChars($poi[2]));
+
+			if (sizeof($poi) > 3) {
+                $content .= sprintf("    <desc>%s</desc>\n", $poi[3]);
+                $content .= sprintf("    <link>%s</link>\n", $poi[4]);
+            }
+
 			$content .= "</wpt>\n";
 		}
 

@@ -364,7 +364,8 @@ class ExportController extends JPController
 
         $exporter = new GPXExporter();
         foreach ($objects as $object) {
-            $exporter->addPoi($object->latitude, $object->longitude, $object->nazev." (".$object->id.")");
+            $exporter->addPoiExtended($object->latitude, $object->longitude, $object->nazev,
+                "https://krizkyavetrelci.plzne.cz/katalog/dilo/".$object->id."/", "https://krizkyavetrelci.plzne.cz/katalog/dilo/".$object->id."/");
         }
 
         $exporter->download("centrum.gpx");

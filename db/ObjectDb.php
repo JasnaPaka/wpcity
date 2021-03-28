@@ -539,7 +539,8 @@ class ObjectDb extends JPDb
 
         return $wpdb->get_results("SELECT * FROM " . $this->tableName . " WHERE deleted = 0 AND schvaleno = 1 
         AND (latitude <= 49.7556425 and latitude >=49.7342339) AND (longitude > 13.3498150 AND longitude < 13.3943611)
-        AND zruseno = 0 AND (pristupnost is null OR pristupnost = '' or pristupnost LIKE 'veřejné%')");
+        AND zruseno = 0 AND (pristupnost is null OR pristupnost = '' or pristupnost LIKE 'veřejné%')
+        AND kategorie IN (7, 2, 13, 5)");
+        
     }
-
 }

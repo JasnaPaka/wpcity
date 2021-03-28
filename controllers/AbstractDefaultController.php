@@ -95,7 +95,6 @@ abstract class AbstractDefaultController extends JPController
 		global $current_user;
 
 		$sizes = array();
-
 		if (!function_exists('wp_handle_upload')) {
 			require_once(ABSPATH . 'wp-admin/includes/file.php');
 		}
@@ -122,7 +121,6 @@ abstract class AbstractDefaultController extends JPController
 		$newPhotos = array();
 		$isFirst = true;
 		foreach ($uploadFiles as $uploadFile) {
-
 			$result = wp_handle_upload($uploadFile, $upload_overrides);
 
 			if ($result["error"] != null) {
