@@ -160,7 +160,7 @@ abstract class AbstractDefaultController extends JPController
 						$photos[$i] = $path;
 					} else {
 						array_push($this->messages, new JPErrorMessage("Pro fotografii '" . $uploadFile['name'] . " se nepodařilo
-                                    vygenerovat náhled: " . $size[0] . 'x' . $size[1] . " Chyba: " . $image->error));
+                                    vygenerovat náhled: " . $size[0] . 'x' . $size[1] . " Chyba: " . $image->get_error_message()));
 					}
 				}
 
