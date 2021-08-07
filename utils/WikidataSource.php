@@ -236,16 +236,20 @@ class WikidataSource
 			if ($item->datum_n != null) {
 				$obj->datumNarozeni = new DateTime($item->datum_n->value);
 			}
-			if ($item->datum_u != null) {
-				$obj->datumUmrti = new DateTime($item->datum_u->value);
+			if (isset($item->datum_u ) && $item->datum_u != null) {
+			    try {
+                    $obj->datumUmrti = new DateTime($item->datum_u->value);
+                } catch (Exception $e) {
+			        // Některé hodnoty ve Wikidatech nejsou platné, tiše ignorujeme.
+                }
 			}
-			if ($item->misto_nLabel != null) {
+			if (isset($item->misto_nLabel) && $item->misto_nLabel != null) {
 				$obj->mistoNarozeni = $item->misto_nLabel->value;
 			}
-			if ($item->misto_uLabel != null) {
+			if (isset($item->misto_uLabel) && $item->misto_uLabel != null) {
 				$obj->mistoUmrti = $item->misto_uLabel->value;
 			}
-			if ($item->abart != null) {
+			if (isset($item->abart) && $item->abart != null) {
 			    $obj->abart = $item->abart->value;
             }
 
