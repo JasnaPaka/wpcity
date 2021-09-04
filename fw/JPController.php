@@ -56,6 +56,7 @@ abstract class JPController {
 	 * Null je vrácen i tehdy, když podle ID nebyla nalezena žádná kategorie.
 	 */
 	public function getObjectId() {
+        $id = null;
 		
 		if (isset ($_GET["id"])) {
 			$id =  (int) filter_input (INPUT_GET, "id", FILTER_SANITIZE_STRING);

@@ -282,6 +282,7 @@ class ObjectController extends AbstractDefaultController implements IdentifierAb
 			$row = $this->setAuthors($row);
 			$row->potreba_foto = 0;
 			$row->schvaleno = $public ? 0 : 1;
+			$row->pamatkova_ochrana = '';
 			$result = $this->db->create($row);
 
 			if (!$result) {
@@ -524,8 +525,8 @@ class ObjectController extends AbstractDefaultController implements IdentifierAb
 		$output = $service->call($object->latitude, $object->longitude);
 
 		if ($service->getStatusCode() == CityService::HTTP_200) {
-			$object->mestska_cast = $output->umo;
-			$object->oblast = $output->part;
+			$object->mestska_cast = $output->umo->__toString();
+			$object->oblast = $output->part->__toString();
 			$this->db->update($object, $object->id);
 		} else if ($service->getStatusCode() == CityService::HTTP_404 && $id == null) {
 			array_push($this->messages, new JPErrorMessage("Objekt se nenachází na území města Plzně."));
@@ -1071,10 +1072,12 @@ class ObjectController extends AbstractDefaultController implements IdentifierAb
 	{
 		global $wp_query;
 
+		$id = 0;
+
 		// v administraci máme "category", na webu "kategorie" :)
 		if (isset($_GET["category"])) {
 			$id = (int)filter_input(INPUT_GET, "category", FILTER_SANITIZE_STRING);
-		} else {
+		} else if (isset($wp_query->query_vars['kategorie'])) {
 			$id = (int)$wp_query->query_vars['kategorie'];
 		}
 
