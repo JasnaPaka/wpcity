@@ -7,7 +7,7 @@ Plugin pro WordPress vyvinutý pro projekt [Křížky a vetřelci](http://krizky
 
 Instalace
 ----------
-Poslední vydaná verze pluginu WPCity je **1.5**, kterou získáte na stránce [Releases](https://github.com/JasnaPaka/wpcity/releases). 
+Poslední vydaná verze pluginu WPCity je **1.6**, kterou získáte na stránce [Releases](https://github.com/JasnaPaka/wpcity/releases). 
 
 Po stažení postupujte následovně:
 * Nakopírujte plugin do vámi vytvořeného adresáře WordPressu *wp-content/plugins/wpcity*.
