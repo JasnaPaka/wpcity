@@ -12,6 +12,18 @@
 
 <p>Novinky a opravy v jednotlivých verzích pluginu WPCity.</p>
 
+<h3>1.6 (24. prosince 2021)</h3>
+<ul>
+    <li>Přidání provázání děl a autorů na Encyklopedii města Plzeň.</li>
+    <li>Přidání kontroly aktuálnosti údajů o autorech mezi Wikidaty a pluginem</li>
+    <li>Nově u autorů děl na webu neuvádíme tituly.</li>
+    <li>Oprava ukládání informace o městské části u nově přidávaných děl.</li>
+    <li>Oprava kontrola aktuálnosti údajů o autorech mezi Wikidaty a pluginem.</li>
+    <li>Oprava odkazů na položky v katalogu Státní vědecké knihovny v Plzni.</li>
+    <li>Oprava exportu děl na přefocení.</li>
+    <li>Oprava odkazů od Památkového katalogu.</li>
+</ul>
+
 <h3>1.5 (5. červenec 2019)</h3>
 
 <ul>
