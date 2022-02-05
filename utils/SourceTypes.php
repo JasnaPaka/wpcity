@@ -37,7 +37,7 @@ class SourceTypes
 				"%s na MonumNetu","http://monumnet.npu.cz/pamfond/list.php?CiRejst=%s", true),
 			new SourceType(self::CODE_CEVH, "Evid. váleč. hrobů",
 				"%s v Centrální evidenci válečných hrobů",
-				"http://www.evidencevh.army.cz/Evidence/detail-hrobu-ci-mista?id=%s", false),
+				"https://evidencevh.army.cz/Evidence/detail-hrobu-ci-mista?id=%s", false),
 			new SourceType(self::CODE_DP, "Drobné památky.cz",
 				"%s na webu Drobnépamátky.cz",
 				"https://www.drobnepamatky.cz/node/%s", false),
