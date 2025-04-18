@@ -33,10 +33,10 @@ function wpCitySendHeadersCallback()
 
 function pageScripts()
 {
-	wp_enqueue_script('jQuery', plugin_dir_url(__FILE__) . '/content/js/jquery-ui/jquery-3.1.0.min.js');
-	wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__) . '/content/js/jquery-ui/jquery-ui-1.12.min.js');
+	wp_enqueue_script('jQuery', plugin_dir_url(__FILE__) . '/content/js/jquery-ui/jquery-3.7.1.min.js');
+	wp_enqueue_script('jQuery UI', plugin_dir_url(__FILE__) . '/content/js/jquery-ui/jquery-ui.min-1.14.1.js');
 
-	wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__) . '/content/css/jquery-ui/jquery-ui.theme.min-1.12.css');
+	wp_enqueue_style('jQuery UI CSS', plugin_dir_url(__FILE__) . '/content/css/jquery-ui/jquery-ui-1.11.4.css');
 	wp_enqueue_style('WPCity CSS', plugin_dir_url(__FILE__) . '/content/css/wpcity.css');
 }
 
